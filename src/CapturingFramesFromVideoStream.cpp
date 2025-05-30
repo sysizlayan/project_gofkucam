@@ -41,7 +41,7 @@ void CapturingFramesFromVideoStream::open()
    {
       m_cap = std::make_unique<cv::VideoCapture>(m_source);
       
-      auto latest_frame_ptr = std::make_shared<cv::Mat>();
+      auto latest_frame_ptr = std::make_shared<Frame>();
       m_latest_frame.store(latest_frame_ptr);
 
       if (!m_cap->isOpened())

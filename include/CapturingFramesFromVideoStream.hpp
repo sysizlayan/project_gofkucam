@@ -21,7 +21,7 @@ public:
     CapturingFramesFromVideoStream(const std::string source, LoggerInterfacePtr logger);
     ~CapturingFramesFromVideoStream() override;
 
-    void open();
+    void open() override;
     void open(const std::string& source) override;
     void close() override;
 
