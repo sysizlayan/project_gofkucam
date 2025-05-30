@@ -1,0 +1,7 @@
+<map id="qxk_port.hpp" name="qxk_port.hpp">
+<area shape="rect" id="node1" title="QXK/C++ port example, Generic C++ compiler." alt="" coords="122,5,219,32"/>
+<area shape="rect" id="node2" href="$qxk_8hpp.html" title="QXK/C++ preemptive extended (blocking) kernel, platform&#45;independent public interface." alt="" coords="137,80,205,107"/>
+<area shape="rect" id="node3" href="$qequeue_8hpp.html" title="platform&#45;independent fast &quot;raw&quot; thread&#45;safe event queue interface" alt="" coords="5,155,101,181"/>
+<area shape="rect" id="node4" href="$qmpool_8hpp.html" title="platform&#45;independent memory pool QP::QMPool interface." alt="" coords="126,155,215,181"/>
+<area shape="rect" id="node5" href="$qpset_8hpp.html" title="platform&#45;independent priority sets of 8 or 64 elements." alt="" coords="239,155,318,181"/>
+</map>

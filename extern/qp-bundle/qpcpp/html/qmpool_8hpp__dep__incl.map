@@ -1,0 +1,12 @@
+<map id="qmpool.hpp" name="qmpool.hpp">
+<area shape="rect" id="node1" title="platform&#45;independent memory pool QP::QMPool interface." alt="" coords="119,5,209,32"/>
+<area shape="rect" id="node2" href="$qk_8hpp.html" title="QK/C++ platform&#45;independent public interface." alt="" coords="35,80,96,107"/>
+<area shape="rect" id="node5" href="$qv_8hpp.html" title="QV/C++ platform&#45;independent public interface." alt="" coords="135,80,193,107"/>
+<area shape="rect" id="node8" href="$qxk_8hpp.html" title="QXK/C++ preemptive extended (blocking) kernel, platform&#45;independent public interface." alt="" coords="233,80,301,107"/>
+<area shape="rect" id="node3" href="$qk__port_8hpp.html" title="QK/C++ port to Lint, Generic C++ compiler." alt="" coords="5,155,96,181"/>
+<area shape="rect" id="node4" href="$qk_2qf__port_8hpp.html" title="QF/C++ port for QK kernel, Generic C++ compiler." alt="" coords="7,229,94,256"/>
+<area shape="rect" id="node6" href="$qv__port_8hpp.html" title="QV/C++ port to Lint, Generic C++ compiler." alt="" coords="120,155,208,181"/>
+<area shape="rect" id="node7" href="$qv_2qf__port_8hpp.html" title="QF/C++ port for QV kernel, Generic C++ compiler." alt="" coords="121,229,207,256"/>
+<area shape="rect" id="node9" href="$qxk__port_8hpp.html" title="QXK/C++ port example, Generic C++ compiler." alt="" coords="233,155,330,181"/>
+<area shape="rect" id="node10" href="$qxk_2qf__port_8hpp.html" title="QF/C++ port to PC&#45;Lint&#45;Plus, Generic C++ compiler." alt="" coords="238,229,325,256"/>
+</map>

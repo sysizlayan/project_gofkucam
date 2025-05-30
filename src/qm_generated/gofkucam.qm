@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model version="5.1.1" links="0">
+ <framework name="qpcpp"/>
+ <package name="Evts" stereotype="0x01">
+  <class name="FrameCapturedEvt" superclass="qpcpp::QEvt">
+   <operation name="FrameCapturedEvt" type="" visibility="0x00" properties="0x02">
+    <code>sig     = FRAME_CAPTURED_SIG;
+poolId_ = 0U;</code>
+   </operation>
+  </class>
+  <class name="TimerTimedOut" superclass="qpcpp::QEvt">
+   <operation name="TimerTimedOut" type="" visibility="0x00" properties="0x02">
+    <code>sig     = TIMER_TIMEDOUT_SIG;
+poolId_ = 0U;</code>
+   </operation>
+  </class>
+  <class name="FrameGrabbingFailed" superclass="qpcpp::QEvt">
+   <operation name="FrameGrabbingFailed" type="" visibility="0x00" properties="0x00">
+    <code>sig     = FRAME_GRABBING_FAILED_SIG;
+poolId_ = 0U;</code>
+   </operation>
+  </class>
+ </package>
+ <package name="Components" stereotype="0x02">
+  <class name="Controller" superclass="qpcpp::QActive">
+   <attribute name="m_logger" type="LoggerInterfacePtr" visibility="0x02" properties="0x00"/>
+   <attribute name="m_timer" type="QP::QTimeEvt" visibility="0x02" properties="0x00"/>
+   <attribute name="m_frame_strategy" type="FrameGrabbingStrategyPtr" visibility="0x00" properties="0x00"/>
+   <operation name="Controller" type="" visibility="0x00" properties="0x00">
+    <parameter name="logger" type="LoggerInterfacePtr"/>
+    <parameter name="frame_grabber" type="FrameGrabbingStrategyPtr"/>
+    <code>  : QActive(&amp;initial),
+    m_logger(logger),
+    m_timer(this, TIMER_TIMEDOUT_SIG, 0U),
+    m_frame_strategy(frame_grabber)
+
+m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
+   </operation>
+   <statechart properties="0x00">
+    <initial target="../1">
+     <action>(void)e; // Just to supress compiler warning
+(void)Q_this_module_; // Just to supress compiler warning
+
+m_frame_strategy-&gt;subscribeToFrameUpdates(this);
+m_frame_strategy-&gt;open();
+</action>
+     <initial_glyph conn="9,4,5,1,97,11,-2">
+      <action box="1,-3,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="operating">
+     <tran trig="FRAME_CAPTURED">
+      <action>Frame frame;
+m_frame_strategy-&gt;grabFrame(frame);
+std::stringstream ss;
+ss&lt;&lt;&quot;Frame arrived: &quot; &lt;&lt; frame.size;
+m_logger-&gt;info(ss.str());</action>
+      <tran_glyph conn="6,12,3,-1,14,1">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="6,8,98,21"/>
+    </state>
+    <state_diagram size="125,142"/>
+   </statechart>
+  </class>
+ </package>
+ <directory name=".">
+  <file name="Controller.cpp">
+   <text>#include &quot;qpcpp.hpp&quot;
+#include &quot;Controller.hpp&quot;
+#include &quot;Signals.hpp&quot;
+#include &quot;Config.hpp&quot;
+
+Q_DEFINE_THIS_FILE
+
+namespace GofkuCam
+{
+
+$define${Components::Controller}
+
+} // namespace GofkuCam</text>
+  </file>
+ </directory>
+ <directory name="../../include/qm_generated">
+  <file name="Controller.hpp">
+   <text>#ifndef CONTROLLER_HPP_
+#define CONTROLLER_HPP_
+
+#include &quot;qpcpp.hpp&quot;
+#include &quot;LoggerInterface.hpp&quot;
+#include &quot;FrameGrabbingStrategy.hpp&quot;
+
+namespace GofkuCam
+{
+
+$declare${Components::Controller}
+
+} // namespace GofkuCam
+
+#endif</text>
+  </file>
+  <file name="Signals.hpp">
+   <text>#ifndef GOFKUCAMSIGNALS_HPP_
+#define GOFKUCAMSIGNALS_HPP_
+
+#include &quot;qpcpp.hpp&quot;
+#include &lt;opencv2/opencv.hpp&gt;
+
+namespace GofkuCam
+{
+using Frame = cv::Mat;
+using FramePtr = std::shared_ptr&lt;Frame&gt;;
+using ActiveObjPtr = QP::QActive*;
+
+enum GofkuCamSignals
+{
+    IMMEDIATE_TRANSITION_SIG = QP::Q_USER_SIG,
+
+    TIMER_TIMEDOUT_SIG,
+    FRAME_CAPTURED_SIG,
+    FRAME_GRABBING_FAILED_SIG,
+
+    MAX_GOFKU_CAM_SIG
+};
+
+}
+
+#endif</text>
+  </file>
+  <file name="Evts.hpp">
+   <text>#ifndef EVTS_HPP_
+#define EVTS_HPP_
+
+#include &quot;qpcpp.hpp&quot;
+#include &lt;variant&gt;
+#include &quot;Signals.hpp&quot;
+
+
+namespace GofkuCam
+{
+$declare${Evts}
+
+using EventTyp     = std::variant&lt;FrameCapturedEvt, TimerTimedOut, FrameGrabbingFailed&gt;;
+} // namespace GofkuCam
+
+#endif</text>
+  </file>
+ </directory>
+</model>

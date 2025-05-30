@@ -1,0 +1,12 @@
+<map id="qf_port.hpp" name="qf_port.hpp">
+<area shape="rect" id="node1" title="QF/C++ port for QV kernel, Generic C++ compiler." alt="" coords="186,5,273,32"/>
+<area shape="rect" id="node2" href="$qep__port_8hpp.html" title="QEP/C++ port, generic C++11 compiler." alt="" coords="63,80,161,107"/>
+<area shape="rect" id="node5" href="$qv__port_8hpp.html" title="QV/C++ port to Lint, Generic C++ compiler." alt="" coords="185,80,273,107"/>
+<area shape="rect" id="node10" href="$qf_8hpp.html" title="QF/C++ platform&#45;independent public interface." alt="" coords="301,80,358,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,155,67,181"/>
+<area shape="rect" id="node4" href="$qep_8hpp.html" title="QEP/C++ platform&#45;independent public interface." alt="" coords="91,155,159,181"/>
+<area shape="rect" id="node6" href="$qv_8hpp.html" title="QV/C++ platform&#45;independent public interface." alt="" coords="199,155,257,181"/>
+<area shape="rect" id="node7" href="$qequeue_8hpp.html" title="platform&#45;independent fast &quot;raw&quot; thread&#45;safe event queue interface" alt="" coords="63,229,159,256"/>
+<area shape="rect" id="node8" href="$qmpool_8hpp.html" title="platform&#45;independent memory pool QP::QMPool interface." alt="" coords="183,229,273,256"/>
+<area shape="rect" id="node9" href="$qpset_8hpp.html" title="platform&#45;independent priority sets of 8 or 64 elements." alt="" coords="297,229,375,256"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="qk.hpp" name="qk.hpp">
+<area shape="rect" id="node1" title="QK/C++ platform&#45;independent public interface." alt="" coords="140,5,201,32"/>
+<area shape="rect" id="node2" href="$qequeue_8hpp.html" title="platform&#45;independent fast &quot;raw&quot; thread&#45;safe event queue interface" alt="" coords="5,80,101,107"/>
+<area shape="rect" id="node3" href="$qmpool_8hpp.html" title="platform&#45;independent memory pool QP::QMPool interface." alt="" coords="126,80,215,107"/>
+<area shape="rect" id="node4" href="$qpset_8hpp.html" title="platform&#45;independent priority sets of 8 or 64 elements." alt="" coords="239,80,318,107"/>
+</map>

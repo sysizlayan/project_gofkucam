@@ -1,0 +1,5 @@
+<map id="QTicker" name="QTicker">
+<area shape="rect" id="node1" title="Ticker Active Object class." alt="" coords="39,1019,134,1169"/>
+<area shape="rect" id="node2" href="$class_q_p_1_1_q_active.html" title="QActive active object (based on QP::QHsm implementation)" alt="" coords="23,673,150,971"/>
+<area shape="rect" id="node3" href="$class_q_p_1_1_q_hsm.html" title="Hierarchical State Machine base class." alt="" coords="5,5,168,625"/>
+</map>

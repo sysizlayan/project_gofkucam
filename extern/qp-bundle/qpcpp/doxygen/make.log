@@ -1,0 +1,241 @@
+C:/qp_lab/qpcpp/doxygen/history.dox:2463: warning: Reached end of file while still inside a (nested) comment. Nesting level 2 (probable line reference: 404, 3)
+C:/qp_lab/qpcpp/doxygen/struct.dox:225: warning: No matching directory found for command \dir /src/qk/
+
+C:/qp_lab/qpcpp/doxygen/struct.dox:235: warning: No matching directory found for command \dir /src/qxk/
+
+C:/qp_lab/qpcpp/include/qs.hpp:1120: warning: explicit link request to 'QSignal' could not be resolved
+C:/qp_lab/qpcpp/include/qassert.h:221: warning: argument 'loc' of command @param is not found in the argument list of Q_onAssert(char_t const *const module, int_t location)
+C:/qp_lab/qpcpp/include/qassert.h:248: warning: The following parameter of Q_onAssert(char_t const *const module, int_t location) is not documented:
+  parameter 'location'
+C:/qp_lab/qpcpp/include/qf.hpp:725: warning: The following parameter of Q_NEW_X(e_, evtT_, margin_, sig_) is not documented:
+  parameter 'e_'
+C:/qp_lab/qpcpp/include/qf.hpp:777: warning: argument 'tickRate' of command @param is not found in the argument list of TICK_X(tickRate_, sender_)
+C:/qp_lab/qpcpp/include/qf.hpp:777: warning: argument 'sender' of command @param is not found in the argument list of TICK_X(tickRate_, sender_)
+C:/qp_lab/qpcpp/include/qf.hpp:793: warning: explicit link request to 'QF_TICK_X()' could not be resolved
+C:/qp_lab/qpcpp/include/qf.hpp:798: warning: The following parameters of TICK_X(tickRate_, sender_) are not documented:
+  parameter 'tickRate_'
+  parameter 'sender_'
+C:/qp_lab/qpcpp/include/qs.hpp:1120: warning: explicit link request to 'QSignal' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:681: warning: explicit link request to 'QS_QF_ACTIVE_DEFER' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:681: warning: explicit link request to 'QS_QF_ACTIVE_RECALL' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:681: warning: explicit link request to 'QS_QF_ACTIVE_SUBSCRIBE' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:682: warning: explicit link request to 'QS_QF_ACTIVE_UNSUBSCRIBE' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:682: warning: explicit link request to 'QS_QF_ACTIVE_POST' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:682: warning: explicit link request to 'QS_QF_ACTIVE_POST_LIFO' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:683: warning: explicit link request to 'QS_QF_ACTIVE_GET' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:683: warning: explicit link request to 'QS_QF_ACTIVE_GET_LAST' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:684: warning: explicit link request to 'QS_QF_ACTIVE_RECALL_ATTEMPT' could not be resolved
+C:/qp_lab/qpcpp/include/qs.hpp:1120: warning: explicit link request to 'QSignal' could not be resolved
+C:/qp_lab/qpcpp/include/qassert.h:221: warning: argument 'loc' of command @param is not found in the argument list of Q_onAssert(char_t const *const module, int_t location)
+C:/qp_lab/qpcpp/src/qs/qutest.cpp:403: warning: The following parameter of Q_onAssert(char_t const *const module, int_t location) is not documented:
+  parameter 'location'
+C:/qp_lab/qpcpp/doxygen/struct.dox:23: warning: unexpected token TK_EOF as the argument of ref
+C:/qp_lab/qpcpp/doxygen/struct.dox:59: warning: unable to resolve reference to 'qxk_overview' for \ref command
+C:/qp_lab/qpcpp/doxygen/struct.dox:59: warning: unable to resolve reference to 'qxk_overview' for \ref command
+C:/qp_lab/qpcpp/doxygen/api.dox:153: warning: unable to resolve reference to 'term_active' for \ref command
+C:/qp_lab/doxygen/exa_low-power.dox:16: warning: unable to resolve reference to 'QTimeEvt' for \ref command
+C:/qp_lab/doxygen/exa_low-power.dox:167: warning: explicit link request to 'QXThread' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_qutest.dox:13: warning: explicit link request to 'QHsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_qutest.dox:14: warning: explicit link request to 'QMsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_os.dox:20: warning: explicit link request to 'QHsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_os.dox:21: warning: explicit link request to 'QMsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_os.dox:22: warning: explicit link request to 'QHsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_os.dox:23: warning: explicit link request to 'QMsm' could not be resolved
+C:/qp_lab/doxygen/exa_low-power.dox:16: warning: unable to resolve reference to 'QTimeEvt' for \ref command
+C:/qp_lab/doxygen/exa_low-power.dox:167: warning: explicit link request to 'QXThread' could not be resolved
+C:/qp_lab/doxygen/exa_low-power.dox:16: warning: unable to resolve reference to 'QTimeEvt' for \ref command
+C:/qp_lab/doxygen/exa_low-power.dox:167: warning: explicit link request to 'QXThread' could not be resolved
+C:/qp_lab/doxygen/exa_low-power.dox:16: warning: unable to resolve reference to 'QTimeEvt' for \ref command
+C:/qp_lab/doxygen/exa_low-power.dox:167: warning: explicit link request to 'QXThread' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_os.dox:20: warning: explicit link request to 'QHsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_os.dox:21: warning: explicit link request to 'QMsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_os.dox:22: warning: explicit link request to 'QHsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_os.dox:23: warning: explicit link request to 'QMsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_qutest.dox:13: warning: explicit link request to 'QHsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/exa_qutest.dox:14: warning: explicit link request to 'QMsm' could not be resolved
+C:/qp_lab/doxygen/ports_arm-cm.dox:96: warning: image file name arm-cm_int3bit.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_int3bit.png
+   C:/qp_lab/doxygen/images/arm-cm_int3bit.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:100: warning: image file name arm-cm_int4bit.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_int4bit.png
+   C:/qp_lab/doxygen/images/arm-cm_int4bit.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:722: warning: image file name qk_arm-cm.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_arm-cm.gif
+   C:/qp_lab/doxygen/images/qk_arm-cm.gif
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1229: warning: image file name qk_stack-detail.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_stack-detail.gif
+   C:/qp_lab/doxygen/images/qk_stack-detail.gif
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1368: warning: image file name arm-cm_qk_test-ccs.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_qk_test-ccs.png
+   C:/qp_lab/doxygen/images/arm-cm_qk_test-ccs.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1375: warning: unable to resolve reference to 'arm-cm_qk-synch-fig' for \ref command
+C:/qp_lab/qpcpp/doxygen/ports_native.dox:133: warning: included file ports/arm-cr/qk/iar/qk_port.s is not found. Check your EXAMPLE_PATH
+C:/qp_lab/qpcpp/doxygen/ports_rtos.dox:61: warning: explicit link request to 'QEQueue' could not be resolved
+C:/qp_lab/qpcpp/doxygen/ports_rtos.dox:65: warning: explicit link request to 'QMPool' could not be resolved
+C:/qp_lab/doxygen/ports_arm-cm.dox:96: warning: image file name arm-cm_int3bit.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_int3bit.png
+   C:/qp_lab/doxygen/images/arm-cm_int3bit.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:100: warning: image file name arm-cm_int4bit.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_int4bit.png
+   C:/qp_lab/doxygen/images/arm-cm_int4bit.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:722: warning: image file name qk_arm-cm.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_arm-cm.gif
+   C:/qp_lab/doxygen/images/qk_arm-cm.gif
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1229: warning: image file name qk_stack-detail.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_stack-detail.gif
+   C:/qp_lab/doxygen/images/qk_stack-detail.gif
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1368: warning: image file name arm-cm_qk_test-ccs.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_qk_test-ccs.png
+   C:/qp_lab/doxygen/images/arm-cm_qk_test-ccs.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1375: warning: unable to resolve reference to 'arm-cm_qk-synch-fig' for \ref command
+C:/qp_lab/qpcpp/doxygen/ports_native.dox:133: warning: included file ports/arm-cr/qk/iar/qk_port.s is not found. Check your EXAMPLE_PATH
+C:/qp_lab/qpcpp/doxygen/ports_native.dox:133: warning: included file ports/arm-cr/qk/iar/qk_port.s is not found. Check your EXAMPLE_PATH
+C:/qp_lab/doxygen/ports_arm-cm.dox:96: warning: image file name arm-cm_int3bit.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_int3bit.png
+   C:/qp_lab/doxygen/images/arm-cm_int3bit.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:100: warning: image file name arm-cm_int4bit.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_int4bit.png
+   C:/qp_lab/doxygen/images/arm-cm_int4bit.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:722: warning: image file name qk_arm-cm.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_arm-cm.gif
+   C:/qp_lab/doxygen/images/qk_arm-cm.gif
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1229: warning: image file name qk_stack-detail.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_stack-detail.gif
+   C:/qp_lab/doxygen/images/qk_stack-detail.gif
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1368: warning: image file name arm-cm_qk_test-ccs.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_qk_test-ccs.png
+   C:/qp_lab/doxygen/images/arm-cm_qk_test-ccs.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1375: warning: unable to resolve reference to 'arm-cm_qk-synch-fig' for \ref command
+C:/qp_lab/doxygen/ports_arm-cm.dox:722: warning: image file name qk_arm-cm.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_arm-cm.gif
+   C:/qp_lab/doxygen/images/qk_arm-cm.gif
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1229: warning: image file name qk_stack-detail.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_stack-detail.gif
+   C:/qp_lab/doxygen/images/qk_stack-detail.gif
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1368: warning: image file name arm-cm_qk_test-ccs.png is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/arm-cm_qk_test-ccs.png
+   C:/qp_lab/doxygen/images/arm-cm_qk_test-ccs.png
+
+C:/qp_lab/doxygen/ports_arm-cm.dox:1375: warning: unable to resolve reference to 'arm-cm_qk-synch-fig' for \ref command
+C:/qp_lab/qpcpp/doxygen/ports_rtos.dox:61: warning: explicit link request to 'QEQueue' could not be resolved
+C:/qp_lab/qpcpp/doxygen/ports_rtos.dox:65: warning: explicit link request to 'QMPool' could not be resolved
+C:/qp_lab/qpcpp/doxygen/ports_rtos.dox:61: warning: explicit link request to 'QEQueue' could not be resolved
+C:/qp_lab/qpcpp/doxygen/ports_rtos.dox:65: warning: explicit link request to 'QMPool' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:16: warning: Found unknown command '\examples'
+C:/qp_lab/qpcpp/doxygen/history.dox:16: warning: Found unknown command '\arm'
+C:/qp_lab/qpcpp/doxygen/history.dox:16: warning: Found unknown command '\game_efm32'
+C:/qp_lab/qpcpp/doxygen/history.dox:16: warning: Found unknown command '\win32'
+C:/qp_lab/qpcpp/doxygen/history.dox:16: warning: Found unknown command '\examples'
+C:/qp_lab/qpcpp/doxygen/history.dox:16: warning: Found unknown command '\arm'
+C:/qp_lab/qpcpp/doxygen/history.dox:16: warning: Found unknown command '\dpp_efm32'
+C:/qp_lab/qpcpp/doxygen/history.dox:16: warning: Found unknown command '\win32'
+C:/qp_lab/qpcpp/doxygen/history.dox:49: warning: unable to resolve reference to 'qutest' for \ref command
+C:/qp_lab/qpcpp/doxygen/history.dox:121: warning: explicit link request to 'QActiveDummy' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:129: warning: explicit link request to 'SM_OBJ' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:619: warning: explicit link request to 'QF_BASEPRI' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:808: warning: explicit link request to 'QF_SCHED_STAT_TYPE_' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1029: warning: explicit link request to 'QMActive' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1029: warning: explicit link request to 'QMActive' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1029: warning: explicit link request to 'QActive' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1057: warning: unable to resolve reference to 'exa_win32' for \ref command
+C:/qp_lab/qpcpp/doxygen/history.dox:1057: warning: unable to resolve reference to 'exa_posix' for \ref command
+C:/qp_lab/qpcpp/doxygen/history.dox:1059: warning: explicit link request to 'QActive' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1095: warning: unable to resolve reference to 'avr' for \ref command
+C:/qp_lab/qpcpp/doxygen/history.dox:1095: warning: unable to resolve reference to 'exa_avr' for \ref command
+C:/qp_lab/qpcpp/doxygen/history.dox:1095: warning: unable to resolve reference to 'exa_avr' for \ref command
+C:/qp_lab/qpcpp/doxygen/history.dox:1099: warning: unable to resolve reference to 'cmsis-rtx' for \ref command
+C:/qp_lab/qpcpp/doxygen/history.dox:1111: warning: unable to resolve reference to 'qt' for \ref command
+C:/qp_lab/qpcpp/doxygen/history.dox:1218: warning: explicit link request to 'QF::tickX_()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1218: warning: explicit link request to 'QF::noTimeEvtsActiveX()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1220: warning: explicit link request to 'QF::poolInit()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1223: warning: explicit link request to 'QF::newX_()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1231: warning: explicit link request to 'QEQueue::init()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1232: warning: explicit link request to 'post()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1401: warning: explicit link request to 'QMsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1410: warning: explicit link request to 'QHsm' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1897: warning: explicit link request to 'if' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2068: warning: Unsupported xml/html tag <new> found
+C:/qp_lab/qpcpp/doxygen/history.dox:2098: warning: explicit link request to 'QF_TICK' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2098: warning: explicit link request to 'QF_PUBLISH' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2098: warning: explicit link request to 'QACTIVE_POST' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2107: warning: explicit link request to 'QS_U32_HEX_T' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2198: warning: Unsupported xml/html tag <qpcpp> found
+C:/qp_lab/qpcpp/doxygen/history.dox:2205: warning: Unsupported xml/html tag <qpcpp> found
+C:/qp_lab/qpcpp/doxygen/history.dox:2481: warning: explicit link request to 'Q_SUPER()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2483: warning: explicit link request to 'Q_IGNORED()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2498: warning: explicit link request to 'QF_FSM_ACTIVE' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2499: warning: explicit link request to 'QF_ACTIVE_SUPER_' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2499: warning: explicit link request to 'QF_ACTIVE_STATE_' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2507: warning: explicit link request to 'QACTIVE_EQUEUE_ONEMPTY_()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/modules.dox:52: warning: unexpected token TK_EOF as the argument of ref
+C:/qp_lab/qpcpp/doxygen/modules.dox:83: warning: image file name qk_synch.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_synch.gif
+   C:/qp_lab/doxygen/images/qk_synch.gif
+
+C:/qp_lab/qpcpp/doxygen/modules.dox:89: warning: unexpected token TK_EOF as the argument of ref
+C:/qp_lab/qpcpp/doxygen/modules.dox:95: warning: image file name qk_asynch.gif is ambiguous.
+Possible candidates:
+   C:/qp_lab/qpcpp/doxygen/images/qk_asynch.gif
+   C:/qp_lab/doxygen/images/qk_asynch.gif
+
+C:/qp_lab/qpcpp/include/qf.hpp:194: warning: The following parameter of QP::QActive::start(std::uint_fast8_t const prio, QEvt const **const qSto, std::uint_fast16_t const qLen, void *const stkSto, std::uint_fast16_t const stkSize, void const *const par) is not documented:
+  parameter 'par'
+C:/qp_lab/qpcpp/include/qf.hpp:219: warning: The following parameter of QP::QActive::post_(QEvt const *const e, std::uint_fast16_t const margin, void const *const sender) is not documented:
+  parameter 'sender'
+C:/qp_lab/qpcpp/src/qf/qf_ps.cpp:194: warning: included file qf_subscribe.c is not found. Check your EXAMPLE_PATH
+C:/qp_lab/qpcpp/include/qs.hpp:573: warning: The following parameter of QP::QActiveDummy::start(std::uint_fast8_t const prio, QEvt const **const qSto, std::uint_fast16_t const qLen, void *const stkSto, std::uint_fast16_t const stkSize, void const *const par) is not documented:
+  parameter 'par'
+C:/qp_lab/qpcpp/include/qs.hpp:589: warning: The following parameter of QP::QActiveDummy::post_(QEvt const *const e, std::uint_fast16_t const margin, void const *const sender) is not documented:
+  parameter 'sender'
+C:/qp_lab/qpcpp/include/qf.hpp:530: warning: The following parameter of QP::QF::tickX_(std::uint_fast8_t const tickRate, void const *const sender) is not documented:
+  parameter 'sender'
+C:/qp_lab/qpcpp/src/qf/qep_hsm.cpp:536: warning: argument 'state' of command @param is not found in the argument list of QHsm::isIn(QStateHandler const s)
+C:/qp_lab/qpcpp/include/qep.hpp:289: warning: The following parameter of QP::QHsm::isIn(QStateHandler const s) is not documented:
+  parameter 's'
+C:/qp_lab/qpcpp/include/qep.hpp:302: warning: The following parameter of QP::QHsm::top(void *const me, QEvt const *const e) is not documented:
+  parameter 'me'
+C:/qp_lab/qpcpp/src/qs/qs_rx.cpp:1278: warning: argument 'api_id' of command @param is not found in the argument list of QS::getTestProbe_(void(*api)(void))
+C:/qp_lab/qpcpp/include/qs.hpp:439: warning: The following parameter of QP::QS::getTestProbe_(void(*api)(void)) is not documented:
+  parameter 'api'
+C:/qp_lab/qpcpp/include/qf.hpp:638: warning: The following parameter of QP::QTicker::post_(QEvt const *const e, std::uint_fast16_t const margin, void const *const sender) is not documented:
+  parameter 'sender'
+C:/qp_lab/qpcpp/include/qxthread.hpp:112: warning: The following parameter of QP::QXThread::post_(QEvt const *const e, std::uint_fast16_t const margin, void const *const sender) is not documented:
+  parameter 'sender'
+C:/qp_lab/qpcpp/doxygen/main.dox:34: warning: unable to resolve reference to 'macos' for \ref command
+C:/qp_lab/qpcpp/doxygen/main.dox:34: warning: unable to resolve reference to 'macos' for \ref command

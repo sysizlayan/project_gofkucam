@@ -1,0 +1,20 @@
+<map id="qf_pkg.hpp" name="qf_pkg.hpp">
+<area shape="rect" id="node1" title="Internal (package scope) QF/C++ interface." alt="" coords="673,5,759,32"/>
+<area shape="rect" id="node2" href="$qf__act_8cpp.html" title="QP::QActive services and QF support code." alt="" coords="5,80,88,107"/>
+<area shape="rect" id="node3" href="$qf__actq_8cpp.html" title="QP::QActive native queue operations (based on QP::QEQueue)" alt="" coords="113,80,202,107"/>
+<area shape="rect" id="node4" href="$qf__defer_8cpp.html" title="QP::QActive::defer() and QP::QActive::recall() definitions." alt="" coords="226,80,318,107"/>
+<area shape="rect" id="node5" href="$qf__dyn_8cpp.html" title="QF/C++ dynamic event management." alt="" coords="343,80,428,107"/>
+<area shape="rect" id="node6" href="$qf__mem_8cpp.html" title="QF/C++ memory management services." alt="" coords="452,80,545,107"/>
+<area shape="rect" id="node7" href="$qf__ps_8cpp.html" title="QF/C++ Publish&#45;Subscribe services definitions." alt="" coords="570,80,649,107"/>
+<area shape="rect" id="node8" href="$qf__qeq_8cpp.html" title="QP::QEQueue implementation." alt="" coords="673,80,759,107"/>
+<area shape="rect" id="node9" href="$qf__time_8cpp.html" title="QF/C++ time events and time management services." alt="" coords="783,80,873,107"/>
+<area shape="rect" id="node10" href="$qk_8cpp.html" title="QK/C++ preemptive kernel core functions." alt="" coords="897,80,959,107"/>
+<area shape="rect" id="node11" href="$qs__rx_8cpp.html" title="QS receive channel services." alt="" coords="983,80,1062,107"/>
+<area shape="rect" id="node12" href="$qutest_8cpp.html" title="QF/C++ stub for QUTEST unit testing." alt="" coords="1087,80,1169,107"/>
+<area shape="rect" id="node13" href="$qv_8cpp.html" title="Cooperative QV kernel, definition of QP::QV_readySet_ and implementation of kernel&#45;specific functions..." alt="" coords="1193,80,1252,107"/>
+<area shape="rect" id="node14" href="$qxk__pkg_8hpp.html" title="Internal (package scope) QXK/C++ interface." alt="" coords="1276,80,1372,107"/>
+<area shape="rect" id="node15" href="$qxk_8cpp.html" title="QXK/C++ preemptive kernel core functions public interface." alt="" coords="1110,155,1178,181"/>
+<area shape="rect" id="node16" href="$qxk__mutex_8cpp.html" title="Priority&#45;ceiling blocking mutex QP::QXMutex class definition." alt="" coords="1202,155,1313,181"/>
+<area shape="rect" id="node17" href="$qxk__sema_8cpp.html" title="QXK/C++ preemptive kernel counting semaphore implementation." alt="" coords="1337,155,1444,181"/>
+<area shape="rect" id="node18" href="$qxk__xthr_8cpp.html" title="QXK/C++ preemptive kernel extended (blocking) thread implementation." alt="" coords="1469,155,1566,181"/>
+</map>

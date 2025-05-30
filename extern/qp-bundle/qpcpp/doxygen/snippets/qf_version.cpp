@@ -1,0 +1,1 @@
+cout << "QP version: " << QP::getVersion() << endl;

@@ -1,0 +1,11 @@
+<map id="QActiveDummy" name="QActiveDummy">
+<area shape="rect" id="node1" title="Dummy Active Object class." alt="" coords="5,573,137,753"/>
+<area shape="rect" id="node2" href="$class_q_p_1_1_q_active.html" title="QActive active object (based on QP::QHsm implementation)" alt="" coords="59,161,185,459"/>
+<area shape="rect" id="node8" href="$class_q_p_1_1_q_x_thread.html" title="Extended (blocking) thread of the QXK preemptive kernel." alt="" coords="213,521,327,804"/>
+<area shape="rect" id="node3" href="$class_q_p_1_1_q_hsm.html" title="Hierarchical State Machine base class." alt="" coords="115,1021,278,1612"/>
+<area shape="rect" id="node4" href="$namespace_q_p.html#union_q_p_1_1_q_hsm_attr" title="Attribute of for the QHsm class (Hierarchical State Machine)." alt="" coords="335,867,415,944"/>
+<area shape="rect" id="node5" href="$struct_q_p_1_1_q_evt.html" title="QEvt base class." alt="" coords="433,5,507,112"/>
+<area shape="rect" id="node9" href="$class_q_p_1_1_q_time_evt.html" title="Time Event class." alt="" coords="210,183,330,437"/>
+<area shape="rect" id="node6" href="$namespace_q_p.html#struct_q_p_1_1_q_m_tran_act_table" title="Transition&#45;Action Table for the QP::QMsm State Machine." alt="" coords="429,624,548,701"/>
+<area shape="rect" id="node7" href="$namespace_q_p.html#struct_q_p_1_1_q_m_state" title="State object for the QP::QMsm class (QM State Machine)." alt="" coords="430,249,537,371"/>
+</map>

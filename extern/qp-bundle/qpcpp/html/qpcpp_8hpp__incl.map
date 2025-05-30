@@ -1,0 +1,7 @@
+<map id="qpcpp.hpp" name="qpcpp.hpp">
+<area shape="rect" id="node1" title="QP/C++ public interface including backwards&#45;compatibility layer." alt="" coords="41,5,123,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,155,92,181"/>
+<area shape="rect" id="node3" href="$qassert_8h.html" title="Customizable and memory&#45;efficient assertions for embedded systems." alt="" coords="44,80,120,107"/>
+<area shape="rect" id="node4" href="$qs__port_8hpp.html" title="QS/C++ port to a 32&#45;bit CPU, generic compiler." alt="" coords="145,80,235,107"/>
+<area shape="rect" id="node5" href="$qs_8hpp.html" title="QS/C++ platform&#45;independent public interface." alt="" coords="159,155,221,181"/>
+</map>

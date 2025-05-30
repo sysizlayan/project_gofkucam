@@ -1,0 +1,187 @@
+
+--- Module:   C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp (C++)
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  39  note 970: use of modifier or type 'int' outside of a typedef 
+    [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  40  note 970: use of modifier or type 'double' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  41  note 970: use of modifier or type 'double' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  42  note 970: use of modifier or type 'char' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  46  note 970: use of modifier or type 'char' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  40  note 970: use of modifier or type 'double' outside of 
+    a typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  41  note 970: use of modifier or type 'double' outside of 
+    a typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  52  note 970: use of modifier or type 'double' outside of 
+    a typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  138  note 970: use of modifier or type 'double' outside of 
+    a typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  139  note 970: use of modifier or type 'double' outside of 
+    a typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  424  note 970: use of modifier or type 'int' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  425  note 970: use of modifier or type 'int' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  697  note 970: use of modifier or type 'int' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  698  note 970: use of modifier or type 'int' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1087  note 970: use of modifier or type 'int' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1088  note 970: use of modifier or type 'int' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1135  note 970: use of modifier or type 'int' outside of a 
+    typedef [MISRA C++ Rule 3-9-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  37  note 9141: global declaration of symbol 'BSP_clear' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  38  note 9141: global declaration of symbol 'BSP_negate' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  39  note 9141: global declaration of symbol 'BSP_insert' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  40  note 9141: global declaration of symbol 'BSP_get_value' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  41  note 9141: global declaration of symbol 'BSP_display' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  42  note 9141: global declaration of symbol 'BSP_display_error' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  43  note 9141: global declaration of symbol 'BSP_exit' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  45  note 9141: global declaration of symbol 'BSP_show_display' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  46  note 9141: global declaration of symbol 'BSP_message' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  24  note 9141: global declaration of symbol 'CalcSignals' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  37  note 9141: global declaration of symbol 'CalcEvt' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  39  note 9150: non-private data member 'CalcEvt::key_code' 
+    within a non-POD structure [MISRA C++ Rule 11-0-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  44  note 9141: global declaration of symbol 'the_calc' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  35  note 9141: global declaration of symbol 'Calc' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  37  info 1756: variable 'Calc::inst' has 'static' storage 
+    duration and non-POD type 'Calc'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  58  note 9150: non-private data member 'Calc::sub_operand' 
+    within a non-POD structure [MISRA C++ Rule 11-0-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  122  note 9141: global declaration of symbol 'the_calc' 
+    [MISRA C++ Rule 7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  126  info 1756: variable 'Calc::inst' has 'static' storage 
+    duration and non-POD type 'Calc'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 'Calc::m_op1' 
+    not initialized by constructor 'Calc::Calc(void)'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  40  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 'Calc::m_op2' 
+    not initialized by constructor 'Calc::Calc(void)'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  41  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 'Calc::m_oper1' 
+    not initialized by constructor 'Calc::Calc(void)'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  42  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 'Calc::m_oper2' 
+    not initialized by constructor 'Calc::Calc(void)'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  43  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 
+    'Calc::sub_operand' not initialized by constructor 'Calc::Calc(void)'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  58  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  149  note 904: return statement before end of function 
+    'Calc::eval' [MISRA C++ Rule 6-6-5]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  176  note 904: return statement before end of function 
+    'Calc::eval' [MISRA C++ Rule 6-6-5]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  199  note 904: return statement before end of function 
+    'Calc::eval' [MISRA C++ Rule 6-6-5]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  215  note 904: return statement before end of function 
+    'Calc::eval' [MISRA C++ Rule 6-6-5]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9128: plain character data mixed with 
+    non-plain-character data [MISRA C++ Rule 5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9128: plain character data mixed with 
+    non-plain-character data [MISRA C++ Rule 5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9128: plain character data mixed with 
+    non-plain-character data [MISRA C++ Rule 5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  187  note 9117: implicit conversion from 'signed char' to 
+    'uint8_t' (aka 'unsigned char') changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  187  note 9128: plain character data mixed with 
+    non-plain-character data [MISRA C++ Rule 5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  353  note 9117: implicit conversion from 'signed char' to 
+    'uint8_t' (aka 'unsigned char') changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  353  note 9128: plain character data mixed with 
+    non-plain-character data [MISRA C++ Rule 5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  404  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  424  note 1924: use of c-style cast [MISRA C++ Rule 5-2-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  425  note 1924: use of c-style cast [MISRA C++ Rule 5-2-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  489  info 764: switch with no cases [MISRA C++ Rule 6-4-8]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  522  note 9128: plain character data mixed with 
+    non-plain-character data [MISRA C++ Rule 5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  522  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  677  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  697  note 1924: use of c-style cast [MISRA C++ Rule 5-2-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  698  note 1924: use of c-style cast [MISRA C++ Rule 5-2-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  718  note 9128: plain character data mixed with 
+    non-plain-character data [MISRA C++ Rule 5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  718  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  822  note 9117: implicit conversion from 'signed char' to 
+    'uint8_t' (aka 'unsigned char') changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  27  supplemental 893: expanded from macro 'KEY_NULL'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  882  info 764: switch with no cases [MISRA C++ Rule 6-4-8]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  907  info 764: switch with no cases [MISRA C++ Rule 6-4-8]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1069  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1087  note 1924: use of c-style cast 
+    [MISRA C++ Rule 5-2-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1088  note 1924: use of c-style cast 
+    [MISRA C++ Rule 5-2-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1135  note 1924: use of c-style cast 
+    [MISRA C++ Rule 5-2-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1154  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1196  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1232  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1250  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1268  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1287  note 9128: plain character data mixed with 
+    non-plain-character data [MISRA C++ Rule 5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1287  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [MISRA C++ Rule 5-0-4]
+--- Module Wrap-up
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  138  note 952: parameter 'op' of function 
+    'Calc::eval(double, uint8_t)' could be const [MISRA C++ Rule 7-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  138  note 952: parameter 'oper' of function 
+    'Calc::eval(double, uint8_t)' could be const [MISRA C++ Rule 7-1-1]
+Count   Type    Number  Text
+
+3       info    764     switch with no cases
+5       supplemental    891     declared here
+9       supplemental    893     expanded from macro
+4       note    904     return statement before end of function __symbol__
+2       note    952     parameter __symbol__ of function __symbol__ could be const
+17      note    970     use of modifier or type '__name__' outside of a typedef
+5       warning 1401    non-static data member __symbol__ not initialized by constructor __symbol__
+2       info    1756    variable __symbol__ has '__static/thread__' storage duration and non-POD type __type__
+7       note    1924    use of c-style cast
+17      note    9117    implicit conversion from __underlying-type__ to __underlying-type__ changes signedness of underlying type
+8       note    9128    plain character data mixed with non-plain-character data
+14      note    9141    global declaration of symbol __symbol__
+2       note    9150    non-private data member __symbol__ within a non-POD structure

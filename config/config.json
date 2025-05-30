@@ -1,0 +1,11 @@
+{
+    "config":
+    {
+        "name": "project_gofkucam",
+        "version": "1.0.0",
+        "logging": "INFO",
+        "is_camera": false,
+        "video_file": "/home/sysizlayan/git/project_gofkucam/resources/day_feeding.mp4",
+        "camera_address" : ""
+    }
+}

@@ -1,0 +1,20 @@
+C:/qp_lab/doxygen/exa_low-power.dox:167: warning: explicit link request to 'QXThread' could not be resolved
+C:/qp_lab/doxygen/exa_low-power.dox:167: warning: explicit link request to 'QXThread' could not be resolved
+C:/qp_lab/doxygen/exa_low-power.dox:167: warning: explicit link request to 'QXThread' could not be resolved
+C:/qp_lab/doxygen/exa_low-power.dox:167: warning: explicit link request to 'QXThread' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:1397: warning: explicit link request to 'post()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2062: warning: explicit link request to 'if' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2233: warning: Unsupported xml/html tag <new> found
+C:/qp_lab/qpcpp/doxygen/history.dox:2263: warning: explicit link request to 'QF_TICK' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2263: warning: explicit link request to 'QF_PUBLISH' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2263: warning: explicit link request to 'QACTIVE_POST' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2272: warning: explicit link request to 'QS_U32_HEX_T' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2363: warning: Unsupported xml/html tag <qpcpp> found
+C:/qp_lab/qpcpp/doxygen/history.dox:2370: warning: Unsupported xml/html tag <qpcpp> found
+C:/qp_lab/qpcpp/doxygen/history.dox:2648: warning: explicit link request to 'Q_IGNORED()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2663: warning: explicit link request to 'QF_FSM_ACTIVE' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2664: warning: explicit link request to 'QF_ACTIVE_SUPER_' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2664: warning: explicit link request to 'QF_ACTIVE_STATE_' could not be resolved
+C:/qp_lab/qpcpp/doxygen/history.dox:2672: warning: explicit link request to 'QACTIVE_EQUEUE_ONEMPTY_()' could not be resolved
+C:/qp_lab/qpcpp/doxygen/modules.dox:52: warning: unexpected token TK_EOF as the argument of ref
+C:/qp_lab/qpcpp/doxygen/modules.dox:89: warning: unexpected token TK_EOF as the argument of ref

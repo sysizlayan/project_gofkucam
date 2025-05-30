@@ -1,0 +1,333 @@
+
+--- Module:   C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp (C++)
+<built-in>  1  warning 586: preprocessor directive '' is deprecated. [AUTOSAR Rule A16-0-1]
+<built-in>  7  warning 586: preprocessor directive '' is deprecated. [AUTOSAR Rule A16-0-1]
+<command line>  1  warning 586: preprocessor directive '' is deprecated. [AUTOSAR Rule A16-0-1]
+C:\qp_lab\qpcpp\include\qep.hpp  151  info 886: preprocessor directive 'error' encountered in conditionally excluded 
+    region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\include\qequeue.hpp  78  info 886: preprocessor directive 'error' encountered in conditionally excluded 
+    region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\include\qmpool.hpp  67  info 886: preprocessor directive 'error' encountered in conditionally excluded 
+    region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\include\qmpool.hpp  82  info 886: preprocessor directive 'error' encountered in conditionally excluded 
+    region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\include\qpset.hpp  50  info 886: preprocessor directive 'error' encountered in conditionally excluded 
+    region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\include\qf.hpp  69  info 886: preprocessor directive 'error' encountered in conditionally excluded 
+    region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\include\qf.hpp  94  info 886: preprocessor directive 'error' encountered in conditionally excluded 
+    region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\include\qf.hpp  113  info 886: preprocessor directive 'error' encountered in conditionally excluded 
+    region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\include\qs_dummy.hpp  44  info 886: preprocessor directive 'error' encountered in conditionally excluded 
+    region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  39  error 1038: type 'uint8_t' not found, 'std::uint8_t' 
+    assumed
+C:\qp_lab\qpcpp\ports\lint-plus\32bit\cstdint  19  supplemental 891: 'std::uint8_t' declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  42  error 1038: type 'uint8_t' not found, 'std::uint8_t' 
+    assumed
+C:\qp_lab\qpcpp\ports\lint-plus\32bit\cstdint  19  supplemental 891: 'std::uint8_t' declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  43  error 1038: type 'uint8_t' not found, 'std::uint8_t' 
+    assumed
+C:\qp_lab\qpcpp\ports\lint-plus\32bit\cstdint  19  supplemental 891: 'std::uint8_t' declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  52  error 1038: type 'uint8_t' not found, 'std::uint8_t' 
+    assumed
+C:\qp_lab\qpcpp\ports\lint-plus\32bit\cstdint  19  supplemental 891: 'std::uint8_t' declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  117  info 886: preprocessor directive 'error' encountered 
+    in conditionally excluded region is deprecated. [AUTOSAR Rule A16-0-1], [AUTOSAR Rule A16-6-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  138  error 1038: type 'uint8_t' not found, 'std::uint8_t' 
+    assumed
+C:\qp_lab\qpcpp\ports\lint-plus\32bit\cstdint  19  supplemental 891: 'std::uint8_t' declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  154  note 1904: old-style c comment [AUTOSAR Rule A2-8-4]
+C:\qp_lab\qpcpp\include\qep.hpp  368  note 9419: enum 'QP::QHsm::ReservedHsmSignals' is not a scoped enumeration 
+    [AUTOSAR Rule A7-2-3]
+C:\qp_lab\qpcpp\include\qep.hpp  460  note 9436: symbol 'path' has array type 'QP::QStateHandler (&)[6]' 
+    [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\include\qep.hpp  462  note 9435: type 'class QMsm' declared as friend in class 'QP::QHsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  463  note 9435: type 'class QActive' declared as friend in class 'QP::QHsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  464  note 9435: type 'class QMActive' declared as friend in class 'QP::QHsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  465  note 9435: type 'class QF' declared as friend in class 'QP::QHsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  466  note 9435: type 'class QS' declared as friend in class 'QP::QHsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  467  note 9435: type 'class QXK' declared as friend in class 'QP::QHsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  468  note 9435: type 'class QXThread' declared as friend in class 'QP::QHsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  469  note 9435: type 'class QXMutex' declared as friend in class 'QP::QHsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  470  note 9435: type 'class QXSemaphore' declared as friend in class 'QP::QHsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  552  note 9435: type 'class QMActive' declared as friend in class 'QP::QMsm' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qep.hpp  576  note 9436: symbol 'QP::QMTranActTable::act' has array type 
+    'const QP::QActionHandler [1]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\include\qequeue.hpp  263  note 9435: type 'class QF' declared as friend in class 'QP::QEQueue' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qequeue.hpp  264  note 9435: type 'class QActive' declared as friend in class 'QP::QEQueue' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qequeue.hpp  265  note 9435: type 'class QXThread' declared as friend in class 'QP::QEQueue' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qequeue.hpp  266  note 9435: type 'class QTicker' declared as friend in class 'QP::QEQueue' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qmpool.hpp  166  note 9435: type 'class QF' declared as friend in class 'QP::QMPool' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qf.hpp  287  note 9435: type 'class QF' declared as friend in class 'QP::QActive' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qf.hpp  288  note 9435: type 'class QTimeEvt' declared as friend in class 'QP::QActive' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qf.hpp  289  note 9435: type 'class QTicker' declared as friend in class 'QP::QActive' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qf.hpp  291  note 9435: type 'class QMutex' declared as friend in class 'QP::QActive' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qf.hpp  461  note 9435: type 'class QF' declared as friend in class 'QP::QTimeEvt' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qf.hpp  462  note 9435: type 'class QS' declared as friend in class 'QP::QTimeEvt' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qf.hpp  567  note 9436: symbol 'QP::QF::active_' has array type 'QP::QActive *[33]' 
+    [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\include\qf.hpp  602  note 9436: symbol 'QP::QF::timeEvtHead_' has array type 'QP::QTimeEvt [1]' 
+    [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\include\qf.hpp  602  info 1756: variable 'QP::QF::timeEvtHead_' has 'static' storage duration and 
+    non-POD type 'QP::QTimeEvt [1]' [AUTOSAR Rule A3-3-2]
+C:\qp_lab\qpcpp\include\qf.hpp  604  note 9435: type 'class QActive' declared as friend in class 'QP::QF' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qf.hpp  605  note 9435: type 'class QTimeEvt' declared as friend in class 'QP::QF' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\include\qf.hpp  606  note 9435: type 'class QS' declared as friend in class 'QP::QF' 
+    [AUTOSAR Rule A11-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  37  note 9141: global declaration of symbol 'BSP_clear' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  38  note 9141: global declaration of symbol 'BSP_negate' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  39  note 9141: global declaration of symbol 'BSP_insert' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  39  warning 586: type 'int' is deprecated.  
+    [AUTOSAR Rule A3-9-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  40  note 9141: global declaration of symbol 'BSP_get_value' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  41  note 9141: global declaration of symbol 'BSP_display' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  42  note 9141: global declaration of symbol 'BSP_display_error' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  43  note 9141: global declaration of symbol 'BSP_exit' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  45  note 9141: global declaration of symbol 'BSP_show_display' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\bsp.hpp  46  note 9141: global declaration of symbol 'BSP_message' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  24  note 9141: global declaration of symbol 'CalcSignals' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  24  note 9419: enum 'CalcSignals' is not a scoped 
+    enumeration [AUTOSAR Rule A7-2-3]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  24  note 9418: enum 'CalcSignals' does not have an 
+    explicitly specified underlying type [AUTOSAR Rule A7-2-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  37  note 9141: global declaration of symbol 'CalcEvt' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  39  note 9150: non-private data member 'CalcEvt::key_code' 
+    within a non-POD structure [AUTOSAR Rule M11-0-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.hpp  44  note 9141: global declaration of symbol 'the_calc' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  25  note 9436: symbol 'Q_this_module_' has array type 
+    'const char_t [17]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\include\qassert.h  105  supplemental 893: expanded from macro 'Q_DEFINE_THIS_FILE'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  35  note 9141: global declaration of symbol 'Calc' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  37  info 1756: variable 'Calc::inst' has 'static' storage 
+    duration and non-POD type 'Calc' [AUTOSAR Rule A3-3-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  58  note 9150: non-private data member 'Calc::sub_operand' 
+    within a non-POD structure [AUTOSAR Rule M11-0-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  122  note 9141: global declaration of symbol 'the_calc' 
+    [AUTOSAR Rule M7-3-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  126  info 1756: variable 'Calc::inst' has 'static' storage 
+    duration and non-POD type 'Calc' [AUTOSAR Rule A3-3-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 'Calc::m_op1' 
+    not initialized by constructor 'Calc::Calc(void)' [AUTOSAR Rule A12-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  40  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 'Calc::m_op2' 
+    not initialized by constructor 'Calc::Calc(void)' [AUTOSAR Rule A12-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  41  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 'Calc::m_oper1' 
+    not initialized by constructor 'Calc::Calc(void)' [AUTOSAR Rule A12-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  42  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 'Calc::m_oper2' 
+    not initialized by constructor 'Calc::Calc(void)' [AUTOSAR Rule A12-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  43  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  128  warning 1401: non-static data member 
+    'Calc::sub_operand' not initialized by constructor 'Calc::Calc(void)' [AUTOSAR Rule A12-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  58  supplemental 891: declared here
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9128: plain character data mixed with 
+    non-plain-character data [AUTOSAR Rule M5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9128: plain character data mixed with 
+    non-plain-character data [AUTOSAR Rule M5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9128: plain character data mixed with 
+    non-plain-character data [AUTOSAR Rule M5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  140  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  187  note 9117: implicit conversion from 'signed char' to 
+    'std::uint8_t' (aka 'unsigned char') changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  187  note 9128: plain character data mixed with 
+    non-plain-character data [AUTOSAR Rule M5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  248  note 9436: symbol 'Calc::initial_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  284  note 9436: symbol 'Calc::on_i_h()::(anonymous 
+    struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  305  note 9436: symbol 'Calc::on_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [4]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  323  note 9436: symbol 'Calc::on_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  353  note 9117: implicit conversion from 'signed char' to 
+    'std::uint8_t' (aka 'unsigned char') changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  353  note 9128: plain character data mixed with 
+    non-plain-character data [AUTOSAR Rule M5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  368  note 9436: symbol 'Calc::ready_i_h()::(anonymous 
+    struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  388  note 9436: symbol 'Calc::ready_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [4]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  404  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  408  note 9436: symbol 'Calc::ready_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [4]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  424  note 1924: use of c-style cast [AUTOSAR Rule A5-2-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  425  note 1924: use of c-style cast [AUTOSAR Rule A5-2-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  429  note 9436: symbol 'Calc::ready_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [4]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  449  note 9436: symbol 'Calc::ready_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  489  info 764: switch with no cases
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  489  note 9181: switch contains fewer than two non-default 
+    switch cases [AUTOSAR Rule A6-4-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  518  note 9181: switch contains fewer than two non-default 
+    switch cases [AUTOSAR Rule A6-4-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  522  note 9128: plain character data mixed with 
+    non-plain-character data [AUTOSAR Rule M5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  522  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  526  note 9436: symbol 'Calc::begin_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [5]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  575  note 9436: symbol 'Calc::operand1_CE_h()::(anonymous 
+    struct)::act' has array type 'QP::QActionHandler [4]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  598  note 9436: symbol 'Calc::operand1_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  614  note 9436: symbol 'Calc::operand1_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  661  note 9436: symbol 'Calc::opEntered_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [4]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  677  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  681  note 9436: symbol 'Calc::opEntered_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [4]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  697  note 1924: use of c-style cast [AUTOSAR Rule A5-2-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  698  note 1924: use of c-style cast [AUTOSAR Rule A5-2-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  702  note 9436: symbol 'Calc::opEntered_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [4]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  718  note 9128: plain character data mixed with 
+    non-plain-character data [AUTOSAR Rule M5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  718  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  722  note 9436: symbol 'Calc::opEntered_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [4]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  770  note 9436: symbol 'Calc::operand2_CE_h()::(anonymous 
+    struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  792  note 9436: symbol 'Calc::operand2_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  807  note 9436: symbol 'Calc::operand2_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  822  note 9117: implicit conversion from 'signed char' to 
+    'std::uint8_t' (aka 'unsigned char') changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  27  supplemental 893: expanded from macro 'KEY_NULL'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  826  note 9436: symbol 'Calc::operand2_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  842  note 9436: symbol 'Calc::operand2_h(const QP::QEvt 
+    *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  882  info 764: switch with no cases
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  882  note 9181: switch contains fewer than two non-default 
+    switch cases [AUTOSAR Rule A6-4-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  907  info 764: switch with no cases
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  907  note 9181: switch contains fewer than two non-default 
+    switch cases [AUTOSAR Rule A6-4-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  941  note 9436: symbol 'Calc::operand_i_h()::(anonymous 
+    struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  954  note 9181: switch contains fewer than two non-default 
+    switch cases [AUTOSAR Rule A6-4-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  981  note 9436: symbol 
+    'Calc::operand_zero_ep_h()::(anonymous struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  997  note 9436: symbol 
+    'Calc::operand_intgr_ep_h()::(anonymous struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1013  note 9436: symbol 
+    'Calc::operand_frac_ep_h()::(anonymous struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1029  note 9436: symbol 
+    'Calc::operand_neg_ep_h()::(anonymous struct)::act' has array type 'QP::QActionHandler [2]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1069  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1073  note 9436: symbol 'Calc::operand_zero_h(const 
+    QP::QEvt *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1087  note 1924: use of c-style cast [AUTOSAR Rule A5-2-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1088  note 1924: use of c-style cast [AUTOSAR Rule A5-2-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1092  note 9436: symbol 'Calc::operand_zero_h(const 
+    QP::QEvt *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1135  note 1924: use of c-style cast [AUTOSAR Rule A5-2-2]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1139  note 9436: symbol 'Calc::operand_intgr_h(const 
+    QP::QEvt *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1154  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1196  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1232  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1236  note 9436: symbol 'Calc::operand_neg_h(const 
+    QP::QEvt *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1250  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1254  note 9436: symbol 'Calc::operand_neg_h(const 
+    QP::QEvt *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1268  note 9117: implicit conversion from 'unsigned char' 
+    to 'int' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+C:\qp_lab\qpcpp\include\qep.hpp  109  supplemental 893: expanded from macro 'Q_EVT_CAST'
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1272  note 9436: symbol 'Calc::operand_neg_h(const 
+    QP::QEvt *const)::(anonymous struct)::act' has array type 'QP::QActionHandler [3]' [AUTOSAR Rule A18-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1287  note 9128: plain character data mixed with 
+    non-plain-character data [AUTOSAR Rule M5-0-11]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  1287  note 9117: implicit conversion from 'unsigned char' 
+    to 'char' changes signedness of underlying type [AUTOSAR Rule M5-0-4]
+--- Module Wrap-up
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  138  note 952: parameter 'op' of function 
+    'Calc::eval(double, std::uint8_t)' could be const [AUTOSAR Rule M7-1-1]
+C:\qp_lab\qpcpp\examples\workstation\calc1_sub\calc1_sub.cpp  138  note 952: parameter 'oper' of function 
+    'Calc::eval(double, std::uint8_t)' could be const [AUTOSAR Rule M7-1-1]
+Count   Type    Number  Text
+
+4       warning 586     __string__ '__name__' is deprecated. __string__
+3       info    764     switch with no cases
+10      info    886     preprocessor directive '__name__' encountered in conditionally excluded region is deprecated. __string__
+10      supplemental    891     __parameter__ declared here
+10      supplemental    893     expanded from macro
+2       note    952     parameter __symbol__ of function __symbol__ could be const
+5       error   1038    type __type__ not found, __type__ assumed
+5       warning 1401    non-static data member __symbol__ not initialized by constructor __symbol__
+3       info    1756    variable __symbol__ has '__static/thread__' storage duration and non-POD type __type__
+1       note    1904    old-style c comment
+7       note    1924    use of c-style cast
+17      note    9117    implicit conversion from __underlying-type__ to __underlying-type__ changes signedness of underlying type
+8       note    9128    plain character data mixed with non-plain-character data
+14      note    9141    global declaration of symbol __symbol__
+2       note    9150    non-private data member __symbol__ within a non-POD structure
+5       note    9181    switch contains fewer than two non-default switch cases
+1       note    9418    enum __symbol__ does not have an explicitly specified underlying type
+2       note    9419    enum __symbol__ is not a scoped enumeration
+24      note    9435    __string__ __symbol__ declared as friend in class __symbol__
+38      note    9436    symbol __symbol__ has array type __type__

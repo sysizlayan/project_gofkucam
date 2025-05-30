@@ -1,0 +1,7 @@
+<map id="qxk_pkg.hpp" name="qxk_pkg.hpp">
+<area shape="rect" id="node1" title="Internal (package scope) QXK/C++ interface." alt="" coords="171,5,267,32"/>
+<area shape="rect" id="node2" href="$qxk_8cpp.html" title="QXK/C++ preemptive kernel core functions public interface." alt="" coords="5,80,73,107"/>
+<area shape="rect" id="node3" href="$qxk__mutex_8cpp.html" title="Priority&#45;ceiling blocking mutex QP::QXMutex class definition." alt="" coords="97,80,208,107"/>
+<area shape="rect" id="node4" href="$qxk__sema_8cpp.html" title="QXK/C++ preemptive kernel counting semaphore implementation." alt="" coords="233,80,339,107"/>
+<area shape="rect" id="node5" href="$qxk__xthr_8cpp.html" title="QXK/C++ preemptive kernel extended (blocking) thread implementation." alt="" coords="364,80,461,107"/>
+</map>

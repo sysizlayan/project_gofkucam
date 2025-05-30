@@ -1,0 +1,101 @@
+#include "QPFrame.hpp"
+#include <iostream>
+
+#include "CapturingFramesFromVideoStream.hpp"
+#include "qpcpp.hpp"
+#include <memory>
+#include <sstream>
+#include <thread>
+#include <chrono>
+#include "Config.hpp"
+#include "Controller.hpp"
+
+constexpr size_t KB = 1024;
+constexpr size_t MB = 1024 * KB;
+
+namespace GofkuCam
+{
+QPFrame::QPFrame(LoggerInterfacePtr logger)
+   : m_logger(logger)
+{
+   //Initialize Q Framework
+   QP::QF::init();
+
+   // Init Pub-sub
+   QP::QF::psInit(m_subscrSto, Q_DIM(m_subscrSto));
+   QP::QF::poolInit(m_event_memory_pool, sizeof(m_event_memory_pool), sizeof(m_event_memory_pool[0]));
+
+   std::string source;
+   if(Config::config().get<bool>("is_camera"))
+   {
+      source = Config::config().get<std::string>("camera_address");
+   }
+   else
+   {
+      source = Config::config().get<std::string>("video_file");
+   }
+   std::stringstream ss;
+   ss<<"Using " << source << " as video source!";
+   m_logger->info(ss.str());
+
+   m_frame_grabbing_strategy = std::make_shared<CapturingFramesFromVideoStream>(source, m_logger);
+   m_logger->trace("QP Framework constructed.");
+}
+
+void QPFrame::start()
+{
+    aoThread_ = std::thread(&QPFrame::ao_thread_func, this);
+    aoThread_.detach();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+}
+
+void QPFrame::ao_thread_func()
+{
+    m_logger->info("QPFrame external thread started.");
+
+    m_theController = std::make_shared<Controller>(m_logger, m_frame_grabbing_strategy);
+    m_theController->start(
+        1, 
+        m_gofkucam_controller_queue,
+        Q_DIM(m_gofkucam_controller_queue),
+        nullptr,
+        256*MB);
+
+    // Ticker loop
+    // Does not return till SIGTERM!
+    int result = QP::QF::run();
+
+    std::stringstream ss;
+    ss<<"Terminating QP Framework thread, result:" << result;
+    m_logger->info(ss.str());
+}
+}
+
+/*--------------------------------------------------------------------------*/
+void QP::QF::onStartup()
+{
+    QF_setTickRate(1000, 50); // desired tick rate/prio -> 1000 ticks per second!
+}
+/*--------------------------------------------------------------------------*/
+
+void QP::QF::onCleanup()
+{
+}
+/*--------------------------------------------------------------------------*/
+
+void QP::QF_onClockTick()
+{
+   // process time events at rate 0
+   QP::QF::TICK_X(0U, 0);
+}
+
+/*--------------------------------------------------------------------------*/
+// this function is used by the QP embedded systems-friendly assertions
+extern "C" Q_NORETURN Q_onAssert(char const * const module, int_t const loc)
+{
+   std::cout<<"Assertion failed in "<< module<<" "<< loc<<std::endl;
+   QP::QF::stop();  // stop ticking
+   QS_ASSERTION(module, loc, 10000U); // report assertion to QS
+
+   exit(-1);
+}
