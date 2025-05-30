@@ -30,3 +30,18 @@
 *.exe
 *.out
 *.app
+
+# Videos
+*.mp4
+Tapo*
+
+*:Zone.Identifier
+
+.vscode/
+.cache/
+out/
+build/
+extern/libtorch/
+test___/
+
+CmakePresets.json
