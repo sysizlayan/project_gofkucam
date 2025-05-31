@@ -101,6 +101,7 @@ void CapturingFramesFromVideoStream::acquisition_loop()
       if ((m_latest_frame.load())->empty())
       {
          m_logger->error("Frame is received empty");
+        break;
       }
       //*m_latest_frame.load() = frame;
       notify_new_frame();
