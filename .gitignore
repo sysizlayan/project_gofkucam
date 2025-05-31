@@ -43,5 +43,6 @@ out/
 build/
 extern/libtorch/
 test___/
+extern/onnxruntime-*
 
 CmakePresets.json
