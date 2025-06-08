@@ -22,6 +22,7 @@
 #include "qpcpp.hpp"
 #include "LoggerInterface.hpp"
 #include "FrameGrabbingStrategy.hpp"
+#include "ObjectDetector.hpp"
 
 namespace GofkuCam
 {
@@ -32,12 +33,12 @@ class Controller : public QP::QActive {
 private:
     LoggerInterfacePtr m_logger;
     QP::QTimeEvt m_timer;
-
+    YOLO12DetectorPtr m_detector;
 public:
     FrameGrabbingStrategyPtr m_frame_strategy;
 
 public:
-    Controller(LoggerInterfacePtr logger, FrameGrabbingStrategyPtr frame_grabber);
+    Controller(LoggerInterfacePtr logger, FrameGrabbingStrategyPtr frame_grabber, YOLO12DetectorPtr detector);
 
 protected:
     Q_STATE_DECL(initial);

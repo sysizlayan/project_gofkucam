@@ -1,5 +1,7 @@
 # CMake config for compiled library code and executable ROS node.
 
+#CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(CMAKE_CXX_COMPILER "clang++")
 set(CMAKE_C_COMPILER "clang")
@@ -17,8 +19,10 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 # Set compile flags for different build types
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+set(ONNXRUNTIME_DIR "../extern/onnxruntime-linux-x64-gpu-1.20.1")
 
 # Update C++ standard
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_PREFIX_PATH ../extern/libtorch)
@@ -62,6 +66,7 @@ target_include_directories(gofkucam_lib
     ../extern/qp-bundle/qpcpp/src
     ../extern/qp-bundle/qpcpp/ports/posix
     ../extern/json/include
+    ../extern/onnxruntime-linux-x64-gpu-1.20.1/include
 )
 
 target_compile_options(gofkucam_lib
@@ -75,11 +80,17 @@ target_link_libraries(gofkucam_lib
     qp_cpp_posix_lib
     ${OpenCV_LIBS}
     "${TORCH_LIBRARIES}"
+    "/home/sysizlayan/git/project_gofkucam/extern/onnxruntime-linux-x64-gpu-1.20.1/lib/libonnxruntime.so"
 )
 
 # Target: The executable for the gofkucam
 add_executable(gofkucam
     ../main.cpp
+)
+
+target_compile_features(gofkucam
+    PRIVATE
+    cxx_std_23
 )
 
 # Add build-specific compile definitions
@@ -93,7 +104,7 @@ target_compile_definitions(gofkucam
 target_compile_options(gofkucam
     PRIVATE
     $<$<CONFIG:Debug>:-g -O0>
-    $<$<CONFIG:Release>:-O3>
+    $<$<CONFIG:Release>:-O3 -march=native>
 )
 
 target_include_directories(gofkucam

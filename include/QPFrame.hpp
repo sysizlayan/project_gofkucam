@@ -8,8 +8,9 @@
 #include "LoggerInterface.hpp"
 #include "qf.hpp"
 #include "Controller.hpp"
+#include "ObjectDetector.hpp"
 
-constexpr size_t NUM_STORED_EVENTS = 10;
+constexpr size_t NUM_STORED_EVENTS = 10000;
 
 namespace GofkuCam
 {
@@ -36,6 +37,7 @@ private:
     LoggerInterfacePtr  m_logger;
     std::shared_ptr<FrameGrabbingStrategy> m_frame_grabbing_strategy;
     std::shared_ptr<Controller>   m_theController;
+    YOLO12DetectorPtr m_detector;
 
     QP::QEvt const *m_gofkucam_controller_queue[NUM_STORED_EVENTS];
     QP::QSubscrList m_subscrSto[MAX_GOFKU_CAM_SIG];

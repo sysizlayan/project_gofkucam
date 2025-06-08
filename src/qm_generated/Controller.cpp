@@ -35,10 +35,11 @@ namespace GofkuCam
 //.$define${Components::Controller} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 //.${Components::Controller} .................................................
 //.${Components::Controller::Controller} .....................................
-Controller::Controller(LoggerInterfacePtr logger, FrameGrabbingStrategyPtr frame_grabber)
+Controller::Controller(LoggerInterfacePtr logger, FrameGrabbingStrategyPtr frame_grabber, YOLO12DetectorPtr detector)
   : QActive(&initial),
     m_logger(logger),
     m_timer(this, TIMER_TIMEDOUT_SIG, 0U),
+    m_detector(detector),
     m_frame_strategy(frame_grabber)
 {
     m_logger->trace("The Controller ctor!");
@@ -61,8 +62,14 @@ Q_STATE_DEF(Controller, operating) {
     switch (e->sig) {
         //.${Components::Controller::SM::operating::FRAME_CAPTURED}
         case FRAME_CAPTURED_SIG: {
+
+            m_frame_strategy->unsubscribeFromFrameUpdates(this);
             Frame frame;
             m_frame_strategy->grabFrame(frame);
+            // Detect objects in the frame
+            std::vector<Detection> results = m_detector->detect(frame);
+            m_frame_strategy->subscribeToFrameUpdates(this);
+
             std::stringstream ss;
             ss<<"Frame arrived: " << frame.size;
             m_logger->info(ss.str());
