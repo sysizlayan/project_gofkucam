@@ -4,7 +4,6 @@
 #include <memory>
 #include <opencv2/opencv.hpp>
 #include "Signals.hpp"
-#include "qf.hpp"
 
 namespace GofkuCam
 {

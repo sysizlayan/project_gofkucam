@@ -1,8 +1,7 @@
-#include "QPFrame.hpp"
+#include "qpcpp.hpp"
 #include <iostream>
 
 #include "CapturingFramesFromVideoStream.hpp"
-#include "qpcpp.hpp"
 #include <memory>
 #include <sstream>
 #include <thread>

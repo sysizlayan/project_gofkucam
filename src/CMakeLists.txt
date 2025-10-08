@@ -72,7 +72,7 @@ target_compile_options(gofkucam_lib
     
 target_link_libraries(gofkucam_lib
     PUBLIC
-    qp_cpp_posix_lib
+    qpcpp
     ${OpenCV_LIBS}
     "${TORCH_LIBRARIES}"
 )
