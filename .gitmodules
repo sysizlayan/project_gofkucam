@@ -1,6 +1,6 @@
 [submodule "extern/json"]
 	path = extern/json
-	url = https://github.com/nlohmann/json.git
+	url = https://github.com/nlohmann/json
 [submodule "extern/qpcpp"]
 	path = extern/qpcpp
 	url = https://github.com/QuantumLeaps/qpcpp
