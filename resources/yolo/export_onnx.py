@@ -4,4 +4,4 @@ from ultralytics import YOLO
 model = YOLO("yolo12x.pt")
 
 # Export the model to ONNX format
-model.export(format="onnx")
+model.export(format="onnx", opset=21)

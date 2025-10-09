@@ -29,7 +29,7 @@ set(CMAKE_PREFIX_PATH ../extern/libtorch)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 find_package(OpenCV REQUIRED)
-find_package(Torch REQUIRED)
+#find_package(Torch REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 message(STATUS "OpenCV library status:")
@@ -66,7 +66,7 @@ target_include_directories(gofkucam_lib
     ../extern/qp-bundle/qpcpp/src
     ../extern/qp-bundle/qpcpp/ports/posix
     ../extern/json/include
-    ../extern/onnxruntime-linux-x64-gpu-1.20.1/include
+    ../extern/onnxruntime-linux-x64-1.20.1/include
 )
 
 target_compile_options(gofkucam_lib
@@ -79,8 +79,8 @@ target_link_libraries(gofkucam_lib
     PUBLIC
     qpcpp
     ${OpenCV_LIBS}
-    "${TORCH_LIBRARIES}"
-    "/home/sysizlayan/git/project_gofkucam/extern/onnxruntime-linux-x64-gpu-1.20.1/lib/libonnxruntime.so"
+    #"${TORCH_LIBRARIES}"
+    "/home/sysizlayan/git/project_gofkucam/extern/onnxruntime-linux-x64-1.20.1/lib/libonnxruntime.so"
 )
 
 # Target: The executable for the gofkucam
