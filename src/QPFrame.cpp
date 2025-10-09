@@ -3,7 +3,6 @@
 
 #include "CapturingFramesFromVideoStream.hpp"
 #include "ObjectDetector.hpp"
-#include "qpcpp.hpp"
 #include <memory>
 #include <sstream>
 #include <thread>
@@ -82,19 +81,21 @@ void QPFrame::ao_thread_func()
 /*--------------------------------------------------------------------------*/
 void QP::QF::onStartup()
 {
-    QF_setTickRate(1000, 50); // desired tick rate/prio -> 1000 ticks per second!
+    setTickRate(1000, 50); // desired tick rate/prio -> 1000 ticks per second!
 }
-/*--------------------------------------------------------------------------*/
 
+/*--------------------------------------------------------------------------*/
 void QP::QF::onCleanup()
 {
 }
-/*--------------------------------------------------------------------------*/
 
-void QP::QF_onClockTick()
+//............................................................................
+void QP::QF::onClockTick()
 {
-   // process time events at rate 0
-   QP::QF::TICK_X(0U, 0);
+   QTimeEvt::TICK_X(0U, 0); // process time events at rate 0
+   //  QS_RX_INPUT(); // handle the QS-RX input
+   //  QS_OUTPUT();   // handle the QS output
+
 }
 
 /*--------------------------------------------------------------------------*/

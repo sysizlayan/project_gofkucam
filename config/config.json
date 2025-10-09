@@ -8,7 +8,7 @@
         "yolo_model_path": "/home/sysizlayan/git/project_gofkucam/resources/yolo/yolo12x.onnx",
         "yolo_labels_path": "/home/sysizlayan/git/project_gofkucam/resources/yolo/coco.names",
         "is_camera": false,
-        "video_file": "/home/sysizlayan/git/project_gofkucam/resources/day_feeding.mp4",
+        "video_file": "/home/sysizlayan/git/project_gofkucam/resources/day_feeding_short.mp4",
         "camera_address" : ""
     }
 }

@@ -77,7 +77,7 @@ target_compile_options(gofkucam_lib
     
 target_link_libraries(gofkucam_lib
     PUBLIC
-    qp_cpp_posix_lib
+    qpcpp
     ${OpenCV_LIBS}
     "${TORCH_LIBRARIES}"
     "/home/sysizlayan/git/project_gofkucam/extern/onnxruntime-linux-x64-gpu-1.20.1/lib/libonnxruntime.so"
