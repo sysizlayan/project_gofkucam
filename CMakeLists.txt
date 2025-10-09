@@ -6,13 +6,19 @@ project(project_gofkucam
 )
 
 # Update C++ standard
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 17)
 
 # Imported CMake modules
 set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-# Build library and ROS executable
+set(QPCPP_CFG_KERNEL qv)
+set(QPCPP_CFG_PORT posix)
+set(QPCPP_CFG_GUI OFF)
+set(QPCPP_CFG_DEBUG OFF)
+set(QPCPP_CFG_VERBOSE OFF)
+
 add_subdirectory(extern/json)
-add_subdirectory(extern/qp-bundle)
+add_subdirectory(extern/qpcpp)
 #add_subdirectory(extern/libtorch)
 add_subdirectory(src)
+

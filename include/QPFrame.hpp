@@ -6,7 +6,6 @@
 #include "Evts.hpp"
 #include "FrameGrabbingStrategy.hpp"
 #include "LoggerInterface.hpp"
-#include "qf.hpp"
 #include "Controller.hpp"
 
 constexpr size_t NUM_STORED_EVENTS = 10;
