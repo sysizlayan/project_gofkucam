@@ -13,9 +13,9 @@ set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 set(QPCPP_CFG_KERNEL qv)
 set(QPCPP_CFG_PORT posix)
-set(QPCPP_CFG_GUI ON)
-set(QPCPP_CFG_DEBUG ON)
-set(QPCPP_CFG_VERBOSE ON)
+set(QPCPP_CFG_GUI OFF)
+set(QPCPP_CFG_DEBUG OFF)
+set(QPCPP_CFG_VERBOSE OFF)
 
 add_subdirectory(extern/json)
 add_subdirectory(extern/qpcpp)
