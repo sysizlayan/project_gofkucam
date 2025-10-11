@@ -1,7 +1,7 @@
 #ifndef OBJECTDETECTOR_HPP
 #define OBJECTDETECTOR_HPP
 
-#include "Signals.hpp"
+#include "GofkuCamCommon.hpp"
 #include <onnxruntime_cxx_api.h>
 #include <string>
 #include <vector>

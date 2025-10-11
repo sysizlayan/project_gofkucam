@@ -3,54 +3,123 @@
  <framework name="qpcpp"/>
  <package name="Evts" stereotype="0x01" namespace="GofkuCam::">
   <attribute name="EvtSignals" type="enum" visibility="0x04" properties="0x00">
-   <code>: QP::QSignal {
+   <code>: QP::QSignal
+{
     IMMEDIATE_TRANSITION_SIG = QP::Q_USER_SIG,
 
-    TIMER_TIMEDOUT_SIG,
+    FRAME_TIMER_TIMEOUT_SIG,
     FRAME_CAPTURED_SIG,
-    FRAME_GRABBING_FAILED_SIG,
+    STREAM_ENDED_SIG,
+    CAPTURE_ERROR_SIG,
+    START_REQ_SIG,
+    STOP_REQ_SIG,
 
     MAX_GOFKU_CAM_SIG
 };</code>
   </attribute>
   <class name="FrameCapturedEvt" superclass="qpcpp::QEvt">
+   <attribute name="m_frame" type="std::shared_ptr&lt;Frame&gt;" visibility="0x00" properties="0x00"/>
    <operation name="FrameCapturedEvt" type="" visibility="0x00" properties="0x02">
-    <code>: QEvt(EvtSignals::FRAME_CAPTURED_SIG)</code>
+    <parameter name="frame" type="std::shared_ptr&lt;Frame&gt;"/>
+    <code>: QEvt(EvtSignals::FRAME_CAPTURED_SIG)
+, m_frame{frame}</code>
    </operation>
   </class>
-  <class name="TimerTimedOut" superclass="qpcpp::QEvt">
-   <operation name="TimerTimedOut" type="" visibility="0x00" properties="0x02">
-    <code>: QEvt(EvtSignals::TIMER_TIMEDOUT_SIG)</code>
+  <class name="FrameTimerTimeout" superclass="qpcpp::QEvt">
+   <operation name="FrameTimerTimeout" type="" visibility="0x00" properties="0x02">
+    <code>: QEvt(EvtSignals::FRAME_TIMER_TIMEOUT_SIG)</code>
    </operation>
   </class>
-  <class name="FrameGrabbingFailed" superclass="qpcpp::QEvt">
-   <operation name="FrameGrabbingFailed" type="" visibility="0x00" properties="0x00">
-    <code>: QEvt(EvtSignals::FRAME_GRABBING_FAILED_SIG)</code>
+  <class name="StreamEnded" superclass="qpcpp::QEvt">
+   <operation name="StreamEnded" type="" visibility="0x00" properties="0x00">
+    <code>: QEvt(EvtSignals::STREAM_ENDED_SIG)</code>
+   </operation>
+  </class>
+  <class name="CaptureError" superclass="qpcpp::QEvt">
+   <operation name="CaptureError" type="" visibility="0x00" properties="0x00">
+    <code>: QEvt(EvtSignals::CAPTURE_ERROR_SIG)</code>
+   </operation>
+  </class>
+  <class name="StopRequested" superclass="qpcpp::QEvt">
+   <operation name="StopRequested" type="" visibility="0x00" properties="0x00">
+    <code>: QEvt(EvtSignals::STOP_REQ_SIG)</code>
+   </operation>
+  </class>
+  <class name="StartRequested" superclass="qpcpp::QEvt">
+   <operation name="StartRequested" type="" visibility="0x00" properties="0x00">
+    <code>: QEvt(EvtSignals::START_REQ_SIG)</code>
    </operation>
   </class>
  </package>
  <package name="Components" stereotype="0x02">
-  <class name="Controller" superclass="qpcpp::QActive">
+  <class name="CameraGrabber" superclass="qpcpp::QActive">
    <attribute name="m_logger" type="LoggerInterfacePtr" visibility="0x02" properties="0x00"/>
-   <attribute name="m_timer" type="QP::QTimeEvt" visibility="0x02" properties="0x00"/>
-   <attribute name="m_frame_strategy" type="FrameGrabbingStrategyPtr" visibility="0x00" properties="0x00"/>
-   <operation name="Controller" type="" visibility="0x00" properties="0x00">
+   <attribute name="m_frame_timer" type="QP::QTimeEvt" visibility="0x00" properties="0x00"/>
+   <operation name="CameraGrabber" type="" visibility="0x00" properties="0x00">
     <parameter name="logger" type="LoggerInterfacePtr"/>
-    <parameter name="frame_grabber" type="FrameGrabbingStrategyPtr"/>
     <code>: QActive(&amp;initial)
 , m_logger(logger)
-, m_timer(this, EvtSignals::TIMER_TIMEDOUT_SIG, 0U)
-, m_frame_strategy(frame_grabber)
+, m_frame_timer(this, EvtSignals::FRAME_TIMER_TIMEOUT_SIG, 0U)
 
 m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
    </operation>
    <statechart properties="0x00">
     <initial target="../1">
      <action>(void)e; // Just to supress compiler warning
-(void)Q_this_module_; // Just to supress compiler warning
+(void)Q_this_module_; // Just to supress compiler warning</action>
+     <initial_glyph conn="9,4,5,1,67,7,-4">
+      <action box="1,-3,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="NOT_STARTED">
+     <tran trig="START_REQ" target="../../2">
+      <tran_glyph conn="6,18,3,1,70,14,-4">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="6,7,66,13"/>
+    </state>
+    <state name="RUNNING">
+     <tran trig="STREAM_ENDED" target="../../1">
+      <tran_glyph conn="5,42,3,1,74,-26,-7">
+       <action box="0,-2,16,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="CAPTURE_ERROR" target="../../1">
+      <tran_glyph conn="5,44,3,1,76,-29,-9">
+       <action box="0,-2,15,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="FRAME_TIMER_TIMEOUT">
+      <tran_glyph conn="5,32,3,-1,29">
+       <action box="0,-2,20,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="STOP_REQ" target="../../1">
+      <tran_glyph conn="5,46,3,1,77,-33,-10">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="5,27,67,20"/>
+    </state>
+    <state_diagram size="125,142"/>
+   </statechart>
+  </class>
+  <class name="Controller" superclass="qpcpp::QActive">
+   <attribute name="m_logger" type="LoggerInterfacePtr" visibility="0x02" properties="0x00"/>
+   <attribute name="m_detector" type="std::shared_ptr&lt;ObjectDetector&gt;" visibility="0x00" properties="0x00"/>
+   <operation name="Controller" type="" visibility="0x00" properties="0x00">
+    <parameter name="logger" type="LoggerInterfacePtr"/>
+    <parameter name="detector" type="std::shared_ptr&lt;ObjectDetector&gt;"/>
+    <code>: QActive(&amp;initial)
+, m_logger(logger)
 
-m_frame_strategy-&gt;subscribeToFrameUpdates(this);
-m_frame_strategy-&gt;open();
+m_logger-&gt;trace(&quot;Camera grabber started!&quot;);</code>
+   </operation>
+   <statechart properties="0x00">
+    <initial target="../1">
+     <action>(void)e; // Just to supress compiler warning
+(void)Q_this_module_; // Just to supress compiler warning
 </action>
      <initial_glyph conn="9,4,5,1,97,11,-2">
       <action box="1,-3,10,2"/>
@@ -58,11 +127,30 @@ m_frame_strategy-&gt;open();
     </initial>
     <state name="operating">
      <tran trig="FRAME_CAPTURED">
-      <action>Frame frame;
+      <action>/*
+m_frame_strategy-&gt;unsubscribeFromFrameUpdates(this);
+Frame frame;
 m_frame_strategy-&gt;grabFrame(frame);
+// Detect objects in the frame
+#ifdef MINI_PROFILER
+// Mini profiler
+//static int call_count = 0;
+std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+#endif
+
+std::vector&lt;Detection&gt; results = m_detector-&gt;detect(frame);
+//m_detector-&gt;draw_bounding_box_mask(frame, results);
+
+#ifdef MINI_PROFILER
+std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+m_logger-&gt;info(&quot;Detection took &quot; + std::to_string(std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(end - begin).count()) + &quot;[ms]&quot;);
+#endif
+m_frame_strategy-&gt;subscribeToFrameUpdates(this);
+
 std::stringstream ss;
-ss&lt;&lt;&quot;Frame arrived: &quot; &lt;&lt; frame.size;
-m_logger-&gt;info(ss.str());</action>
+ss&lt;&lt;&quot;Frame processed: &quot; &lt;&lt; frame.size;
+m_logger-&gt;info(ss.str());
+*/</action>
       <tran_glyph conn="6,12,3,-1,14,1">
        <action box="0,-2,10,2"/>
       </tran_glyph>
@@ -89,6 +177,21 @@ $define${Components::Controller}
 
 } // namespace GofkuCam</text>
   </file>
+  <file name="CameraGrabber.cpp">
+   <text>#include &quot;qpcpp.hpp&quot;
+#include &quot;CameraGrabber.hpp&quot;
+#include &quot;Evts.hpp&quot;
+#include &quot;Config.hpp&quot;
+
+Q_DEFINE_THIS_FILE
+
+namespace GofkuCam
+{
+
+$define${Components::CameraGrabber}
+
+} // namespace GofkuCam</text>
+  </file>
  </directory>
  <directory name="../../include/qm_generated">
   <file name="Controller.hpp">
@@ -97,8 +200,7 @@ $define${Components::Controller}
 
 #include &quot;qpcpp.hpp&quot;
 #include &quot;LoggerInterface.hpp&quot;
-#include &quot;FrameGrabbingStrategy.hpp&quot;
-
+#include &quot;ObjectDetector.hpp&quot;
 namespace GofkuCam
 {
 
@@ -108,9 +210,9 @@ $declare${Components::Controller}
 
 #endif</text>
   </file>
-  <file name="Signals.hpp">
-   <text>#ifndef GOFKUCAMSIGNALS_HPP_
-#define GOFKUCAMSIGNALS_HPP_
+  <file name="GofkuCamCommon.hpp">
+   <text>#ifndef GOFKUCAMCOMMON_HPP_
+#define GOFKUCAMCOMMON_HPP_
 
 #include &quot;qpcpp.hpp&quot;
 #include &lt;opencv2/opencv.hpp&gt;
@@ -119,7 +221,7 @@ namespace GofkuCam
 {
 using Frame = cv::Mat;
 using FramePtr = std::shared_ptr&lt;Frame&gt;;
-using ActiveObjPtr = QP::QActive*;
+using ActiveObjPtr = std::shared_ptr&lt;QP::QActive&gt;;
 
 }
 
@@ -130,14 +232,25 @@ using ActiveObjPtr = QP::QActive*;
 #define EVTS_HPP_
 
 #include &quot;qpcpp.hpp&quot;
-#include &lt;variant&gt;
-#include &quot;Signals.hpp&quot;
+#include &quot;GofkuCamCommon.hpp&quot;
+#include &lt;memory&gt;
 
 $declare ${Evts}
 
+#endif</text>
+  </file>
+  <file name="CameraGrabber.hpp">
+   <text>#ifndef CAMERA_GRABBER_HPP_
+#define AMERA_GRABBER_HPP_
+
+#include &quot;qpcpp.hpp&quot;
+#include &quot;LoggerInterface.hpp&quot;
+
 namespace GofkuCam
 {
-    using EventTyp     = std::variant&lt;FrameCapturedEvt, TimerTimedOut, FrameGrabbingFailed&gt;;
+
+$declare${Components::CameraGrabber}
+
 } // namespace GofkuCam
 
 #endif</text>

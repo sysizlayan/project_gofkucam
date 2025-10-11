@@ -8,11 +8,14 @@
 #include "LoggerInterface.hpp"
 #include "Controller.hpp"
 #include "ObjectDetector.hpp"
+#include "GofkuCamCommon.hpp"
+#include <variant>
+constexpr size_t NUM_STORED_EVENTS = 100;
 
-constexpr size_t NUM_STORED_EVENTS = 10000;
 
 namespace GofkuCam
 {
+using EventTyp = std::variant<FrameCapturedEvt, FrameTimerTimeout, StreamEnded, CaptureError, StopRequested>;
 class QPFrame
 /**
  * @class QPFrame
@@ -46,7 +49,6 @@ private:
     void                ao_thread_func();
 };
 
- 
 } // namespace GofkuCam
 
 #endif // QPFRAME_HPP

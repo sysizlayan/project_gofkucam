@@ -60,7 +60,7 @@ void QPFrame::ao_thread_func()
 {
     m_logger->info("QPFrame external thread started.");
 
-    m_theController = std::make_shared<Controller>(m_logger, m_frame_grabbing_strategy, m_detector);
+    m_theController = std::make_shared<Controller>(m_logger, m_detector);
     m_theController->start(
         1, 
         m_gofkucam_controller_queue,

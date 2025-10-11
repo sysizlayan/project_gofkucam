@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <opencv2/opencv.hpp>
-#include "Signals.hpp"
+#include "GofkuCamCommon.hpp"
 
 namespace GofkuCam
 {

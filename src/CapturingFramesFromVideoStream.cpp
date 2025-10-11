@@ -1,7 +1,7 @@
 #include "CapturingFramesFromVideoStream.hpp"
 #include "Evts.hpp"
 #include "GofkuCamExceptions.hpp"
-#include "Signals.hpp"
+#include "GofkuCamCommon.hpp"
 #include "opencv2/core/mat.hpp"
 #include "opencv2/videoio.hpp"
 #include <memory>
@@ -18,9 +18,7 @@ CapturingFramesFromVideoStream::CapturingFramesFromVideoStream(const std::string
    , m_cap(nullptr)
    , m_latest_frame(nullptr)
    , m_thread()
-{
-   
-}
+{}
 
 CapturingFramesFromVideoStream::~CapturingFramesFromVideoStream()
 {
@@ -105,6 +103,7 @@ void CapturingFramesFromVideoStream::acquisition_loop()
       }
       //*m_latest_frame.load() = frame;
       notify_new_frame();
+      //std::this_thread::sleep_for(std::chrono::milliseconds(500));
    }
    m_cap->release();
 }
