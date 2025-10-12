@@ -2,6 +2,7 @@
 #include "Config.hpp"
 #include "Evts.hpp"
 #include "qp.hpp"
+#include <memory>
 namespace GofkuCam {
 
 CameraGrabberImpl::CameraGrabberImpl(QP::QActive * owner, LoggerInterfacePtr logger)
@@ -11,6 +12,8 @@ CameraGrabberImpl::CameraGrabberImpl(QP::QActive * owner, LoggerInterfacePtr log
    , m_source(Config::config().get<std::string>("stream_address"))
    , m_frame_timer{m_owner, EvtSignals::FRAME_TIMER_TIMEOUT_SIG}
    , m_polling_timer{m_owner, EvtSignals::POLLING_TIMER_TIMEOUT_SIG}
+   , m_is_new_frame_available(false)
+   , m_current_frame(std::make_shared<Frame>())
 {
 }
 
@@ -23,31 +26,22 @@ void CameraGrabberImpl::start_req()
 void CameraGrabberImpl::frame_timer_timeout()
 {
    m_logger->trace("Frame timer timeout");
-   if (m_cap && m_cap->isOpened())
+   
+   if (m_is_new_frame_available)
    {
-      auto frame = std::make_shared<Frame>();
-
-      *m_cap >> *frame;
-      if (!frame->empty())
-      {
-         FrameCapturedEvt* fce = Q_NEW(FrameCapturedEvt, FRAME_CAPTURED_SIG);
-         fce->m_frame = frame;
-         m_logger->trace("Captured a new frame");
-         QP::QF::PUBLISH(fce, this);
-         m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
-      }
-      else
-      {
-         m_logger->error("Captured empty frame");
-         StreamEnded *see = Q_NEW(StreamEnded, STREAM_ENDED_SIG);
-         QP::QF::PUBLISH(see, this);
-      }
+      FrameCapturedEvt* fce = Q_NEW(FrameCapturedEvt, FRAME_CAPTURED_SIG);
+      fce->m_frame = m_current_frame;
+      m_logger->trace("Captured a new frame");
+      QP::QF::PUBLISH(fce, this);
+      m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
+      m_is_new_frame_available = false;
    }
    else
    {
-      m_logger->error("Camera is not opened");
-      CaptureError *ce = Q_NEW(CaptureError, CAPTURE_ERROR_SIG);
-      QP::QF::PUBLISH(ce, this);
+      m_polling_timer.disarm();
+      m_logger->error("Captured empty frame");
+      StreamEnded *see = Q_NEW(StreamEnded, STREAM_ENDED_SIG);
+      QP::QF::PUBLISH(see, this);
    }
 }
 
@@ -69,9 +63,36 @@ bool CameraGrabberImpl::is_opened()
 {
    return (m_cap && m_cap->isOpened());
 }
+void CameraGrabberImpl::poll_the_camera()
+{
+   if (m_cap && m_cap->isOpened())
+   {
+      auto frame = std::make_shared<Frame>();
+      *m_cap >> *frame;
+      if (!frame->empty())
+      {
+         m_current_frame = frame;
+         m_is_new_frame_available = true;
+         m_logger->trace("Polled a new frame");
+      }
+      else
+      {
+         m_logger->trace("Polled empty frame");
+      }
+      m_polling_timer.armX(30, 0);
+   }
+   else
+   {
+      m_polling_timer.disarm();
+      m_logger->error("Capture system got broken!");
+      StreamEnded *see = Q_NEW(StreamEnded, STREAM_ENDED_SIG);
+      QP::QF::PUBLISH(see, this);
+   }
+}
 void CameraGrabberImpl::running_entry()
 {
    m_logger->info("Camera grabber running entry");
    m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
+   m_polling_timer.armX(30, 0);
 }
 } // namespace GofkuCam

@@ -14,6 +14,7 @@ public:
     virtual void stop_req() = 0;
     virtual void stream_end() = 0;
     virtual bool is_opened() = 0;
+    virtual void poll_the_camera() = 0;
     virtual ~ICameraGrabber() = default;
 }; // class ICameraGrabber
 

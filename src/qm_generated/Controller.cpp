@@ -110,8 +110,8 @@ Q_STATE_DEF(Controller, operating) {
 
             // Display the frame
             cv::imshow("GofkuCam Stream", *frame);
-            cv::waitKey(500); // Allow the window to update, wait 1ms
-            cv::destroyAllWindows();
+            cv::waitKey(1); // Allow the window to update, wait 1ms
+            //cv::destroyAllWindows();
             status_ = Q_RET_HANDLED;
             break;
         }

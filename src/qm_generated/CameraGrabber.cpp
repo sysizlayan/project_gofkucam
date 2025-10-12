@@ -137,6 +137,8 @@ Q_STATE_DEF(CameraGrabber, RUNNING) {
         }
         //${Components::CameraGrabber::SM::RUNNING::POLLING_TIMER_TIMEOUT}
         case POLLING_TIMER_TIMEOUT_SIG: {
+            m_icamera_grabber->poll_the_camera();
+
             status_ = Q_RET_HANDLED;
             break;
         }

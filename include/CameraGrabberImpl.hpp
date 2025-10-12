@@ -19,6 +19,8 @@ private:
     std::string m_source;
     QP::QTimeEvt m_frame_timer;
     QP::QTimeEvt m_polling_timer;
+    bool m_is_new_frame_available;
+    std::shared_ptr<Frame> m_current_frame;
 
 public:
     explicit CameraGrabberImpl(QP::QActive * owner, LoggerInterfacePtr logger);
@@ -30,6 +32,7 @@ public:
     void stop_req() override;
     void stream_end() override;
     bool is_opened() override;
+    void poll_the_camera() override;
 }; // class CameraGrabberImpl
 
 } // namespace GofkuCam
