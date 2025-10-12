@@ -57,16 +57,12 @@
  <package name="Components" stereotype="0x02">
   <class name="CameraGrabber" superclass="qpcpp::QActive">
    <attribute name="m_logger" type="LoggerInterfacePtr" visibility="0x02" properties="0x00"/>
-   <attribute name="m_frame_timer" type="QP::QTimeEvt" visibility="0x00" properties="0x00"/>
-   <attribute name="m_source" type="std::string" visibility="0x00" properties="0x00"/>
    <attribute name="m_icamera_grabber" type="std::shared_ptr&lt;ICameraGrabber&gt;" visibility="0x00" properties="0x00"/>
    <operation name="CameraGrabber" type="" visibility="0x00" properties="0x00">
     <parameter name="logger" type="LoggerInterfacePtr"/>
     <parameter name="source" type="std::string"/>
     <code>: QActive(&amp;initial)
 , m_logger(logger)
-, m_frame_timer(this, EvtSignals::FRAME_TIMER_TIMEOUT_SIG, 0U)
-, m_source{source}
 , m_icamera_grabber{std::make_shared&lt;CameraGrabberImpl&gt;(this, m_logger)}
 
 m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
@@ -120,6 +116,8 @@ m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
       </tran_glyph>
      </tran>
      <tran trig="POLLING_TIMER_TIMEOUT">
+      <action>m_icamera_grabber-&gt;poll_the_camera();
+</action>
       <tran_glyph conn="5,35,3,-1,29">
        <action box="0,-2,28,3"/>
       </tran_glyph>
@@ -131,10 +129,10 @@ m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
     <state_diagram size="125,142"/>
    </statechart>
   </class>
-  <class name="Controller" superclass="qpcpp::QActive">
+  <class name="DetectorController" superclass="qpcpp::QActive">
    <attribute name="m_logger" type="LoggerInterfacePtr" visibility="0x02" properties="0x00"/>
    <attribute name="m_detector" type="std::shared_ptr&lt;ObjectDetector&gt;" visibility="0x00" properties="0x00"/>
-   <operation name="Controller" type="" visibility="0x00" properties="0x00">
+   <operation name="DetectorController" type="" visibility="0x00" properties="0x00">
     <parameter name="logger" type="LoggerInterfacePtr"/>
     <parameter name="detector" type="std::shared_ptr&lt;ObjectDetector&gt;"/>
     <code>: QActive(&amp;initial)
@@ -183,8 +181,8 @@ m_logger-&gt;trace(&quot;Captured frame with size: &quot; + std::to_string(frame
 
 // Display the frame
 cv::imshow(&quot;GofkuCam Stream&quot;, *frame);
-cv::waitKey(500); // Allow the window to update, wait 1ms
-cv::destroyAllWindows();</action>
+cv::waitKey(1); // Allow the window to update, wait 1ms
+//cv::destroyAllWindows();</action>
       <tran_glyph conn="6,12,3,-1,14,1">
        <action box="0,-2,10,2"/>
       </tran_glyph>
@@ -194,17 +192,11 @@ cv::destroyAllWindows();</action>
     <state_diagram size="125,142"/>
    </statechart>
   </class>
-  <class name="ICameraGrabber">
-   <operation name="start_req" type="void" visibility="0x00" properties="0x04"/>
-   <operation name="frame_timer_timeout" type="void" visibility="0x00" properties="0x04"/>
-   <operation name="stop_req" type="void" visibility="0x00" properties="0x04"/>
-   <operation name="stream_end" type="void" visibility="0x00" properties="0x04"/>
-  </class>
  </package>
  <directory name=".">
-  <file name="Controller.cpp">
+  <file name="DetectorController.cpp">
    <text>#include &quot;qpcpp.hpp&quot;
-#include &quot;Controller.hpp&quot;
+#include &quot;DetectorController.hpp&quot;
 #include &quot;Evts.hpp&quot;
 #include &quot;Config.hpp&quot;
 
@@ -213,7 +205,7 @@ Q_DEFINE_THIS_FILE
 namespace GofkuCam
 {
 
-$define${Components::Controller}
+$define${Components::DetectorController}
 
 } // namespace GofkuCam</text>
   </file>
@@ -235,9 +227,9 @@ $define${Components::CameraGrabber}
   </file>
  </directory>
  <directory name="../../include/qm_generated">
-  <file name="Controller.hpp">
-   <text>#ifndef CONTROLLER_HPP_
-#define CONTROLLER_HPP_
+  <file name="DetectorController.hpp">
+   <text>#ifndef DETECTOR_CONTROLLER_HPP_
+#define DETECTOR_CONTROLLER_HPP_
 
 #include &quot;qpcpp.hpp&quot;
 #include &quot;LoggerInterface.hpp&quot;
@@ -245,7 +237,7 @@ $define${Components::CameraGrabber}
 namespace GofkuCam
 {
 
-$declare${Components::Controller}
+$declare${Components::DetectorController}
 
 } // namespace GofkuCam
 

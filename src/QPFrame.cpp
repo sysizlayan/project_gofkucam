@@ -3,15 +3,12 @@
 
 #include "CapturingFramesFromVideoStream.hpp"
 #include "Evts.hpp"
-#include "ICameraGrabber.hpp"
 #include "ObjectDetector.hpp"
 #include <memory>
 #include <sstream>
 #include <thread>
 #include <chrono>
 #include "Config.hpp"
-#include "Controller.hpp"
-#include "CameraGrabberImpl.hpp"
 #include "GofkuCamCommon.hpp"
 
 
@@ -61,7 +58,7 @@ void QPFrame::ao_thread_func()
    m_camera_grabber = std::make_shared<CameraGrabber>(m_logger, 
          Config::config().get<std::string>("stream_address"));
 
-   m_theController = std::make_shared<Controller>(m_logger, m_detector);
+   m_detector_controller = std::make_shared<DetectorController>(m_logger, m_detector);
 
    m_camera_grabber->start(
       2, 
@@ -70,7 +67,7 @@ void QPFrame::ao_thread_func()
       nullptr,
       256*MB);
 
-   m_theController->start(
+   m_detector_controller->start(
       1, 
       m_gofkucam_controller_queue,
       Q_DIM(m_gofkucam_controller_queue),
@@ -83,11 +80,11 @@ void QPFrame::ao_thread_func()
    m_camera_grabber->subscribe(FRAME_TIMER_TIMEOUT_SIG);
    m_camera_grabber->subscribe(STREAM_ENDED_SIG);
 
-   m_theController->subscribe(START_REQ_SIG);
-   m_theController->subscribe(STOP_REQ_SIG);
-   m_theController->subscribe(FRAME_CAPTURED_SIG);
-   m_theController->subscribe(STREAM_ENDED_SIG);
-   m_theController->subscribe(CAPTURE_ERROR_SIG);
+   m_detector_controller->subscribe(START_REQ_SIG);
+   m_detector_controller->subscribe(STOP_REQ_SIG);
+   m_detector_controller->subscribe(FRAME_CAPTURED_SIG);
+   m_detector_controller->subscribe(STREAM_ENDED_SIG);
+   m_detector_controller->subscribe(CAPTURE_ERROR_SIG);
 
    StartRequested* sr = Q_NEW(StartRequested, START_REQ_SIG);
    QP::QF::PUBLISH(sr, this);

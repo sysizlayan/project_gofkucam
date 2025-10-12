@@ -6,7 +6,7 @@
 #include "Evts.hpp"
 #include "FrameGrabbingStrategy.hpp"
 #include "LoggerInterface.hpp"
-#include "Controller.hpp"
+#include "DetectorController.hpp"
 #include "CameraGrabber.hpp"
 #include "ObjectDetector.hpp"
 #include "GofkuCamCommon.hpp"
@@ -39,7 +39,7 @@ public:
 private:
     LoggerInterfacePtr  m_logger;
     std::shared_ptr<FrameGrabbingStrategy> m_frame_grabbing_strategy;
-    std::shared_ptr<Controller>   m_theController;
+    std::shared_ptr<DetectorController>   m_detector_controller;
     std::shared_ptr<CameraGrabber> m_camera_grabber;
     YOLO12DetectorPtr m_detector;
 
