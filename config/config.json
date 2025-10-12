@@ -3,9 +3,11 @@
     {
         "name": "project_gofkucam",
         "version": "1.0.0",
-        "logging": "INFO",
-        "is_camera": false,
-        "video_file": "/home/sysizlayan/git/project_gofkucam/resources/day_feeding_short.mp4",
-        "camera_address" : ""
+        "logging": "DEBUG",
+        "use_gpu": false,
+        "yolo_model_path": "/home/sysizlayan/git/project_gofkucam/resources/yolo/yolo12s.onnx",
+        "yolo_labels_path": "/home/sysizlayan/git/project_gofkucam/resources/yolo/coco.names",
+        "stream_address": "/home/sysizlayan/git/project_gofkucam/resources/dayligth_feeding.mp4",
+        "frame_interval_ms": 1000
     }
 }

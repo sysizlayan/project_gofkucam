@@ -1,13 +1,14 @@
 #include "QPFrame.hpp"
 #include <iostream>
 
-#include "CapturingFramesFromVideoStream.hpp"
+#include "Evts.hpp"
 #include <memory>
 #include <sstream>
 #include <thread>
 #include <chrono>
 #include "Config.hpp"
-#include "Controller.hpp"
+#include "GofkuCamCommon.hpp"
+
 
 constexpr size_t KB = 1024;
 constexpr size_t MB = 1024 * KB;
@@ -24,56 +25,72 @@ QPFrame::QPFrame(LoggerInterfacePtr logger)
    QP::QF::psInit(m_subscrSto, Q_DIM(m_subscrSto));
    QP::QF::poolInit(m_event_memory_pool, sizeof(m_event_memory_pool), sizeof(m_event_memory_pool[0]));
 
-   std::string source;
-   if(Config::config().get<bool>("is_camera"))
-   {
-      source = Config::config().get<std::string>("camera_address");
-   }
-   else
-   {
-      source = Config::config().get<std::string>("video_file");
-   }
-   std::stringstream ss;
-   ss<<"Using " << source << " as video source!";
-   m_logger->info(ss.str());
+   std::string source = Config::config().get<std::string>("stream_address");
 
-   m_frame_grabbing_strategy = std::make_shared<CapturingFramesFromVideoStream>(source, m_logger);
-   m_logger->trace("QP Framework constructed.");
+   std::stringstream ss;
+   ss<<"Using " << source << " as video source! QP Framework constructed.";
+   m_logger->info(ss.str());
 }
 
 void QPFrame::start()
 {
-    aoThread_ = std::thread(&QPFrame::ao_thread_func, this);
-    aoThread_.detach();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+   aoThread_ = std::thread(&QPFrame::ao_thread_func, this);
+   aoThread_.detach();
+   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 void QPFrame::ao_thread_func()
 {
-    m_logger->info("QPFrame external thread started.");
+   m_logger->info("QPFrame external thread started.");
 
-    m_theController = std::make_shared<Controller>(m_logger, m_frame_grabbing_strategy);
-    m_theController->start(
-        1, 
-        m_gofkucam_controller_queue,
-        Q_DIM(m_gofkucam_controller_queue),
-        nullptr,
-        256*MB);
+   m_camera_grabber = std::make_shared<CameraGrabber>(m_logger, 
+         Config::config().get<std::string>("stream_address"));
 
-    // Ticker loop
-    // Does not return till SIGTERM!
-    int result = QP::QF::run();
+   m_detector_controller = std::make_shared<DetectorController>(m_logger);
 
-    std::stringstream ss;
-    ss<<"Terminating QP Framework thread, result:" << result;
-    m_logger->info(ss.str());
+   m_camera_grabber->start(
+      2, 
+      m_gofkucam_camera_grabber_queue,
+      Q_DIM(m_gofkucam_camera_grabber_queue),
+      nullptr,
+      256*MB);
+
+   m_detector_controller->start(
+      1, 
+      m_gofkucam_controller_queue,
+      Q_DIM(m_gofkucam_controller_queue),
+      nullptr,
+      256*MB);
+
+   
+   m_camera_grabber->subscribe(START_REQ_SIG);
+   m_camera_grabber->subscribe(STOP_REQ_SIG);
+   m_camera_grabber->subscribe(FRAME_TIMER_TIMEOUT_SIG);
+   m_camera_grabber->subscribe(STREAM_ENDED_SIG);
+
+   m_detector_controller->subscribe(START_REQ_SIG);
+   m_detector_controller->subscribe(STOP_REQ_SIG);
+   m_detector_controller->subscribe(FRAME_CAPTURED_SIG);
+   m_detector_controller->subscribe(STREAM_ENDED_SIG);
+   m_detector_controller->subscribe(CAPTURE_ERROR_SIG);
+
+   StartRequested* sr = Q_NEW(StartRequested, START_REQ_SIG);
+   QP::QF::PUBLISH(sr, this);
+
+   // Ticker loop
+   // Does not return till SIGTERM!
+   int result = QP::QF::run();
+
+   std::stringstream ss;
+   ss<<"Terminating QP Framework thread, result:" << result;
+   m_logger->info(ss.str());
 }
 }
 
 /*--------------------------------------------------------------------------*/
 void QP::QF::onStartup()
 {
-    setTickRate(1000, 50); // desired tick rate/prio -> 1000 ticks per second!
+   setTickRate(GofkuCam::TICKS_PER_SEC, 50); // desired tick rate/prio -> 1000 ticks per second!
 }
 
 /*--------------------------------------------------------------------------*/

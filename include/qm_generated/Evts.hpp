@@ -39,19 +39,22 @@
 #define EVTS_HPP_
 
 #include "qpcpp.hpp"
-#include <variant>
-#include "Signals.hpp"
+#include "GofkuCamCommon.hpp"
+#include <memory>
 
 //$declare${Evts} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 namespace GofkuCam {
 
 //${Evts::EvtSignals} ........................................................
-enum EvtSignals : QP::QSignal {
-    IMMEDIATE_TRANSITION_SIG = QP::Q_USER_SIG,
-
-    TIMER_TIMEDOUT_SIG,
+enum EvtSignals : QP::QSignal
+{
+    FRAME_TIMER_TIMEOUT_SIG  = QP::Q_USER_SIG,
+    POLLING_TIMER_TIMEOUT_SIG,
     FRAME_CAPTURED_SIG,
-    FRAME_GRABBING_FAILED_SIG,
+    STREAM_ENDED_SIG,
+    CAPTURE_ERROR_SIG,
+    START_REQ_SIG,
+    STOP_REQ_SIG,
 
     MAX_GOFKU_CAM_SIG
 };
@@ -59,31 +62,54 @@ enum EvtSignals : QP::QSignal {
 //${Evts::FrameCapturedEvt} ..................................................
 class FrameCapturedEvt : public QP::QEvt {
 public:
+    std::shared_ptr<Frame> m_frame;
+
+public:
     FrameCapturedEvt()
     : QEvt(EvtSignals::FRAME_CAPTURED_SIG)
+    , m_frame{nullptr}
     {}
 }; // class FrameCapturedEvt
 
-//${Evts::TimerTimedOut} .....................................................
-class TimerTimedOut : public QP::QEvt {
+//${Evts::FrameTimerTimeout} .................................................
+class FrameTimerTimeout : public QP::QEvt {
 public:
-    TimerTimedOut()
-    : QEvt(EvtSignals::TIMER_TIMEDOUT_SIG)
+    FrameTimerTimeout()
+    : QEvt(EvtSignals::FRAME_TIMER_TIMEOUT_SIG)
     {}
-}; // class TimerTimedOut
+}; // class FrameTimerTimeout
 
-//${Evts::FrameGrabbingFailed} ...............................................
-class FrameGrabbingFailed : public QP::QEvt {
+//${Evts::StreamEnded} .......................................................
+class StreamEnded : public QP::QEvt {
 public:
-    FrameGrabbingFailed();
-}; // class FrameGrabbingFailed
+    StreamEnded();
+}; // class StreamEnded
+
+//${Evts::CaptureError} ......................................................
+class CaptureError : public QP::QEvt {
+public:
+    CaptureError();
+}; // class CaptureError
+
+//${Evts::StopRequested} .....................................................
+class StopRequested : public QP::QEvt {
+public:
+    StopRequested();
+}; // class StopRequested
+
+//${Evts::StartRequested} ....................................................
+class StartRequested : public QP::QEvt {
+public:
+    StartRequested();
+}; // class StartRequested
+
+//${Evts::PollingTimerTimeout} ...............................................
+class PollingTimerTimeout : public QP::QEvt {
+public:
+    PollingTimerTimeout();
+}; // class PollingTimerTimeout
 
 } // namespace GofkuCam
 //$enddecl${Evts} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-namespace GofkuCam
-{
-    using EventTyp     = std::variant<FrameCapturedEvt, TimerTimedOut, FrameGrabbingFailed>;
-} // namespace GofkuCam
 
 #endif

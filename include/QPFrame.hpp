@@ -4,14 +4,16 @@
 #include <thread>
 
 #include "Evts.hpp"
-#include "FrameGrabbingStrategy.hpp"
 #include "LoggerInterface.hpp"
-#include "Controller.hpp"
+#include "DetectorController.hpp"
+#include "CameraGrabber.hpp"
+#include <variant>
+constexpr size_t NUM_STORED_EVENTS = 100;
 
-constexpr size_t NUM_STORED_EVENTS = 10;
 
 namespace GofkuCam
 {
+using EventTyp = std::variant<FrameCapturedEvt, FrameTimerTimeout, StreamEnded, CaptureError, StopRequested>;
 class QPFrame
 /**
  * @class QPFrame
@@ -33,10 +35,11 @@ public:
     void start();
 private:
     LoggerInterfacePtr  m_logger;
-    std::shared_ptr<FrameGrabbingStrategy> m_frame_grabbing_strategy;
-    std::shared_ptr<Controller>   m_theController;
+    std::shared_ptr<DetectorController>   m_detector_controller;
+    std::shared_ptr<CameraGrabber> m_camera_grabber;
 
     QP::QEvt const *m_gofkucam_controller_queue[NUM_STORED_EVENTS];
+    QP::QEvt const *m_gofkucam_camera_grabber_queue[NUM_STORED_EVENTS];
     QP::QSubscrList m_subscrSto[MAX_GOFKU_CAM_SIG];
     QF_MPOOL_EL(EventTyp)    m_event_memory_pool[5*NUM_STORED_EVENTS];
 
@@ -44,7 +47,6 @@ private:
     void                ao_thread_func();
 };
 
- 
 } // namespace GofkuCam
 
 #endif // QPFRAME_HPP

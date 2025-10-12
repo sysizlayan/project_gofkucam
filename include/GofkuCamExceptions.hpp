@@ -35,5 +35,11 @@ public:
     explicit ErrorTimerTimedOut(const std::string& message)
         : BaseGofkuCamFailure(message) {}
 };
+
+class DetectorInilializationError : public BaseGofkuCamFailure {
+public:
+    explicit DetectorInilializationError(const std::string& message)
+        : BaseGofkuCamFailure(message) {}
+};
 }
 #endif // GOFKUCAM_EXCEPTIONS_HPP
