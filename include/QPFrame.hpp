@@ -7,6 +7,7 @@
 #include "FrameGrabbingStrategy.hpp"
 #include "LoggerInterface.hpp"
 #include "Controller.hpp"
+#include "CameraGrabber.hpp"
 #include "ObjectDetector.hpp"
 #include "GofkuCamCommon.hpp"
 #include <variant>
@@ -39,9 +40,11 @@ private:
     LoggerInterfacePtr  m_logger;
     std::shared_ptr<FrameGrabbingStrategy> m_frame_grabbing_strategy;
     std::shared_ptr<Controller>   m_theController;
+    std::shared_ptr<CameraGrabber> m_camera_grabber;
     YOLO12DetectorPtr m_detector;
 
     QP::QEvt const *m_gofkucam_controller_queue[NUM_STORED_EVENTS];
+    QP::QEvt const *m_gofkucam_camera_grabber_queue[NUM_STORED_EVENTS];
     QP::QSubscrList m_subscrSto[MAX_GOFKU_CAM_SIG];
     QF_MPOOL_EL(EventTyp)    m_event_memory_pool[5*NUM_STORED_EVENTS];
 

@@ -47,5 +47,6 @@ extern/onnxruntime-*
 *.onnx
 *.pt
 resources/yolo/venv/
+config/config.json
 
 CmakePresets.json

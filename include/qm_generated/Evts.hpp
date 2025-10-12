@@ -48,9 +48,8 @@ namespace GofkuCam {
 //${Evts::EvtSignals} ........................................................
 enum EvtSignals : QP::QSignal
 {
-    IMMEDIATE_TRANSITION_SIG = QP::Q_USER_SIG,
-
-    FRAME_TIMER_TIMEOUT_SIG,
+    FRAME_TIMER_TIMEOUT_SIG  = QP::Q_USER_SIG,
+    POLLING_TIMER_TIMEOUT_SIG,
     FRAME_CAPTURED_SIG,
     STREAM_ENDED_SIG,
     CAPTURE_ERROR_SIG,
@@ -66,9 +65,9 @@ public:
     std::shared_ptr<Frame> m_frame;
 
 public:
-    FrameCapturedEvt(std::shared_ptr<Frame> frame)
+    FrameCapturedEvt()
     : QEvt(EvtSignals::FRAME_CAPTURED_SIG)
-    , m_frame{frame}
+    , m_frame{nullptr}
     {}
 }; // class FrameCapturedEvt
 
@@ -103,6 +102,12 @@ class StartRequested : public QP::QEvt {
 public:
     StartRequested();
 }; // class StartRequested
+
+//${Evts::PollingTimerTimeout} ...............................................
+class PollingTimerTimeout : public QP::QEvt {
+public:
+    PollingTimerTimeout();
+}; // class PollingTimerTimeout
 
 } // namespace GofkuCam
 //$enddecl${Evts} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

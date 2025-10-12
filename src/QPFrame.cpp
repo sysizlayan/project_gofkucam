@@ -2,6 +2,8 @@
 #include <iostream>
 
 #include "CapturingFramesFromVideoStream.hpp"
+#include "Evts.hpp"
+#include "ICameraGrabber.hpp"
 #include "ObjectDetector.hpp"
 #include <memory>
 #include <sstream>
@@ -9,6 +11,9 @@
 #include <chrono>
 #include "Config.hpp"
 #include "Controller.hpp"
+#include "CameraGrabberImpl.hpp"
+#include "GofkuCamCommon.hpp"
+
 
 constexpr size_t KB = 1024;
 constexpr size_t MB = 1024 * KB;
@@ -25,15 +30,8 @@ QPFrame::QPFrame(LoggerInterfacePtr logger)
    QP::QF::psInit(m_subscrSto, Q_DIM(m_subscrSto));
    QP::QF::poolInit(m_event_memory_pool, sizeof(m_event_memory_pool), sizeof(m_event_memory_pool[0]));
 
-   std::string source;
-   if(Config::config().get<bool>("is_camera"))
-   {
-      source = Config::config().get<std::string>("camera_address");
-   }
-   else
-   {
-      source = Config::config().get<std::string>("video_file");
-   }
+   std::string source = Config::config().get<std::string>("stream_address");
+
    std::stringstream ss;
    ss<<"Using " << source << " as video source!";
    m_logger->info(ss.str());
@@ -42,46 +40,72 @@ QPFrame::QPFrame(LoggerInterfacePtr logger)
    m_logger->trace("QP Framework constructed.");
 
    m_detector = std::make_shared<ObjectDetector>(
-       Config::config().get<std::string>("yolo_model_path"),
-       Config::config().get<std::string>("yolo_labels_path"),
-       m_logger,
-       Config::config().get<bool>("use_gpu"));
+      Config::config().get<std::string>("yolo_model_path"),
+      Config::config().get<std::string>("yolo_labels_path"),
+      m_logger,
+      Config::config().get<bool>("use_gpu"));
    m_logger->trace("Detector constructed with model: " + Config::config().get<std::string>("yolo_model_path"));
 }
 
 void QPFrame::start()
 {
-    aoThread_ = std::thread(&QPFrame::ao_thread_func, this);
-    aoThread_.detach();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+   aoThread_ = std::thread(&QPFrame::ao_thread_func, this);
+   aoThread_.detach();
+   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 void QPFrame::ao_thread_func()
 {
-    m_logger->info("QPFrame external thread started.");
+   m_logger->info("QPFrame external thread started.");
 
-    m_theController = std::make_shared<Controller>(m_logger, m_detector);
-    m_theController->start(
-        1, 
-        m_gofkucam_controller_queue,
-        Q_DIM(m_gofkucam_controller_queue),
-        nullptr,
-        256*MB);
+   m_camera_grabber = std::make_shared<CameraGrabber>(m_logger, 
+         Config::config().get<std::string>("stream_address"));
 
-    // Ticker loop
-    // Does not return till SIGTERM!
-    int result = QP::QF::run();
+   m_theController = std::make_shared<Controller>(m_logger, m_detector);
 
-    std::stringstream ss;
-    ss<<"Terminating QP Framework thread, result:" << result;
-    m_logger->info(ss.str());
+   m_camera_grabber->start(
+      2, 
+      m_gofkucam_camera_grabber_queue,
+      Q_DIM(m_gofkucam_camera_grabber_queue),
+      nullptr,
+      256*MB);
+
+   m_theController->start(
+      1, 
+      m_gofkucam_controller_queue,
+      Q_DIM(m_gofkucam_controller_queue),
+      nullptr,
+      256*MB);
+
+   
+   m_camera_grabber->subscribe(START_REQ_SIG);
+   m_camera_grabber->subscribe(STOP_REQ_SIG);
+   m_camera_grabber->subscribe(FRAME_TIMER_TIMEOUT_SIG);
+   m_camera_grabber->subscribe(STREAM_ENDED_SIG);
+
+   m_theController->subscribe(START_REQ_SIG);
+   m_theController->subscribe(STOP_REQ_SIG);
+   m_theController->subscribe(FRAME_CAPTURED_SIG);
+   m_theController->subscribe(STREAM_ENDED_SIG);
+   m_theController->subscribe(CAPTURE_ERROR_SIG);
+
+   StartRequested* sr = Q_NEW(StartRequested, START_REQ_SIG);
+   QP::QF::PUBLISH(sr, this);
+
+   // Ticker loop
+   // Does not return till SIGTERM!
+   int result = QP::QF::run();
+
+   std::stringstream ss;
+   ss<<"Terminating QP Framework thread, result:" << result;
+   m_logger->info(ss.str());
 }
 }
 
 /*--------------------------------------------------------------------------*/
 void QP::QF::onStartup()
 {
-    setTickRate(1000, 50); // desired tick rate/prio -> 1000 ticks per second!
+   setTickRate(GofkuCam::TICKS_PER_SEC, 50); // desired tick rate/prio -> 1000 ticks per second!
 }
 
 /*--------------------------------------------------------------------------*/

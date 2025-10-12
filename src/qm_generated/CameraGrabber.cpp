@@ -39,6 +39,7 @@
 #include "CameraGrabber.hpp"
 #include "Evts.hpp"
 #include "Config.hpp"
+#include "CameraGrabberImpl.hpp"
 
 Q_DEFINE_THIS_FILE
 
@@ -56,10 +57,14 @@ namespace GofkuCam
 //${Components::CameraGrabber} ...............................................
 
 //${Components::CameraGrabber::CameraGrabber} ................................
-CameraGrabber::CameraGrabber(LoggerInterfacePtr logger)
+CameraGrabber::CameraGrabber(
+    LoggerInterfacePtr logger,
+    std::string source)
 : QActive(&initial)
 , m_logger(logger)
 , m_frame_timer(this, EvtSignals::FRAME_TIMER_TIMEOUT_SIG, 0U)
+, m_source{source}
+, m_icamera_grabber{std::make_shared<CameraGrabberImpl>(this, m_logger)}
 {
     m_logger->trace("The Controller ctor!");
 }
@@ -78,7 +83,15 @@ Q_STATE_DEF(CameraGrabber, NOT_STARTED) {
     switch (e->sig) {
         //${Components::CameraGrabber::SM::NOT_STARTED::START_REQ}
         case START_REQ_SIG: {
-            status_ = tran(&RUNNING);
+            m_icamera_grabber->start_req();
+
+            //${Components::CameraGrabber::SM::NOT_STARTED::START_REQ::[m_icamera_grabber->is_opened()]}
+            if (m_icamera_grabber->is_opened()) {
+                status_ = tran(&RUNNING);
+            }
+            else {
+                status_ = Q_RET_UNHANDLED;
+            }
             break;
         }
         default: {
@@ -93,24 +106,38 @@ Q_STATE_DEF(CameraGrabber, NOT_STARTED) {
 Q_STATE_DEF(CameraGrabber, RUNNING) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::CameraGrabber::SM::RUNNING::STREAM_ENDED}
-        case STREAM_ENDED_SIG: {
-            status_ = tran(&NOT_STARTED);
+        //${Components::CameraGrabber::SM::RUNNING}
+        case Q_ENTRY_SIG: {
+            m_icamera_grabber->running_entry();
+
+            status_ = Q_RET_HANDLED;
             break;
         }
-        //${Components::CameraGrabber::SM::RUNNING::CAPTURE_ERROR}
+        //${Components::CameraGrabber::SM::RUNNING::STREAM_ENDED, CAPTURE_ERROR}
+        case STREAM_ENDED_SIG: // intentionally fall through
         case CAPTURE_ERROR_SIG: {
+            m_icamera_grabber->stream_end();
+
             status_ = tran(&NOT_STARTED);
             break;
         }
         //${Components::CameraGrabber::SM::RUNNING::FRAME_TIMER_TIMEOUT}
         case FRAME_TIMER_TIMEOUT_SIG: {
+            m_icamera_grabber->frame_timer_timeout();
+
             status_ = Q_RET_HANDLED;
             break;
         }
         //${Components::CameraGrabber::SM::RUNNING::STOP_REQ}
         case STOP_REQ_SIG: {
-            status_ = tran(&NOT_STARTED);
+            m_icamera_grabber->stop_req();
+
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CameraGrabber::SM::RUNNING::POLLING_TIMER_TIMEOUT}
+        case POLLING_TIMER_TIMEOUT_SIG: {
+            status_ = Q_RET_HANDLED;
             break;
         }
         default: {

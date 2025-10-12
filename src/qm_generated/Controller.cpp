@@ -104,6 +104,14 @@ Q_STATE_DEF(Controller, operating) {
             ss<<"Frame processed: " << frame.size;
             m_logger->info(ss.str());
             */
+            m_logger->info("New frame");
+            std::shared_ptr<Frame> frame = Q_EVT_CAST(FrameCapturedEvt)->m_frame;
+            m_logger->trace("Captured frame with size: " + std::to_string(frame->cols) + "x" + std::to_string(frame->rows));
+
+            // Display the frame
+            cv::imshow("GofkuCam Stream", *frame);
+            cv::waitKey(500); // Allow the window to update, wait 1ms
+            cv::destroyAllWindows();
             status_ = Q_RET_HANDLED;
             break;
         }

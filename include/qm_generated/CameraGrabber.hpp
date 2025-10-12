@@ -36,10 +36,12 @@
 //
 //$endhead${../../include/qm~::CameraGrabber.hpp} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #ifndef CAMERA_GRABBER_HPP_
-#define AMERA_GRABBER_HPP_
+#define CAMERA_GRABBER_HPP_
 
 #include "qpcpp.hpp"
+#include "ICameraGrabber.hpp"
 #include "LoggerInterface.hpp"
+#include "GofkuCamCommon.hpp"
 
 namespace GofkuCam
 {
@@ -53,9 +55,13 @@ private:
 
 public:
     QP::QTimeEvt m_frame_timer;
+    std::string m_source;
+    std::shared_ptr<ICameraGrabber> m_icamera_grabber;
 
 public:
-    CameraGrabber(LoggerInterfacePtr logger);
+    CameraGrabber(
+        LoggerInterfacePtr logger,
+        std::string source);
 
 protected:
     Q_STATE_DECL(initial);
