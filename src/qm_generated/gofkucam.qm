@@ -77,7 +77,7 @@ m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
     </initial>
     <state name="NOT_STARTED">
      <tran trig="START_REQ">
-      <action>m_icamera_grabber-&gt;start_req();
+      <action>m_icamera_grabber-&gt;start_req(e);
 </action>
       <choice target="../../../2">
        <guard>m_icamera_grabber-&gt;is_opened()</guard>
@@ -92,31 +92,31 @@ m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
      <state_glyph node="6,7,66,16"/>
     </state>
     <state name="RUNNING">
-     <entry>m_icamera_grabber-&gt;running_entry();
+     <entry>m_icamera_grabber-&gt;running_entry(e);
 </entry>
      <tran trig="STREAM_ENDED, CAPTURE_ERROR" target="../../1">
-      <action>m_icamera_grabber-&gt;stream_end();
+      <action>m_icamera_grabber-&gt;stream_end(e);
 </action>
       <tran_glyph conn="5,42,3,1,74,-26,-7">
        <action box="0,-2,47,2"/>
       </tran_glyph>
      </tran>
      <tran trig="FRAME_TIMER_TIMEOUT">
-      <action>m_icamera_grabber-&gt;frame_timer_timeout();
+      <action>m_icamera_grabber-&gt;frame_timer_timeout(e);
 </action>
       <tran_glyph conn="5,32,3,-1,29">
        <action box="0,-2,20,2"/>
       </tran_glyph>
      </tran>
      <tran trig="STOP_REQ">
-      <action>m_icamera_grabber-&gt;stop_req();
+      <action>m_icamera_grabber-&gt;stop_req(e);
 </action>
       <tran_glyph conn="5,44,3,-1,29">
        <action box="0,-2,10,2"/>
       </tran_glyph>
      </tran>
      <tran trig="POLLING_TIMER_TIMEOUT">
-      <action>m_icamera_grabber-&gt;poll_the_camera();
+      <action>m_icamera_grabber-&gt;poll_the_camera(e);
 </action>
       <tran_glyph conn="5,35,3,-1,29">
        <action box="0,-2,28,2"/>

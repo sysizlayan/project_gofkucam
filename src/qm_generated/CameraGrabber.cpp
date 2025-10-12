@@ -81,7 +81,7 @@ Q_STATE_DEF(CameraGrabber, NOT_STARTED) {
     switch (e->sig) {
         //${Components::CameraGrabber::SM::NOT_STARTED::START_REQ}
         case START_REQ_SIG: {
-            m_icamera_grabber->start_req();
+            m_icamera_grabber->start_req(e);
 
             //${Components::CameraGrabber::SM::NOT_STARTED::START_REQ::[m_icamera_grabber->is_opened()]}
             if (m_icamera_grabber->is_opened()) {
@@ -106,7 +106,7 @@ Q_STATE_DEF(CameraGrabber, RUNNING) {
     switch (e->sig) {
         //${Components::CameraGrabber::SM::RUNNING}
         case Q_ENTRY_SIG: {
-            m_icamera_grabber->running_entry();
+            m_icamera_grabber->running_entry(e);
 
             status_ = Q_RET_HANDLED;
             break;
@@ -114,28 +114,28 @@ Q_STATE_DEF(CameraGrabber, RUNNING) {
         //${Components::CameraGrabber::SM::RUNNING::STREAM_ENDED, CAPTURE_ERROR}
         case STREAM_ENDED_SIG: // intentionally fall through
         case CAPTURE_ERROR_SIG: {
-            m_icamera_grabber->stream_end();
+            m_icamera_grabber->stream_end(e);
 
             status_ = tran(&NOT_STARTED);
             break;
         }
         //${Components::CameraGrabber::SM::RUNNING::FRAME_TIMER_TIMEOUT}
         case FRAME_TIMER_TIMEOUT_SIG: {
-            m_icamera_grabber->frame_timer_timeout();
+            m_icamera_grabber->frame_timer_timeout(e);
 
             status_ = Q_RET_HANDLED;
             break;
         }
         //${Components::CameraGrabber::SM::RUNNING::STOP_REQ}
         case STOP_REQ_SIG: {
-            m_icamera_grabber->stop_req();
+            m_icamera_grabber->stop_req(e);
 
             status_ = Q_RET_HANDLED;
             break;
         }
         //${Components::CameraGrabber::SM::RUNNING::POLLING_TIMER_TIMEOUT}
         case POLLING_TIMER_TIMEOUT_SIG: {
-            m_icamera_grabber->poll_the_camera();
+            m_icamera_grabber->poll_the_camera(e);
 
             status_ = Q_RET_HANDLED;
             break;

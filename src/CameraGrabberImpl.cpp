@@ -17,14 +17,16 @@ CameraGrabberImpl::CameraGrabberImpl(QP::QActive * owner, LoggerInterfacePtr log
 {
 }
 
-void CameraGrabberImpl::start_req()
+void CameraGrabberImpl::start_req(QP::QEvt const * const e)
 {
+   (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber start requested");
    m_cap = std::make_unique<cv::VideoCapture>(m_source);
 }
 
-void CameraGrabberImpl::frame_timer_timeout()
+void CameraGrabberImpl::frame_timer_timeout(QP::QEvt const * const e)
 {
+   (void)e; // Suppress unused parameter warning
    m_logger->trace("Frame timer timeout");
    
    if (m_is_new_frame_available)
@@ -45,8 +47,9 @@ void CameraGrabberImpl::frame_timer_timeout()
    }
 }
 
-void CameraGrabberImpl::stop_req()
+void CameraGrabberImpl::stop_req(QP::QEvt const * const e)
 {
+   (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber stop requested");
    m_cap->release();
 
@@ -54,8 +57,9 @@ void CameraGrabberImpl::stop_req()
    m_cap = nullptr;
 }
 
-void CameraGrabberImpl::stream_end()
+void CameraGrabberImpl::stream_end(QP::QEvt const * const e)
 {
+   (void)e; // Suppress unused parameter warning
    m_logger->info("Camera stream ended");
 }
 
@@ -63,8 +67,10 @@ bool CameraGrabberImpl::is_opened()
 {
    return (m_cap && m_cap->isOpened());
 }
-void CameraGrabberImpl::poll_the_camera()
+
+void CameraGrabberImpl::poll_the_camera(QP::QEvt const * const e)
 {
+   (void)e; // Suppress unused parameter warning
    if (m_cap && m_cap->isOpened())
    {
       auto frame = std::make_shared<Frame>();
@@ -89,8 +95,10 @@ void CameraGrabberImpl::poll_the_camera()
       QP::QF::PUBLISH(see, this);
    }
 }
-void CameraGrabberImpl::running_entry()
+
+void CameraGrabberImpl::running_entry(QP::QEvt const * const e)
 {
+   (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber running entry");
    m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
    m_polling_timer.armX(30, 0);
