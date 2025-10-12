@@ -62,8 +62,6 @@ CameraGrabber::CameraGrabber(
     std::string source)
 : QActive(&initial)
 , m_logger(logger)
-, m_frame_timer(this, EvtSignals::FRAME_TIMER_TIMEOUT_SIG, 0U)
-, m_source{source}
 , m_icamera_grabber{std::make_shared<CameraGrabberImpl>(this, m_logger)}
 {
     m_logger->trace("The Controller ctor!");

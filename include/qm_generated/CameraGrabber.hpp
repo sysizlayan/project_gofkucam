@@ -54,8 +54,6 @@ private:
     LoggerInterfacePtr m_logger;
 
 public:
-    QP::QTimeEvt m_frame_timer;
-    std::string m_source;
     std::shared_ptr<ICameraGrabber> m_icamera_grabber;
 
 public:
