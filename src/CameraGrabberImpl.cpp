@@ -22,6 +22,13 @@ void CameraGrabberImpl::start_req(QP::QEvt const * const e)
    (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber start requested");
    m_cap = std::make_unique<cv::VideoCapture>(m_source);
+
+   if(!m_cap->isOpened())
+   {
+      m_logger->error("Failed to open video source: " + m_source);
+      StreamEnded *see = Q_NEW(StreamEnded, STREAM_ENDED_SIG);
+      QP::QF::PUBLISH(see, this);
+   }
 }
 
 void CameraGrabberImpl::frame_timer_timeout(QP::QEvt const * const e)

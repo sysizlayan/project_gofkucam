@@ -17,6 +17,8 @@ DetectorControllerImpl::DetectorControllerImpl(QP::QActive * const owner, Logger
                     Config::config().get<std::string>("yolo_labels_path"),
                     logger,
                     Config::config().get<bool>("use_gpu")))
+    , m_class_names(m_detector->get_class_names(Config::config().get<std::string>("yolo_labels_path")))
+    , m_class_colors(ObjectDetector::generate_colors(m_class_names, 0))
 {
     m_logger->info("Detector constructed with model: " + Config::config().get<std::string>("yolo_model_path"));
 
@@ -55,9 +57,24 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     #endif
 
-    // TODO: Get frame from event and run detection
     std::vector<Detection> detections = m_detector->detect(frame);
-    //m_detector->draw_bounding_box(frame, detections, const std::vector<std::string> &classNames, const std::vector<cv::Scalar> &colors)
+    std::vector<Detection> cat_or_dog_detections{};
+    // Log dog and cat detections
+    for (const auto& detection : detections) {
+        std::string class_name = m_class_names[detection.classId];
+        if (class_name == "dog" || class_name == "cat")
+        {
+            m_logger->info("Detected " + class_name + " with confidence: " + 
+                         std::to_string(detection.conf) + 
+                         " at position [" + std::to_string(detection.box.x) + 
+                         ", " + std::to_string(detection.box.y) + 
+                         ", " + std::to_string(detection.box.width) + 
+                         ", " + std::to_string(detection.box.height) + "]");
+            cat_or_dog_detections.push_back(detection);
+        }
+    }
+
+    m_detector->draw_bounding_box(frame, cat_or_dog_detections, m_class_names, m_class_colors);
     
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();

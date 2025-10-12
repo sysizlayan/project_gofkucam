@@ -14,6 +14,8 @@ private:
     QP::QActive * m_owner; 
     LoggerInterfacePtr m_logger;
     std::shared_ptr<ObjectDetector> m_detector;
+    std::vector<std::string> m_class_names;
+    std::vector<cv::Scalar> m_class_colors;
 
 public:
     DetectorControllerImpl(QP::QActive * const owner, LoggerInterfacePtr logger);

@@ -64,6 +64,8 @@ public:
     void draw_bounding_box_mask(FramePtr image, const std::vector<Detection> &detections,
                                 const std::vector<std::string> &classNames, const std::vector<cv::Scalar> &classColors,
                                 float maskAlpha);
+    std::vector<std::string> get_class_names(const std::string &path);
+    static std::vector<cv::Scalar> generate_colors(const std::vector<std::string> &classNames, int seed);
 
 private:
     std::string m_model_path;                   // Path to the ONNX model file
@@ -110,10 +112,6 @@ private:
     std::vector<Detection> postprocess(const cv::Size &originalImageSize, const cv::Size &resizedImageShape,
                                       const std::vector<Ort::Value> &outputTensors,
                                       float confThreshold, float iouThreshold);
-
-    std::vector<std::string> get_class_names(const std::string &path);
-
-    static std::vector<cv::Scalar> generate_colors(const std::vector<std::string> &classNames, int seed);
 
     static void nmx_boxes(const std::vector<BoundingBox>& boundingBoxes,
                 const std::vector<float>& scores,
