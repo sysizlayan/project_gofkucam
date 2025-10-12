@@ -30,18 +30,8 @@ QPFrame::QPFrame(LoggerInterfacePtr logger)
    std::string source = Config::config().get<std::string>("stream_address");
 
    std::stringstream ss;
-   ss<<"Using " << source << " as video source!";
+   ss<<"Using " << source << " as video source! QP Framework constructed.";
    m_logger->info(ss.str());
-
-   m_frame_grabbing_strategy = std::make_shared<CapturingFramesFromVideoStream>(source, m_logger);
-   m_logger->trace("QP Framework constructed.");
-
-   m_detector = std::make_shared<ObjectDetector>(
-      Config::config().get<std::string>("yolo_model_path"),
-      Config::config().get<std::string>("yolo_labels_path"),
-      m_logger,
-      Config::config().get<bool>("use_gpu"));
-   m_logger->trace("Detector constructed with model: " + Config::config().get<std::string>("yolo_model_path"));
 }
 
 void QPFrame::start()

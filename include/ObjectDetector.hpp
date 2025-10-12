@@ -56,12 +56,12 @@ public:
     ObjectDetector(const ObjectDetector &) = delete; // Disable copy constructor
     ObjectDetector &operator=(const ObjectDetector &) = delete; // Disable copy assignment operator
 
-    std::vector<Detection> detect(Frame &image, float confThreshold = 0.4f, float iouThreshold = 0.45f);
+    std::vector<Detection> detect(FramePtr image, float confThreshold = 0.4f, float iouThreshold = 0.45f);
 
-    void draw_bounding_box(Frame &image, const std::vector<Detection> &detections,
+    void draw_bounding_box(FramePtr image, const std::vector<Detection> &detections,
                             const std::vector<std::string> &classNames, const std::vector<cv::Scalar> &colors);
 
-    void draw_bounding_box_mask(Frame &image, const std::vector<Detection> &detections,
+    void draw_bounding_box_mask(FramePtr image, const std::vector<Detection> &detections,
                                 const std::vector<std::string> &classNames, const std::vector<cv::Scalar> &classColors,
                                 float maskAlpha);
 
@@ -95,7 +95,7 @@ private:
      * @param inputTensorShape Reference to vector representing input tensor shape.
      * @return Frame Resized image after preprocessing.
      */
-    Frame preprocess(const Frame &image, float *&blob, std::vector<int64_t> &inputTensorShape);
+    Frame preprocess(FramePtr image, float *&blob, std::vector<int64_t> &inputTensorShape);
     
     /**
      * @brief Postprocesses the model output to extract detections.
@@ -124,13 +124,13 @@ private:
     static BoundingBox scale_coordinates(const cv::Size &imageShape, BoundingBox coords,
                             const cv::Size &imageOriginalShape, bool p_Clip);
 
-    static void letter_box(const cv::Mat& image, cv::Mat& outImage,
-                        const cv::Size& newShape,
-                        const cv::Scalar& color,
-                        bool auto_,
-                        bool scaleFill,
-                        bool scaleUp,
-                        int stride);
+    static void letter_box(FramePtr image, Frame& outImage,
+               const cv::Size& newShape,
+               const cv::Scalar& color,
+               bool auto_,
+               bool scaleFill,
+               bool scaleUp,
+               int stride);
 
     static size_t vector_product(const std::vector<int64_t> &vector);
 

@@ -1,5 +1,6 @@
 #include "ObjectDetector.hpp"
 #include "LoggerInterface.hpp"
+#include <memory>
 #include <sstream>
 #include "GofkuCamExceptions.hpp"
 #include <algorithm>
@@ -101,7 +102,7 @@ ObjectDetector::ObjectDetector(const std::string &model_path, const std::string 
 }
 
 // Detect function implementation
-std::vector<Detection> ObjectDetector::detect(Frame& image, float confThreshold, float iouThreshold) {
+std::vector<Detection> ObjectDetector::detect(FramePtr image, float confThreshold, float iouThreshold) {
     //ScopedTimer timer("Overall detection");
 
     float* blobPtr = nullptr; // Pointer to hold preprocessed image data
@@ -145,13 +146,13 @@ std::vector<Detection> ObjectDetector::detect(Frame& image, float confThreshold,
     cv::Size resizedImageShape(static_cast<int>(inputTensorShape[3]), static_cast<int>(inputTensorShape[2]));
 
     // Postprocess the output tensors to obtain detections
-    std::vector<Detection> detections = postprocess(image.size(), resizedImageShape, outputTensors, confThreshold, iouThreshold);
+    std::vector<Detection> detections = postprocess(image->size(), resizedImageShape, outputTensors, confThreshold, iouThreshold);
 
     return detections; // Return the vector of detections
 }
 
 // Preprocess function implementation
-Frame ObjectDetector::preprocess(const Frame &image, float *&blob, std::vector<int64_t> &inputTensorShape) {
+Frame ObjectDetector::preprocess(FramePtr image, float *&blob, std::vector<int64_t> &inputTensorShape) {
     //ScopedTimer timer("preprocessing");
 
     Frame resizedImage;
@@ -341,7 +342,7 @@ size_t ObjectDetector::vector_product(const std::vector<int64_t> &vector)
 }
 
 
-void ObjectDetector::letter_box(const Frame& image, Frame& outImage,
+void ObjectDetector::letter_box(FramePtr image, Frame& outImage,
                     const cv::Size& newShape,
                     const cv::Scalar& color,
                     bool auto_,
@@ -350,8 +351,8 @@ void ObjectDetector::letter_box(const Frame& image, Frame& outImage,
                     int stride)
 {
     // Calculate the scaling ratio to fit the image within the new shape
-    float ratio = std::min(static_cast<float>(newShape.height) / image.rows,
-                        static_cast<float>(newShape.width) / image.cols);
+    float ratio = std::min(static_cast<float>(newShape.height) / image->rows,
+                        static_cast<float>(newShape.width) / image->cols);
 
     // Prevent scaling up if not allowed
     if (!scaleUp) {
@@ -359,8 +360,8 @@ void ObjectDetector::letter_box(const Frame& image, Frame& outImage,
     }
 
     // Calculate new dimensions after scaling
-    int newUnpadW = static_cast<int>(std::round(image.cols * ratio));
-    int newUnpadH = static_cast<int>(std::round(image.rows * ratio));
+    int newUnpadW = static_cast<int>(std::round(image->cols * ratio));
+    int newUnpadH = static_cast<int>(std::round(image->rows * ratio));
 
     // Calculate padding needed to reach the desired shape
     int dw = newShape.width - newUnpadW;
@@ -377,8 +378,8 @@ void ObjectDetector::letter_box(const Frame& image, Frame& outImage,
         // Scale to fill without maintaining aspect ratio
         newUnpadW = newShape.width;
         newUnpadH = newShape.height;
-        ratio = std::min(static_cast<float>(newShape.width) / image.cols,
-                        static_cast<float>(newShape.height) / image.rows);
+        ratio = std::min(static_cast<float>(newShape.width) / image->cols,
+                        static_cast<float>(newShape.height) / image->rows);
         dw = 0;
         dh = 0;
     } 
@@ -392,14 +393,14 @@ void ObjectDetector::letter_box(const Frame& image, Frame& outImage,
         int padBottom = dh - padTop;
 
         // Resize the image if the new dimensions differ
-        if (image.cols != newUnpadW || image.rows != newUnpadH)
+        if (image->cols != newUnpadW || image->rows != newUnpadH)
         {
-            cv::resize(image, outImage, cv::Size(newUnpadW, newUnpadH), 0, 0, cv::INTER_LINEAR);
+            cv::resize(*image, outImage, cv::Size(newUnpadW, newUnpadH), 0, 0, cv::INTER_LINEAR);
         } 
         else
         {
             // Avoid unnecessary copying if dimensions are the same
-            outImage = image;
+            outImage = *image;
         }
 
         // Apply padding to reach the desired shape
@@ -408,14 +409,14 @@ void ObjectDetector::letter_box(const Frame& image, Frame& outImage,
     }
 
     // Resize the image if the new dimensions differ
-    if (image.cols != newUnpadW || image.rows != newUnpadH)
+    if (image->cols != newUnpadW || image->rows != newUnpadH)
     {
-        cv::resize(image, outImage, cv::Size(newUnpadW, newUnpadH), 0, 0, cv::INTER_LINEAR);
+        cv::resize(*image, outImage, cv::Size(newUnpadW, newUnpadH), 0, 0, cv::INTER_LINEAR);
     } 
     else
     {
         // Avoid unnecessary copying if dimensions are the same
-        outImage = image;
+        outImage = *image;
     }
 
     // Calculate separate padding for left/right and top/bottom to handle odd padding
@@ -589,7 +590,7 @@ std::vector<cv::Scalar> ObjectDetector::generate_colors(const std::vector<std::s
     return colorCache[hashKey];
 }
 
-void ObjectDetector::draw_bounding_box(Frame &image, const std::vector<Detection> &detections,
+void ObjectDetector::draw_bounding_box(FramePtr image, const std::vector<Detection> &detections,
                             const std::vector<std::string> &classNames, const std::vector<cv::Scalar> &colors)
 {
     // Iterate through each detection to draw bounding boxes and labels
@@ -606,7 +607,7 @@ void ObjectDetector::draw_bounding_box(Frame &image, const std::vector<Detection
         const cv::Scalar& color = colors[detection.classId % colors.size()];
 
         // Draw the bounding box rectangle
-        cv::rectangle(image, cv::Point(detection.box.x, detection.box.y),
+        cv::rectangle(*image, cv::Point(detection.box.x, detection.box.y),
                         cv::Point(detection.box.x + detection.box.width, detection.box.y + detection.box.height),
                         color, 2, cv::LINE_AA);
 
@@ -615,8 +616,8 @@ void ObjectDetector::draw_bounding_box(Frame &image, const std::vector<Detection
 
         // Define text properties for labels
         int fontFace = cv::FONT_HERSHEY_SIMPLEX;
-        double fontScale = std::min(image.rows, image.cols) * 0.0008;
-        const int thickness = std::max(1, static_cast<int>(std::min(image.rows, image.cols) * 0.002));
+        double fontScale = std::min(image->rows, image->cols) * 0.0008;
+        const int thickness = std::max(1, static_cast<int>(std::min(image->rows, image->cols) * 0.002));
         int baseline = 0;
 
         // Calculate text size for background rectangles
@@ -628,10 +629,10 @@ void ObjectDetector::draw_bounding_box(Frame &image, const std::vector<Detection
         cv::Point labelBottomRight(detection.box.x + textSize.width + 5, labelY + baseline - 5);
 
         // Draw background rectangle for label
-        cv::rectangle(image, labelTopLeft, labelBottomRight, color, cv::FILLED);
+        cv::rectangle(*image, labelTopLeft, labelBottomRight, color, cv::FILLED);
 
         // Put label text
-        cv::putText(image, label, cv::Point(detection.box.x + 2, labelY - 2), fontFace, fontScale, cv::Scalar(255, 255, 255), thickness, cv::LINE_AA);
+        cv::putText(*image, label, cv::Point(detection.box.x + 2, labelY - 2), fontFace, fontScale, cv::Scalar(255, 255, 255), thickness, cv::LINE_AA);
     }
 }
 
@@ -644,26 +645,26 @@ void ObjectDetector::draw_bounding_box(Frame &image, const std::vector<Detection
     * @param classColors Vector of colors for each class.
     * @param maskAlpha Alpha value for the mask transparency.
     */
-void ObjectDetector::draw_bounding_box_mask(Frame &image, const std::vector<Detection> &detections,
-                                const std::vector<std::string> &classNames, const std::vector<cv::Scalar> &classColors,
-                                float maskAlpha)
+void ObjectDetector::draw_bounding_box_mask(FramePtr image, const std::vector<Detection> &detections,
+                                            const std::vector<std::string> &classNames, const std::vector<cv::Scalar> &classColors,
+                                            float maskAlpha)
 {
     // Validate input image
-    if (image.empty())
+    if (image->empty())
     {
         m_logger->error("Empty image provided to drawBoundingBoxMask.");
         return;
     }
 
-    const int imgHeight = image.rows;
-    const int imgWidth = image.cols;
+    const int imgHeight = image->rows;
+    const int imgWidth = image->cols;
 
     // Precompute dynamic font size and thickness based on image dimensions
     const double fontSize = std::min(imgHeight, imgWidth) * 0.0006;
     const int textThickness = std::max(1, static_cast<int>(std::min(imgHeight, imgWidth) * 0.001));
 
     // Create a mask image for blending (initialized to zero)
-    Frame maskImage(image.size(), image.type(), cv::Scalar::all(0));
+    Frame maskImage(image->size(), image->type(), cv::Scalar::all(0));
 
     // Pre-filter detections to include only those above the confidence threshold and with valid class IDs
     std::vector<const Detection*> filteredDetections;
@@ -686,14 +687,14 @@ void ObjectDetector::draw_bounding_box_mask(Frame &image, const std::vector<Dete
     }
 
     // Blend the maskImage with the original image to apply the semi-transparent masks
-    cv::addWeighted(maskImage, maskAlpha, image, 1.0f, 0, image);
+    cv::addWeighted(maskImage, maskAlpha, *image, 1.0f, 0, *image);
 
     // Draw bounding boxes and labels on the original image
     for (const auto* detection : filteredDetections)
     {
         cv::Rect box(detection->box.x, detection->box.y, detection->box.width, detection->box.height);
         const cv::Scalar &color = classColors[detection->classId];
-        cv::rectangle(image, box, color, 2, cv::LINE_AA);
+        cv::rectangle(*image, box, color, 2, cv::LINE_AA);
 
         std::string label = classNames[detection->classId] + ": " + std::to_string(static_cast<int>(detection->conf * 100)) + "%";
         int baseLine = 0;
@@ -704,10 +705,10 @@ void ObjectDetector::draw_bounding_box_mask(Frame &image, const std::vector<Dete
         cv::Point labelBottomRight(detection->box.x + labelSize.width + 5, labelY + baseLine - 5);
 
         // Draw background rectangle for label
-        cv::rectangle(image, labelTopLeft, labelBottomRight, color, cv::FILLED);
+        cv::rectangle(*image, labelTopLeft, labelBottomRight, color, cv::FILLED);
 
         // Put label text
-        cv::putText(image, label, cv::Point(detection->box.x + 2, labelY - 2), cv::FONT_HERSHEY_SIMPLEX, fontSize, cv::Scalar(255, 255, 255), textThickness, cv::LINE_AA);
+        cv::putText(*image, label, cv::Point(detection->box.x + 2, labelY - 2), cv::FONT_HERSHEY_SIMPLEX, fontSize, cv::Scalar(255, 255, 255), textThickness, cv::LINE_AA);
     }
 }
 
