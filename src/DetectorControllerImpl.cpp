@@ -4,6 +4,9 @@
 #include "ObjectDetector.hpp"
 #include "qp.hpp"
 #include <memory>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
 
 #define MINI_PROFILER
 namespace GofkuCam
@@ -73,6 +76,25 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
             cat_or_dog_detections.push_back(detection);
         }
     }
+
+    // // Save frame if it contains a dog or cat detection
+    // for (const auto& detection : detections) {
+    //     std::string class_name = m_class_names[detection.classId];
+    //     if (class_name == "dog" || class_name == "cat") {
+    //         // Generate timestamp for the filename
+    //         auto now = std::chrono::system_clock::now();
+    //         auto now_time = std::chrono::system_clock::to_time_t(now);
+    //         std::stringstream ss;
+    //         ss << "captured_frames/" << class_name << "_" 
+    //            << std::put_time(std::localtime(&now_time), "%Y%m%d_%H%M%S")
+    //            << "_conf" << std::fixed << std::setprecision(2) << detection.conf
+    //            << ".png";
+            
+    //         cv::imwrite(ss.str(), *frame);
+    //         m_logger->info("Saved frame to: " + ss.str());
+    //         break;  // Save the frame only once even if multiple detections exist
+    //     }
+    // }
 
     m_detector->draw_bounding_box(frame, cat_or_dog_detections, m_class_names, m_class_colors);
     

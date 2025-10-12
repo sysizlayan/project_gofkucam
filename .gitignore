@@ -48,5 +48,6 @@ extern/onnxruntime-*
 *.pt
 resources/yolo/venv/
 config/config.json
-
+captured_frames/
+captured_frames/*
 CmakePresets.json
