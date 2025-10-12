@@ -58,7 +58,7 @@ void QPFrame::ao_thread_func()
    m_camera_grabber = std::make_shared<CameraGrabber>(m_logger, 
          Config::config().get<std::string>("stream_address"));
 
-   m_detector_controller = std::make_shared<DetectorController>(m_logger, m_detector);
+   m_detector_controller = std::make_shared<DetectorController>(m_logger);
 
    m_camera_grabber->start(
       2, 

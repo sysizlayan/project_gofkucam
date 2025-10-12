@@ -41,6 +41,8 @@
 #include "qpcpp.hpp"
 #include "LoggerInterface.hpp"
 #include "ObjectDetector.hpp"
+#include "IDetectorController.hpp"
+
 namespace GofkuCam
 {
 
@@ -52,16 +54,15 @@ private:
     LoggerInterfacePtr m_logger;
 
 public:
-    std::shared_ptr<ObjectDetector> m_detector;
+    std::shared_ptr<IDetectorController> m_detector_controller;
 
 public:
-    DetectorController(
-        LoggerInterfacePtr logger,
-        std::shared_ptr<ObjectDetector> detector);
+    DetectorController(LoggerInterfacePtr logger);
 
 protected:
     Q_STATE_DECL(initial);
     Q_STATE_DECL(operating);
+    Q_STATE_DECL(NOT_STARTED);
 }; // class DetectorController
 //$enddecl${Components::DetectorController} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -36,7 +36,9 @@
 //
 //$endhead${.::DetectorController.cpp} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #include "qpcpp.hpp"
+#include "IDetectorController.hpp"
 #include "DetectorController.hpp"
+#include "DetectorControllerImpl.hpp"
 #include "Evts.hpp"
 #include "Config.hpp"
 
@@ -56,11 +58,10 @@ namespace GofkuCam
 //${Components::DetectorController} ..........................................
 
 //${Components::DetectorControll~::DetectorController} .......................
-DetectorController::DetectorController(
-    LoggerInterfacePtr logger,
-    std::shared_ptr<ObjectDetector> detector)
+DetectorController::DetectorController(LoggerInterfacePtr logger)
 : QActive(&initial)
 , m_logger(logger)
+, m_detector_controller{std::make_shared<DetectorControllerImpl>(this, logger)}
 {
     m_logger->trace("Camera grabber started!");
 }
@@ -71,7 +72,7 @@ Q_STATE_DEF(DetectorController, initial) {
     (void)e; // Just to supress compiler warning
     (void)Q_this_module_; // Just to supress compiler warning
 
-    return tran(&operating);
+    return tran(&NOT_STARTED);
 }
 
 //${Components::DetectorControll~::SM::operating} ............................
@@ -80,39 +81,34 @@ Q_STATE_DEF(DetectorController, operating) {
     switch (e->sig) {
         //${Components::DetectorControll~::SM::operating::FRAME_CAPTURED}
         case FRAME_CAPTURED_SIG: {
-            /*
-            m_frame_strategy->unsubscribeFromFrameUpdates(this);
-            Frame frame;
-            m_frame_strategy->grabFrame(frame);
-            // Detect objects in the frame
-            #ifdef MINI_PROFILER
-            // Mini profiler
-            //static int call_count = 0;
-            std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-            #endif
-
-            std::vector<Detection> results = m_detector->detect(frame);
-            //m_detector->draw_bounding_box_mask(frame, results);
-
-            #ifdef MINI_PROFILER
-            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-            m_logger->info("Detection took " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) + "[ms]");
-            #endif
-            m_frame_strategy->subscribeToFrameUpdates(this);
-
-            std::stringstream ss;
-            ss<<"Frame processed: " << frame.size;
-            m_logger->info(ss.str());
-            */
-            m_logger->info("New frame");
-            std::shared_ptr<Frame> frame = Q_EVT_CAST(FrameCapturedEvt)->m_frame;
-            m_logger->trace("Captured frame with size: " + std::to_string(frame->cols) + "x" + std::to_string(frame->rows));
-
-            // Display the frame
-            cv::imshow("GofkuCam Stream", *frame);
-            cv::waitKey(1); // Allow the window to update, wait 1ms
-            //cv::destroyAllWindows();
+            m_detector_controller->frame_captured(e);
             status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::DetectorControll~::SM::operating::STREAM_ENDED, CAPTURE_ERROR, STO~}
+        case STREAM_ENDED_SIG: // intentionally fall through
+        case CAPTURE_ERROR_SIG: // intentionally fall through
+        case STOP_REQ_SIG: {
+            m_detector_controller->stream_end(e);
+            status_ = tran(&NOT_STARTED);
+            break;
+        }
+        default: {
+            status_ = super(&top);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::DetectorControll~::SM::NOT_STARTED} ..........................
+Q_STATE_DEF(DetectorController, NOT_STARTED) {
+    QP::QState status_;
+    switch (e->sig) {
+        //${Components::DetectorControll~::SM::NOT_STARTED::START_REQ}
+        case START_REQ_SIG: {
+            m_detector_controller->start_req(e);
+            status_ = tran(&operating);
             break;
         }
         default: {
