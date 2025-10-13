@@ -2,6 +2,7 @@
 #include "Config.hpp"
 #include "Evts.hpp"
 #include "ObjectDetector.hpp"
+#include "GofkuCamCommon.hpp"
 #include "qp.hpp"
 #include <memory>
 #include <chrono>
@@ -20,9 +21,6 @@ DetectorControllerImpl::DetectorControllerImpl(QP::QActive * const owner, Logger
                     Config::config().get<std::string>("yolo_labels_path"),
                     logger,
                     Config::config().get<bool>("use_gpu")))
-    , m_depth_estimator(std::make_shared<DepthEstimator>(
-                    Config::config().get<std::string>("depth_model_path"),
-                    logger))
     , m_class_names(m_detector->get_class_names(Config::config().get<std::string>("yolo_labels_path")))
     , m_class_colors(ObjectDetector::generate_colors(m_class_names, 0))
 {
@@ -62,8 +60,8 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     #endif
-
-    std::vector<Detection> detections = m_detector->detect(frame);
+    FramePtr copy_of_frame = std::make_shared<Frame>(frame->clone());
+    std::vector<Detection> detections = m_detector->detect(copy_of_frame);
     std::vector<Detection> cat_or_dog_detections{};
     // Log dog and cat detections
     for (const auto& detection : detections) {
@@ -78,13 +76,6 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
                          ", " + std::to_string(detection.box.height) + "]");
             cat_or_dog_detections.push_back(detection);
         }
-    }
-
-    FramePtr depth_map = m_depth_estimator->estimate_depth(frame);
-    if (depth_map && !depth_map->empty())
-    {
-        m_logger->info("Depth map estimated with size: " + std::to_string(depth_map->cols) + "x" + std::to_string(depth_map->rows));
-        // You can further process or visualize the depth map as needed
     }
 
     // // Save frame if it contains a dog or cat detection
@@ -114,8 +105,9 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     #endif
 
     // Display the frame
-    cv::imshow("GofkuCam Stream", *frame);
-    cv::imshow("GofkuCam Depth", *depth_map);
+    cv::Mat display_frame;
+    cv::resize(*frame, display_frame, cv::Size(640, 480));
+    cv::imshow("GofkuCam Stream", display_frame);
     cv::waitKey(2); // Allow the window to update, wait 1ms
 
 }
