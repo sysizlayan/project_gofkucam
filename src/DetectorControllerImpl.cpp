@@ -20,6 +20,9 @@ DetectorControllerImpl::DetectorControllerImpl(QP::QActive * const owner, Logger
                     Config::config().get<std::string>("yolo_labels_path"),
                     logger,
                     Config::config().get<bool>("use_gpu")))
+    , m_depth_estimator(std::make_shared<DepthEstimator>(
+                    Config::config().get<std::string>("depth_model_path"),
+                    logger))
     , m_class_names(m_detector->get_class_names(Config::config().get<std::string>("yolo_labels_path")))
     , m_class_colors(ObjectDetector::generate_colors(m_class_names, 0))
 {
