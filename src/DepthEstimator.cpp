@@ -8,8 +8,32 @@
 #include <random>
 #include <fstream>
 
+#include <opencv2/opencv.hpp>
+#include <onnxruntime_cxx_api.h>
+#include <vector>
+#include <stdexcept> // For std::runtime_error
+
+
 namespace GofkuCam
 {
+
+float mean[3] = { 123.675, 116.28, 103.53 };
+float std[3] = { 58.395, 57.12, 57.375 };
+// Helper to get OpenCV type from ONNX Runtime type
+int GetCvType(ONNXTensorElementDataType onnx_type) {
+    switch (onnx_type) {
+        case ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT:   return CV_32F;
+        case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT8:   return CV_8U;
+        case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT8:    return CV_8S;
+        case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT16:  return CV_16U;
+        case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT16:   return CV_16S;
+        case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT32:   return CV_32S;
+        case ONNX_TENSOR_ELEMENT_DATA_TYPE_DOUBLE:  return CV_64F;
+        default:
+            throw std::runtime_error("Unsupported ONNXTensorElementDataType for OpenCV conversion.");
+    }
+}
+
 
 // Implementation of ObjectDetector constructor
 DepthEstimator::DepthEstimator(const std::string &model_path, LoggerInterfacePtr logger, bool is_cuda)
@@ -23,284 +47,320 @@ DepthEstimator::DepthEstimator(const std::string &model_path, LoggerInterfacePtr
     , numInputNodes(0)
     , numOutputNodes(0)
 {
-    // m_session_options = Ort::SessionOptions();
-    // m_session_options.SetIntraOpNumThreads(4);
-    // m_session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
+    m_session_options = Ort::SessionOptions();
+    m_session_options.SetIntraOpNumThreads(4);
+    m_session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
 
-    // // Check what you have as execution providers
-    // std::vector<std::string> availableProviders = Ort::GetAvailableProviders();
-    // std::stringstream ss;
-    // ss << "Available execution providers: ";
-    // for (const auto& provider : availableProviders)
-    // {
-    //     ss << provider << "\n";
-    // }
-    // m_logger->info(ss.str());
+    // Check what you have as execution providers
+    std::vector<std::string> availableProviders = Ort::GetAvailableProviders();
+    std::stringstream ss;
+    ss << "Available execution providers: ";
+    for (const auto& provider : availableProviders)
+    {
+        ss << provider << "\n";
+    }
+    m_logger->info(ss.str());
 
-    // auto cudaAvailable = std::find(availableProviders.begin(), availableProviders.end(), "CUDAExecutionProvider");
-    // OrtCUDAProviderOptions cudaOption;
-    // if (is_cuda && cudaAvailable != availableProviders.end())
-    // {
-    //     m_logger->info("Using CUDA!");
-    //     m_session_options.AppendExecutionProvider_CUDA(cudaOption); // Append CUDA execution provider
-    // }
-    // else if(is_cuda && cudaAvailable == availableProviders.end())
-    // {
-    //     m_logger->warn("CUDAExecutionProvider is not available. Falling back to CPU.");
-    // }
-    // else
-    // {
-    //     m_logger->info("Using CPU");
-    // }
+    auto cudaAvailable = std::find(availableProviders.begin(), availableProviders.end(), "CUDAExecutionProvider");
+    OrtCUDAProviderOptions cudaOption;
+    if (is_cuda && cudaAvailable != availableProviders.end())
+    {
+        m_logger->info("Using CUDA!");
+        m_session_options.AppendExecutionProvider_CUDA(cudaOption); // Append CUDA execution provider
+    }
+    else if(is_cuda && cudaAvailable == availableProviders.end())
+    {
+        m_logger->warn("CUDAExecutionProvider is not available. Falling back to CPU.");
+    }
+    else
+    {
+        m_logger->info("Using CPU");
+    }
 
-    // // Initialize ONNX Runtime environment with warning level
-    // m_env       = Ort::Env(ORT_LOGGING_LEVEL_WARNING, "GOFKU_CAM");
-    // m_session   = Ort::Session(m_env, m_model_path.c_str(), m_session_options);
+    // Initialize ONNX Runtime environment with warning level
+    m_env       = Ort::Env(ORT_LOGGING_LEVEL_WARNING, "GOFKU_CAM_DEPTH");
+    m_session   = Ort::Session(m_env, m_model_path.c_str(), m_session_options);
 
-    // Ort::AllocatorWithDefaultOptions allocator;
+    Ort::AllocatorWithDefaultOptions allocator;
 
-    // // Retrieve input tensor shape information
-    // Ort::TypeInfo inputTypeInfo = m_session.GetInputTypeInfo(0);
-    // std::vector<int64_t> inputTensorShapeVec = inputTypeInfo.GetTensorTypeAndShapeInfo().GetShape();
-    // isDynamicInputShape = (inputTensorShapeVec.size() >= 4) && (inputTensorShapeVec[2] == -1 && inputTensorShapeVec[3] == -1); // Check for dynamic dimensions
+    // Retrieve input tensor shape information
+    Ort::TypeInfo inputTypeInfo = m_session.GetInputTypeInfo(0);
+    std::vector<int64_t> inputTensorShapeVec = inputTypeInfo.GetTensorTypeAndShapeInfo().GetShape();
+    isDynamicInputShape = (inputTensorShapeVec.size() >= 4) && (inputTensorShapeVec[2] == -1 && inputTensorShapeVec[3] == -1); // Check for dynamic dimensions
 
-    // // Allocate and store input node names
-    // auto input_name = m_session.GetInputNameAllocated(0, allocator);
-    // inputNodeNameAllocatedStrings.push_back(std::move(input_name));
-    // inputNames.push_back(inputNodeNameAllocatedStrings.back().get());
+    // Allocate and store input node names
+    auto input_name = m_session.GetInputNameAllocated(0, allocator);
+    inputNodeNameAllocatedStrings.push_back(std::move(input_name));
+    inputNames.push_back(inputNodeNameAllocatedStrings.back().get());
 
-    // // Allocate and store output node names
-    // auto output_name = m_session.GetOutputNameAllocated(0, allocator);
-    // outputNodeNameAllocatedStrings.push_back(std::move(output_name));
-    // outputNames.push_back(outputNodeNameAllocatedStrings.back().get());
+    // Allocate and store output node names
+    auto output_name = m_session.GetOutputNameAllocated(0, allocator);
+    outputNodeNameAllocatedStrings.push_back(std::move(output_name));
+    outputNames.push_back(outputNodeNameAllocatedStrings.back().get());
 
-    // // Set the expected input image shape based on the model's input tensor
-    // if (inputTensorShapeVec.size() >= 4)
-    // {
-    //     inputImageShape = cv::Size(static_cast<int>(inputTensorShapeVec[3]), static_cast<int>(inputTensorShapeVec[2]));
-    // }
-    // else
-    // {
-    //     throw DetectorInilializationError("Tensor shape is not compatible with expected input dimensions.");
-    // }
+    // Set the expected input image shape based on the model's input tensor
+    if (inputTensorShapeVec.size() >= 4)
+    {
+        inputImageShape = cv::Size(static_cast<int>(inputTensorShapeVec[3]), static_cast<int>(inputTensorShapeVec[2]));
+    }
+    else
+    {
+        throw DetectorInilializationError("Tensor shape is not compatible with expected input dimensions.");
+    }
 
-    // // Get the number of input and output nodes
-    // numInputNodes = m_session.GetInputCount();
-    // numOutputNodes = m_session.GetOutputCount();
+    // Get the number of input and output nodes
+    numInputNodes = m_session.GetInputCount();
+    numOutputNodes = m_session.GetOutputCount();
 
-    // // Load class names and generate corresponding colors
-    // m_classes      = get_class_names(m_label_file_path);
-    // m_class_colors = ObjectDetector::generate_colors(m_classes, 0);
-
-    // std::stringstream ss1;
-    // ss1 << "Loaded Model: " << m_model_path << "\n"
-    //            << "Input shape: " << inputImageShape.width << "x" << inputImageShape.height << "\n"
-    //            << "Number of input nodes: " << numInputNodes << "\n"
-    //            << "Number of output nodes: " << numOutputNodes << "\n"
-    //            << "Number of classes loaded: " << m_classes.size() << "\n";
-    // m_logger->info(ss1.str());
+    std::stringstream ss1;
+    ss1 << "Loaded Model: " << m_model_path << "\n"
+        << "Input shape: "  << inputImageShape.width << "x" << inputImageShape.height << "\n"
+        << "Number of input nodes: " << numInputNodes << "\n"
+        << "Number of output nodes: " << numOutputNodes << "\n";
+    m_logger->info(ss1.str());
 }
 
 // Detect function implementation
-void DepthEstimator::estimate_depth(FramePtr image)
+FramePtr DepthEstimator::estimate_depth(FramePtr image)
 {
     // //ScopedTimer timer("Overall detection");
 
-    // float* blobPtr = nullptr; // Pointer to hold preprocessed image data
-    // // Define the shape of the input tensor (batch size, channels, height, width)
-    // std::vector<int64_t> inputTensorShape = {1, 3, inputImageShape.height, inputImageShape.width};
+    float* blobPtr = nullptr; // Pointer to hold preprocessed image data
+    // Define the shape of the input tensor (batch size, channels, height, width)
+    std::vector<int64_t> inputTensorShape = {1, 3, inputImageShape.height, inputImageShape.width};
 
-    // // Preprocess the image and obtain a pointer to the blob
-    // Frame preprocessedImage = preprocess(image, blobPtr, inputTensorShape);
+    // Preprocess the image and obtain a pointer to the blob
+    FramePtr preprocessedImage{preprocess(image, blobPtr, inputTensorShape)};
 
-    // // Compute the total number of elements in the input tensor
-    // size_t inputTensorSize = ObjectDetector::vector_product(inputTensorShape);
+    // Compute the total number of elements in the input tensor
+    size_t inputTensorSize = std::accumulate(inputTensorShape.begin(), inputTensorShape.end(), 1ull, std::multiplies<size_t>());
 
-    // // Create a vector from the blob data for ONNX Runtime input
-    // std::vector<float> inputTensorValues(blobPtr, blobPtr + inputTensorSize);
+    // Create a vector from the blob data for ONNX Runtime input
+    std::vector<float> inputTensorValues(blobPtr, blobPtr + inputTensorSize);
 
-    // delete[] blobPtr; // Free the allocated memory for the blob
+    delete[] blobPtr; // Free the allocated memory for the blob
 
-    // // Create an Ort memory info object (can be cached if used repeatedly)
-    // static Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+    // Create an Ort memory info object (can be cached if used repeatedly)
+    static Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
 
-    // // Create input tensor object using the preprocessed data
-    // Ort::Value inputTensor = Ort::Value::CreateTensor<float>(
-    //     memoryInfo,
-    //     inputTensorValues.data(),
-    //     inputTensorSize,
-    //     inputTensorShape.data(),
-    //     inputTensorShape.size()
-    // );
+    // Create input tensor object using the preprocessed data
+    Ort::Value inputTensor = Ort::Value::CreateTensor<float>(
+        memoryInfo,
+        inputTensorValues.data(),
+        inputTensorSize,
+        inputTensorShape.data(),
+        inputTensorShape.size()
+    );
 
-    // // Run the inference session with the input tensor and retrieve output tensors
-    // std::vector<Ort::Value> outputTensors = m_session.Run(
-    //     Ort::RunOptions{nullptr},
-    //     inputNames.data(),
-    //     &inputTensor,
-    //     numInputNodes,
-    //     outputNames.data(),
-    //     numOutputNodes
-    // );
+    // Run the inference session with the input tensor and retrieve output tensors
+    std::vector<Ort::Value> outputTensors = m_session.Run(
+        Ort::RunOptions{nullptr},
+        inputNames.data(),
+        &inputTensor,
+        numInputNodes,
+        outputNames.data(),
+        numOutputNodes
+    );
+    Ort::Value &outputTensor = outputTensors[0];
 
-    // // Determine the resized image shape based on input tensor shape
-    // cv::Size resizedImageShape(static_cast<int>(inputTensorShape[3]), static_cast<int>(inputTensorShape[2]));
+    std::stringstream ss;
+    ss << "\nInput tensor shape: [";
+    for (size_t i = 0; i < inputTensorShape.size(); ++i)
+    {
+        ss << inputTensorShape[i];
+        if (i < inputTensorShape.size() - 1) ss << ", ";
+    }
+    ss << "]\n";
+    ss<< "Output tensor shapes: ";
+    for (size_t i = 0; i < outputTensors.size(); ++i)
+    {
+        auto shape = outputTensors[i].GetTensorTypeAndShapeInfo().GetShape();
+        ss << "[";
+        for (size_t j = 0; j < shape.size(); ++j)
+        {
+            ss << shape[j];
+            if (j < shape.size() - 1) ss << ", ";
+        }
+        ss << "] ";
+    }
+    ss << "\n";
+    m_logger->info(ss.str()); 
 
-    // // Postprocess the output tensors to obtain detections
-    // std::vector<Detection> detections = postprocess(image->size(), resizedImageShape, outputTensors, confThreshold, iouThreshold);
+    // Determine the resized image shape based on input tensor shape
+    cv::Size resizedImageShape(static_cast<int>(inputTensorShape[3]), static_cast<int>(inputTensorShape[2]));
 
-    // return detections; // Return the vector of detections
+    return postprocess(outputTensor);
 }
+
 
 // Preprocess function implementation
 FramePtr DepthEstimator::preprocess(FramePtr image, float *&blob, std::vector<int64_t> &inputTensorShape)
 {
-    FramePtr resizedImage = std::make_shared<Frame>();
+    FramePtr resized_image = std::make_shared<Frame>();
+    // Resize and pad the image using letterBox utility
+    DepthEstimator::letter_box(image, resized_image, inputImageShape, cv::Scalar(114, 114, 114), isDynamicInputShape, false, true, 32);
 
-    return resizedImage;
-    // //ScopedTimer timer("preprocessing");
+    // Update input tensor shape based on resized image dimensions
+    inputTensorShape[2] = resized_image->rows;
+    inputTensorShape[3] = resized_image->cols;
 
-    // Frame resizedImage;
-    // // Resize and pad the image using letterBox utility
-    // ObjectDetector::letter_box(image, resizedImage, inputImageShape, cv::Scalar(114, 114, 114), isDynamicInputShape, false, true, 32);
-
-    // // Update input tensor shape based on resized image dimensions
-    // inputTensorShape[2] = resizedImage.rows;
-    // inputTensorShape[3] = resizedImage.cols;
-
-    // // Convert image to float and normalize to [0, 1]
-    // resizedImage.convertTo(resizedImage, CV_32FC3, 1 / 255.0f);
-
-    // // Allocate memory for the image blob in CHW format
-    // blob = new float[resizedImage.cols * resizedImage.rows * resizedImage.channels()];
-
-    // // Split the image into separate channels and store in the blob
-    // std::vector<Frame> chw(resizedImage.channels());
-    // for (int i = 0; i < resizedImage.channels(); ++i) {
-    //     chw[i] = Frame(resizedImage.rows, resizedImage.cols, CV_32FC1, blob + i * resizedImage.cols * resizedImage.rows);
+    // for (int k = 0; k < 3; k++)
+    // {
+    //     for (int i = 0; i < resized_image->rows; i++)
+    //     {
+    //         for (int j = 0; j < resized_image->cols; j++)
+    //         {
+    //             resized_image->at<cv::Vec3b>(i, j) = (resized_image->at<cv::Vec3b>(i, j)[k] - mean[k]) / std[k];
+    //         }
+    //     }
     // }
-    // cv::split(resizedImage, chw); // Split channels into the blob
 
-    // //DEBUG_PRINT("Preprocessing completed")
+    // Convert image to float and normalize to [0, 1]
+    resized_image->convertTo(*resized_image, CV_32FC3, 1 / 255.0f);
 
-    // return resizedImage;
+    // Allocate memory for the image blob in CHW format
+    blob = new float[resized_image->cols * resized_image->rows * resized_image->channels()];
+
+    // Split the image into separate channels and store in the blob
+    std::vector<Frame> chw(resized_image->channels());
+    for (int i = 0; i < resized_image->channels(); ++i)
+    {
+        chw[i] = Frame(resized_image->rows, resized_image->cols, CV_32FC1, blob + i * resized_image->cols * resized_image->rows);
+    }
+    cv::split(*resized_image, chw); // Split channels into the blob
+
+    return resized_image;
 }
 
 // Postprocess function to convert raw model output into detections
-FramePtr DepthEstimator::postprocess(
-    const cv::Size &originalImageSize,
-    const cv::Size &resizedImageShape,
-    const std::vector<Ort::Value> &outputTensors)
+FramePtr DepthEstimator::postprocess(const Ort::Value &ort_value)
 {
-    FramePtr depthMap = std::make_shared<Frame>();
-    return depthMap;
+    if (!ort_value.IsTensor())
+    {
+        throw std::runtime_error("Ort::Value is not a tensor.");
+    }
 
-    // //ScopedTimer timer("postprocessing"); // Measure postprocessing time
+    // Get tensor infoF OrtVa
+    Ort::TensorTypeAndShapeInfo type_info = ort_value.GetTensorTypeAndShapeInfo();
+    ONNXTensorElementDataType onnx_type = type_info.GetElementType();
+    std::vector<int64_t> shape = type_info.GetShape();
 
-    // std::vector<Detection> detections;
-    // const float* rawOutput = outputTensors[0].GetTensorData<float>(); // Extract raw output data from the first output tensor
-    // const std::vector<int64_t> outputShape = outputTensors[0].GetTensorTypeAndShapeInfo().GetShape();
+    // EXPECTING SHAPE: 1xHxW (e.g., 1x518x518)
+    if (shape.size() != 3 || shape[0] != 1)
+    {
+        throw std::runtime_error("Unsupported tensor shape for grayscale conversion. Expected 1xHxW.");
+    }
 
-    // // Determine the number of features and detections
-    // const size_t num_features = outputShape[1];
-    // const size_t num_detections = outputShape[2];
+    int height = static_cast<int>(shape[1]);
+    int width = static_cast<int>(shape[2]);
+    int channels = 1; // Grayscale
 
-    // // Early exit if no detections
-    // if (num_detections == 0) {
-    //     return detections;
-    // }
+    // Determine OpenCV data type
+    int cv_depth = GetCvType(onnx_type);
 
-    // // Calculate number of classes based on output shape
-    // const int numClasses = static_cast<int>(num_features) - 4;
-    // if (numClasses <= 0) {
-    //     // Invalid number of classes
-    //     return detections;
-    // }
+    // Get a pointer to the raw data
+    const void* raw_data_ptr = ort_value.GetTensorRawData();
 
-    // // Reserve memory for efficient appending
-    // std::vector<BoundingBox> boxes;
-    // boxes.reserve(num_detections);
-    // std::vector<float> confs;
-    // confs.reserve(num_detections);
-    // std::vector<int> classIds;
-    // classIds.reserve(num_detections);
-    // std::vector<BoundingBox> nms_boxes;
-    // nms_boxes.reserve(num_detections);
+    // Create cv::Mat. Since it's grayscale, we just need height, width, and type.
+    // The Mat will be a view into the Ort::Value's memory.
+    cv::Mat depth_mat(height, width, CV_32F, const_cast<void*>(raw_data_ptr));
+    cv::normalize(depth_mat, depth_mat, 0, 255, cv::NORM_MINMAX, CV_8U);
 
-    // // Constants for indexing
-    // const float* ptr = rawOutput;
-
-    // for (size_t d = 0; d < num_detections; ++d)
-    // {
-    //     // Extract bounding box coordinates (center x, center y, width, height)
-    //     float centerX = ptr[0 * num_detections + d];
-    //     float centerY = ptr[1 * num_detections + d];
-    //     float width = ptr[2 * num_detections + d];
-    //     float height = ptr[3 * num_detections + d];
-
-    //     // Find class with the highest confidence score
-    //     int classId = -1;
-    //     float maxScore = -FLT_MAX;
-    //     for (int c = 0; c < numClasses; ++c)
-    //     {
-    //         const float score = ptr[d + (4 + c) * num_detections];
-    //         if (score > maxScore)
-    //         {
-    //             maxScore = score;
-    //             classId = c;
-    //         }
-    //     }
-
-    //     // Proceed only if confidence exceeds threshold
-    //     if (maxScore > confThreshold)
-    //     {
-    //         // Convert center coordinates to top-left (x1, y1)
-    //         float left = centerX - width / 2.0f;
-    //         float top = centerY - height / 2.0f;
-
-    //         // Scale to original image size
-    //         BoundingBox scaledBox = scale_coordinates(
-    //             resizedImageShape,
-    //             BoundingBox(left, top, width, height),
-    //             originalImageSize,
-    //             true
-    //         );
-
-    //         // Round coordinates for integer pixel positions
-    //         BoundingBox roundedBox;
-    //         roundedBox.x = std::round(scaledBox.x);
-    //         roundedBox.y = std::round(scaledBox.y);
-    //         roundedBox.width = std::round(scaledBox.width);
-    //         roundedBox.height = std::round(scaledBox.height);
-
-    //         // Adjust NMS box coordinates to prevent overlap between classes
-    //         BoundingBox nmsBox = roundedBox;
-    //         nmsBox.x += classId * 7680; // Arbitrary offset to differentiate classes
-    //         nmsBox.y += classId * 7680;
-
-    //         // Add to respective containers
-    //         nms_boxes.emplace_back(nmsBox);
-    //         boxes.emplace_back(roundedBox);
-    //         confs.emplace_back(maxScore);
-    //         classIds.emplace_back(classId);
-    //     }
-    // }
-
-    // // Apply Non-Maximum Suppression (NMS) to eliminate redundant detections
-    // std::vector<int> indices;
-    // ObjectDetector::nmx_boxes(nms_boxes, confs, confThreshold, iouThreshold, indices);
-
-    // // Collect filtered detections into the result vector
-    // detections.reserve(indices.size());
-    // for (const int idx : indices)
-    // {
-    //     detections.emplace_back(Detection{
-    //         boxes[idx],       // Bounding box
-    //         confs[idx],       // Confidence score
-    //         classIds[idx]     // Class ID
-    //     });
-    // }
-    // return detections;
+    // Create a colormap from the depth data
+    cv::Mat colormap;
+    cv::applyColorMap(depth_mat, colormap, cv::COLORMAP_INFERNO);
+    cv::resize(colormap, colormap, cv::Size(1080, 1080));
+    
+    return std::make_shared<Frame>(colormap);
 }
+
+
+void DepthEstimator::letter_box(FramePtr image, FramePtr outImage,
+                    const cv::Size& newShape,
+                    const cv::Scalar& color,
+                    bool auto_,
+                    bool scaleFill,
+                    bool scaleUp,
+                    int stride)
+{
+    // Calculate the scaling ratio to fit the image within the new shape
+    float ratio = std::min(static_cast<float>(newShape.height) / image->rows,
+                        static_cast<float>(newShape.width) / image->cols);
+
+    // Prevent scaling up if not allowed
+    if (!scaleUp) {
+        ratio = std::min(ratio, 1.0f);
+    }
+
+    // Calculate new dimensions after scaling
+    int newUnpadW = static_cast<int>(std::round(image->cols * ratio));
+    int newUnpadH = static_cast<int>(std::round(image->rows * ratio));
+
+    // Calculate padding needed to reach the desired shape
+    int dw = newShape.width - newUnpadW;
+    int dh = newShape.height - newUnpadH;
+
+    if (auto_)
+    {
+        // Ensure padding is a multiple of stride for model compatibility
+        dw = (dw % stride) / 2;
+        dh = (dh % stride) / 2;
+    } 
+    else if (scaleFill)
+    {
+        // Scale to fill without maintaining aspect ratio
+        newUnpadW = newShape.width;
+        newUnpadH = newShape.height;
+        ratio = std::min(static_cast<float>(newShape.width) / image->cols,
+                        static_cast<float>(newShape.height) / image->rows);
+        dw = 0;
+        dh = 0;
+    } 
+    else
+    {
+        // Evenly distribute padding on both sides
+        // Calculate separate padding for left/right and top/bottom to handle odd padding
+        int padLeft = dw / 2;
+        int padRight = dw - padLeft;
+        int padTop = dh / 2;
+        int padBottom = dh - padTop;
+
+        // Resize the image if the new dimensions differ
+        if (image->cols != newUnpadW || image->rows != newUnpadH)
+        {
+            cv::resize(*image, *outImage, cv::Size(newUnpadW, newUnpadH), 0, 0, cv::INTER_LINEAR);
+        } 
+        else
+        {
+            // Avoid unnecessary copying if dimensions are the same
+            *outImage = *image;
+        }
+
+        // Apply padding to reach the desired shape
+        cv::copyMakeBorder(*outImage, *outImage, padTop, padBottom, padLeft, padRight, cv::BORDER_CONSTANT, color);
+        return; // Exit early since padding is already applied
+    }
+
+    // Resize the image if the new dimensions differ
+    if (image->cols != newUnpadW || image->rows != newUnpadH)
+    {
+        cv::resize(*image, *outImage, cv::Size(newUnpadW, newUnpadH), 0, 0, cv::INTER_LINEAR);
+    } 
+    else
+    {
+        // Avoid unnecessary copying if dimensions are the same
+        *outImage = *image;
+    }
+
+    // Calculate separate padding for left/right and top/bottom to handle odd padding
+    int padLeft = dw / 2;
+    int padRight = dw - padLeft;
+    int padTop = dh / 2;
+    int padBottom = dh - padTop;
+
+    // Apply padding to reach the desired shape
+    cv::copyMakeBorder(*outImage, *outImage, padTop, padBottom, padLeft, padRight, cv::BORDER_CONSTANT, color);
+}
+
 
 } // namespace GpfkuCam

@@ -20,7 +20,7 @@ public:
     DepthEstimator(const DepthEstimator &) = delete; // Disable copy constructor
     DepthEstimator &operator=(const DepthEstimator &) = delete; // Disable copy assignment operator
 
-    void estimate_depth(FramePtr image);
+    FramePtr estimate_depth(FramePtr image);
 
 private:
     std::string m_model_path;                   // Path to the ONNX model file
@@ -61,8 +61,15 @@ private:
      * @param outputTensors Vector of output tensors from the model.
      * @return std::vector<Detection> Vector of detections.
      */
-    FramePtr postprocess(const cv::Size &originalImageSize, const cv::Size &resizedImageShape,
-                                      const std::vector<Ort::Value> &outputTensors);
+    FramePtr postprocess(const Ort::Value &ort_value);
+
+    void letter_box(FramePtr image, FramePtr outImage,
+        const cv::Size& newShape,
+        const cv::Scalar& color,
+        bool auto_,
+        bool scaleFill,
+        bool scaleUp,
+        int stride);
 
 };
 

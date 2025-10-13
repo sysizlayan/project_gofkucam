@@ -80,6 +80,13 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
         }
     }
 
+    FramePtr depth_map = m_depth_estimator->estimate_depth(frame);
+    if (depth_map && !depth_map->empty())
+    {
+        m_logger->info("Depth map estimated with size: " + std::to_string(depth_map->cols) + "x" + std::to_string(depth_map->rows));
+        // You can further process or visualize the depth map as needed
+    }
+
     // // Save frame if it contains a dog or cat detection
     // for (const auto& detection : detections) {
     //     std::string class_name = m_class_names[detection.classId];
@@ -108,7 +115,8 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
 
     // Display the frame
     cv::imshow("GofkuCam Stream", *frame);
-    cv::waitKey(1); // Allow the window to update, wait 1ms
+    cv::imshow("GofkuCam Depth", *depth_map);
+    cv::waitKey(2); // Allow the window to update, wait 1ms
 
 }
 
