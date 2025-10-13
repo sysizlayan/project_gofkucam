@@ -2,6 +2,7 @@
 #include "Config.hpp"
 #include "Evts.hpp"
 #include "ObjectDetector.hpp"
+#include "GofkuCamCommon.hpp"
 #include "qp.hpp"
 #include <memory>
 #include <chrono>
@@ -59,8 +60,8 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     #endif
-
-    std::vector<Detection> detections = m_detector->detect(frame);
+    FramePtr copy_of_frame = std::make_shared<Frame>(frame->clone());
+    std::vector<Detection> detections = m_detector->detect(copy_of_frame);
     std::vector<Detection> cat_or_dog_detections{};
     // Log dog and cat detections
     for (const auto& detection : detections) {
@@ -104,8 +105,10 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     #endif
 
     // Display the frame
-    cv::imshow("GofkuCam Stream", *frame);
-    cv::waitKey(1); // Allow the window to update, wait 1ms
+    cv::Mat display_frame;
+    cv::resize(*frame, display_frame, cv::Size(640, 480));
+    cv::imshow("GofkuCam Stream", display_frame);
+    cv::waitKey(2); // Allow the window to update, wait 1ms
 
 }
 

@@ -1,5 +1,5 @@
-#ifndef DETECTOR_CONTROLLER_IMPL_HPP_
-#define DETECTOR_CONTROLLER_IMPL_HPP_
+#ifndef DEPTH_ESTIMATOR_CONTROLLER_IMPL_HPP_
+#define DEPTH_ESTIMATOR_CONTROLLER_IMPL_HPP_
 
 #include "IDetectorController.hpp"
 #include "LoggerInterface.hpp"
@@ -10,15 +10,13 @@
 namespace GofkuCam
 {
 
-class DetectorControllerImpl : public IDetectorController {
+class DepthEstimatorControllerImpl : public IDetectorController {
 private:
     QP::QActive * m_owner; 
     LoggerInterfacePtr m_logger;
-    ObjectDetectorPtr m_detector;
-    std::vector<std::string> m_class_names;
-    std::vector<cv::Scalar> m_class_colors;
+    DepthEstimatorPtr m_depth_estimator;
 public:
-    DetectorControllerImpl(QP::QActive * const owner, LoggerInterfacePtr logger);
+    DepthEstimatorControllerImpl(QP::QActive * const owner, LoggerInterfacePtr logger);
     
     // IDetectorController interface implementation
     void start_req(QP::QEvt const * const e) override;

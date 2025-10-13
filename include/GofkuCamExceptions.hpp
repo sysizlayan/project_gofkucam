@@ -41,5 +41,11 @@ public:
     explicit DetectorInilializationError(const std::string& message)
         : BaseGofkuCamFailure(message) {}
 };
+
+class DepthEstimatorInitializationError : public BaseGofkuCamFailure {
+public:
+    explicit DepthEstimatorInitializationError(const std::string& message)
+        : BaseGofkuCamFailure(message) {}
+};
 }
 #endif // GOFKUCAM_EXCEPTIONS_HPP

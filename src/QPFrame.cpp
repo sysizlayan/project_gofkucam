@@ -47,16 +47,23 @@ void QPFrame::ao_thread_func()
          Config::config().get<std::string>("stream_address"));
 
    m_detector_controller = std::make_shared<DetectorController>(m_logger);
+   m_depth_estimator_controller = std::make_shared<DepthEstimatorController>(m_logger);
 
    m_camera_grabber->start(
-      2, 
+      1, 
       m_gofkucam_camera_grabber_queue,
       Q_DIM(m_gofkucam_camera_grabber_queue),
       nullptr,
       256*MB);
 
    m_detector_controller->start(
-      1, 
+      2, 
+      m_gofkucam_controller_queue,
+      Q_DIM(m_gofkucam_controller_queue),
+      nullptr,
+      256*MB);
+   m_depth_estimator_controller->start(
+      3, 
       m_gofkucam_controller_queue,
       Q_DIM(m_gofkucam_controller_queue),
       nullptr,
@@ -73,6 +80,12 @@ void QPFrame::ao_thread_func()
    m_detector_controller->subscribe(FRAME_CAPTURED_SIG);
    m_detector_controller->subscribe(STREAM_ENDED_SIG);
    m_detector_controller->subscribe(CAPTURE_ERROR_SIG);
+
+   m_depth_estimator_controller->subscribe(START_REQ_SIG);
+   m_depth_estimator_controller->subscribe(STOP_REQ_SIG);
+   m_depth_estimator_controller->subscribe(FRAME_CAPTURED_SIG);
+   m_depth_estimator_controller->subscribe(STREAM_ENDED_SIG);
+   m_depth_estimator_controller->subscribe(CAPTURE_ERROR_SIG);
 
    StartRequested* sr = Q_NEW(StartRequested, START_REQ_SIG);
    QP::QF::PUBLISH(sr, this);

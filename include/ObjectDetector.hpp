@@ -12,12 +12,12 @@
 /**
  * @brief Confidence threshold for filtering detections.
  */
-const float CONFIDENCE_THRESHOLD = 0.4f;
+const float CONFIDENCE_THRESHOLD = 0.3f;
 
 /**
  * @brief  IoU threshold for filtering detections.
  */
-const float IOU_THRESHOLD = 0.45f;
+const float IOU_THRESHOLD = 0.4f;
 
 /**
  * @brief Struct to represent a bounding box.
@@ -136,7 +136,7 @@ private:
     static typename std::enable_if<std::is_arithmetic<T>::value, T>::type clamp(const T &value, const T &low, const T &high);
 };
 
-using YOLO12DetectorPtr = std::shared_ptr<ObjectDetector>;
+using ObjectDetectorPtr = std::shared_ptr<ObjectDetector>;
 }
 
 #endif // OBJECTDETECTOR_HPP
