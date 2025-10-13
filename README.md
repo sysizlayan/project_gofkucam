@@ -37,6 +37,10 @@ Repo/Development requirements:
 * extern: External libraries like libtorch
 * resouces: neural weights, videos for testing etc.
 
+## Up to object detection and depth estimation
+<img width="1174" height="543" alt="gofkucam" src="https://github.com/user-attachments/assets/edfb83f5-20ca-4951-8ad4-7d001004c8cc" />
+
+
 ### Changelog:
 30.05.2025 - Camera connection, frame acquisition and the QP framework active object framework is working. I will continue with choosing neural models.
 
