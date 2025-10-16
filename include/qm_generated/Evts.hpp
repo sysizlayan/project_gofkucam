@@ -50,11 +50,13 @@ enum EvtSignals : QP::QSignal
 {
     FRAME_TIMER_TIMEOUT_SIG  = QP::Q_USER_SIG,
     POLLING_TIMER_TIMEOUT_SIG,
+    DEPTH_ESTIMATION_COMPLETED_SIG,
     FRAME_CAPTURED_SIG,
     STREAM_ENDED_SIG,
     CAPTURE_ERROR_SIG,
     START_REQ_SIG,
     STOP_REQ_SIG,
+    DEPTH_ESTIMATION_FAILED_SIG,
 
     MAX_GOFKU_CAM_SIG
 };
@@ -108,6 +110,21 @@ class PollingTimerTimeout : public QP::QEvt {
 public:
     PollingTimerTimeout();
 }; // class PollingTimerTimeout
+
+//${Evts::DepthEstimationCompleted} ..........................................
+class DepthEstimationCompleted : public QP::QEvt {
+public:
+    std::int8_t m_id;
+
+public:
+    DepthEstimationCompleted(std::int8_t id);
+}; // class DepthEstimationCompleted
+
+//${Evts::DepthEstimationFailed} .............................................
+class DepthEstimationFailed : public QP::QEvt {
+public:
+    DepthEstimationFailed();
+}; // class DepthEstimationFailed
 
 } // namespace GofkuCam
 //$enddecl${Evts} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

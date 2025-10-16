@@ -184,7 +184,7 @@ FramePtr DepthEstimator::estimate_depth(FramePtr image)
         ss << "] ";
     }
     ss << "\n";
-    m_logger->info(ss.str()); 
+    m_logger->trace(ss.str()); 
 
     // Determine the resized image shape based on input tensor shape
     cv::Size resizedImageShape(static_cast<int>(inputTensorShape[3]), static_cast<int>(inputTensorShape[2]));

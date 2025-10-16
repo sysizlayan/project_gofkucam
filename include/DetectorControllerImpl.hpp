@@ -25,6 +25,8 @@ public:
     void stream_end(QP::QEvt const * const e) override;
     void running_entry(QP::QEvt const * const e) override;
     void frame_captured(QP::QEvt const * const e) override;
+    void calculating_entry(QP::QEvt const * const e) override;
+    void idle_entry(QP::QEvt const * const e) override;
 }; // class DetectorControllerImpl
 
 } // namespace GofkuCam

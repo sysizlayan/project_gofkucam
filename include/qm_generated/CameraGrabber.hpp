@@ -42,6 +42,7 @@
 #include "ICameraGrabber.hpp"
 #include "LoggerInterface.hpp"
 #include "GofkuCamCommon.hpp"
+#include "DepthEstimatorController.hpp"
 
 namespace GofkuCam
 {
@@ -59,7 +60,8 @@ public:
 public:
     CameraGrabber(
         LoggerInterfacePtr logger,
-        std::string source);
+        std::string source,
+        std::vector<std::shared_ptr<DepthEstimatorController>>  depth_estimator_controllers);
 
 protected:
     Q_STATE_DECL(initial);

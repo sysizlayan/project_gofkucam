@@ -40,6 +40,7 @@
 #include "Evts.hpp"
 #include "Config.hpp"
 #include "CameraGrabberImpl.hpp"
+#include "DepthEstimatorController.hpp"
 
 Q_DEFINE_THIS_FILE
 
@@ -59,10 +60,11 @@ namespace GofkuCam
 //${Components::CameraGrabber::CameraGrabber} ................................
 CameraGrabber::CameraGrabber(
     LoggerInterfacePtr logger,
-    std::string source)
+    std::string source,
+    std::vector<std::shared_ptr<DepthEstimatorController>>  depth_estimator_controllers)
 : QActive(&initial)
 , m_logger(logger)
-, m_icamera_grabber{std::make_shared<CameraGrabberImpl>(this, m_logger)}
+, m_icamera_grabber{std::make_shared<CameraGrabberImpl>(this, m_logger, depth_estimator_controllers)}
 {
     m_logger->trace("The Controller ctor!");
 }
@@ -72,6 +74,13 @@ Q_STATE_DEF(CameraGrabber, initial) {
     //${Components::CameraGrabber::SM::initial}
     (void)e; // Just to supress compiler warning
     (void)Q_this_module_; // Just to supress compiler warning
+
+
+    this->subscribe(START_REQ_SIG);
+    this->subscribe(STOP_REQ_SIG);
+    this->subscribe(FRAME_TIMER_TIMEOUT_SIG);
+    this->subscribe(STREAM_ENDED_SIG);
+    this->subscribe(DEPTH_ESTIMATION_COMPLETED_SIG);
     return tran(&NOT_STARTED);
 }
 
@@ -136,6 +145,13 @@ Q_STATE_DEF(CameraGrabber, RUNNING) {
         //${Components::CameraGrabber::SM::RUNNING::POLLING_TIMER_TIMEOUT}
         case POLLING_TIMER_TIMEOUT_SIG: {
             m_icamera_grabber->poll_the_camera(e);
+
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CameraGrabber::SM::RUNNING::DEPTH_ESTIMATION_COMPLETED}
+        case DEPTH_ESTIMATION_COMPLETED_SIG: {
+            m_icamera_grabber->depth_estimation_completed(e);
 
             status_ = Q_RET_HANDLED;
             break;

@@ -57,11 +57,15 @@ public:
     std::shared_ptr<IDetectorController> m_depth_estimator_controller;
 
 public:
-    DepthEstimatorController(LoggerInterfacePtr logger);
+    DepthEstimatorController(
+        LoggerInterfacePtr logger,
+        std::int8_t estimator_id);
 
 protected:
     Q_STATE_DECL(initial);
-    Q_STATE_DECL(operating);
+    Q_STATE_DECL(OPERATING);
+    Q_STATE_DECL(IDLE);
+    Q_STATE_DECL(CALCULATING);
     Q_STATE_DECL(NOT_STARTED);
 }; // class DepthEstimatorController
 //$enddecl${Components::DepthEstimatorController} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

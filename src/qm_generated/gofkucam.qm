@@ -7,11 +7,13 @@
 {
     FRAME_TIMER_TIMEOUT_SIG  = QP::Q_USER_SIG,
     POLLING_TIMER_TIMEOUT_SIG,
+    DEPTH_ESTIMATION_COMPLETED_SIG,
     FRAME_CAPTURED_SIG,
     STREAM_ENDED_SIG,
     CAPTURE_ERROR_SIG,
     START_REQ_SIG,
     STOP_REQ_SIG,
+    DEPTH_ESTIMATION_FAILED_SIG,
 
     MAX_GOFKU_CAM_SIG
 };</code>
@@ -53,6 +55,18 @@
     <code>: QEvt(EvtSignals::POLLING_TIMER_TIMEOUT_SIG)</code>
    </operation>
   </class>
+  <class name="DepthEstimationCompleted" superclass="qpcpp::QEvt">
+   <attribute name="m_id" type="std::int8_t" visibility="0x00" properties="0x00"/>
+   <operation name="DepthEstimationCompleted" type="" visibility="0x00" properties="0x00">
+    <parameter name="id" type="std::int8_t"/>
+    <code>: QEvt(EvtSignals::DEPTH_ESTIMATION_COMPLETED_SIG)</code>
+   </operation>
+  </class>
+  <class name="DepthEstimationFailed" superclass="qpcpp::QEvt">
+   <operation name="DepthEstimationFailed" type="" visibility="0x00" properties="0x00">
+    <code>: QEvt(EvtSignals::DEPTH_ESTIMATION_FAILED_SIG)</code>
+   </operation>
+  </class>
  </package>
  <package name="Components" stereotype="0x02">
   <class name="CameraGrabber" superclass="qpcpp::QActive">
@@ -61,16 +75,24 @@
    <operation name="CameraGrabber" type="" visibility="0x00" properties="0x00">
     <parameter name="logger" type="LoggerInterfacePtr"/>
     <parameter name="source" type="std::string"/>
+    <parameter name="depth_estimator_controllers" type="std::vector&lt;std::shared_ptr&lt;DepthEstimatorController&gt;&gt; "/>
     <code>: QActive(&amp;initial)
 , m_logger(logger)
-, m_icamera_grabber{std::make_shared&lt;CameraGrabberImpl&gt;(this, m_logger)}
+, m_icamera_grabber{std::make_shared&lt;CameraGrabberImpl&gt;(this, m_logger, depth_estimator_controllers)}
 
 m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
    </operation>
    <statechart properties="0x00">
     <initial target="../1">
      <action>(void)e; // Just to supress compiler warning
-(void)Q_this_module_; // Just to supress compiler warning</action>
+(void)Q_this_module_; // Just to supress compiler warning
+
+
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
+this-&gt;subscribe(FRAME_TIMER_TIMEOUT_SIG);
+this-&gt;subscribe(STREAM_ENDED_SIG);
+this-&gt;subscribe(DEPTH_ESTIMATION_COMPLETED_SIG);</action>
      <initial_glyph conn="9,4,5,1,67,7,-4">
       <action box="1,-3,10,2"/>
      </initial_glyph>
@@ -122,6 +144,13 @@ m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
        <action box="0,-2,28,2"/>
       </tran_glyph>
      </tran>
+     <tran trig="DEPTH_ESTIMATION_COMPLETED">
+      <action>m_icamera_grabber-&gt;depth_estimation_completed(e);
+</action>
+      <tran_glyph conn="5,37,3,-1,29">
+       <action box="0,-2,27,2"/>
+      </tran_glyph>
+     </tran>
      <state_glyph node="5,27,67,20">
       <entry box="0,3,6,2"/>
      </state_glyph>
@@ -144,7 +173,13 @@ m_logger-&gt;trace(&quot;Object Detector started!&quot;);</code>
     <initial target="../2">
      <action>(void)e; // Just to supress compiler warning
 (void)Q_this_module_; // Just to supress compiler warning
-</action>
+
+
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
+this-&gt;subscribe(FRAME_CAPTURED_SIG);
+this-&gt;subscribe(STREAM_ENDED_SIG);
+this-&gt;subscribe(CAPTURE_ERROR_SIG);</action>
      <initial_glyph conn="9,4,5,1,42,8,-7">
       <action box="1,-3,10,2"/>
      </initial_glyph>
@@ -181,9 +216,10 @@ m_logger-&gt;trace(&quot;Object Detector started!&quot;);</code>
    <attribute name="m_depth_estimator_controller" type="std::shared_ptr&lt;IDetectorController&gt;" visibility="0x00" properties="0x00"/>
    <operation name="DepthEstimatorController" type="" visibility="0x00" properties="0x00">
     <parameter name="logger" type="LoggerInterfacePtr"/>
+    <parameter name="estimator_id" type="std::int8_t"/>
     <code>: QActive(&amp;initial)
 , m_logger(logger)
-, m_depth_estimator_controller{std::make_shared&lt;DepthEstimatorControllerImpl&gt;(this, logger)}
+, m_depth_estimator_controller{std::make_shared&lt;DepthEstimatorControllerImpl&gt;(this, logger, estimator_id)}
 
 m_logger-&gt;trace(&quot;Depth Estimator started!&quot;);</code>
    </operation>
@@ -191,34 +227,55 @@ m_logger-&gt;trace(&quot;Depth Estimator started!&quot;);</code>
     <initial target="../2">
      <action>(void)e; // Just to supress compiler warning
 (void)Q_this_module_; // Just to supress compiler warning
-</action>
-     <initial_glyph conn="9,4,5,1,42,8,-7">
+
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
+this-&gt;subscribe(STREAM_ENDED_SIG);
+this-&gt;subscribe(CAPTURE_ERROR_SIG);</action>
+     <initial_glyph conn="9,4,5,1,81,8,-4">
       <action box="1,-3,10,2"/>
      </initial_glyph>
     </initial>
-    <state name="operating">
-     <tran trig="FRAME_CAPTURED">
-      <action>m_depth_estimator_controller-&gt;frame_captured(e);</action>
-      <tran_glyph conn="8,31,3,-1,23">
-       <action box="0,-2,20,2"/>
-      </tran_glyph>
-     </tran>
-     <tran trig="STREAM_ENDED, CAPTURE_ERROR, STOP_REQ" target="../../2">
+    <state name="OPERATING">
+     <tran trig="STREAM_ENDED, CAPTURE_ERROR, STOP_REQ, DEPTH_ESTIMATION_FAILED" target="../../2">
       <action>m_depth_estimator_controller-&gt;stream_end(e);</action>
-      <tran_glyph conn="8,41,3,1,43,-26,-7">
-       <action box="0,-2,39,2"/>
+      <tran_glyph conn="8,52,3,1,82,-37,-4">
+       <action box="0,-2,65,7"/>
       </tran_glyph>
      </tran>
-     <state_glyph node="8,22,36,21"/>
+     <state name="IDLE">
+      <entry>m_depth_estimator_controller-&gt;idle_entry(e);</entry>
+      <tran trig="FRAME_CAPTURED" target="../../2">
+       <action>m_depth_estimator_controller-&gt;frame_captured(e);</action>
+       <tran_glyph conn="10,33,3,1,60,9,-2">
+        <action box="0,-2,20,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="10,26,58,10">
+       <entry box="0,3,6,2"/>
+      </state_glyph>
+     </state>
+     <state name="CALCULATING">
+      <entry>m_depth_estimator_controller-&gt;calculating_entry(e);</entry>
+      <tran trig="DEPTH_ESTIMATION_COMPLETED" target="../../1">
+       <tran_glyph conn="10,45,3,1,63,-14,-5">
+        <action box="0,-2,26,5"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="10,38,58,9">
+       <entry box="0,3,6,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="8,22,79,33"/>
     </state>
     <state name="NOT_STARTED">
-     <tran trig="START_REQ" target="../../1">
+     <tran trig="START_REQ" target="../../1/1">
       <action>m_depth_estimator_controller-&gt;start_req(e);</action>
-      <tran_glyph conn="8,18,3,1,41,9,-5">
+      <tran_glyph conn="8,18,3,1,80,11,-20">
        <action box="0,-2,10,2"/>
       </tran_glyph>
      </tran>
-     <state_glyph node="8,8,36,12"/>
+     <state_glyph node="8,8,78,12"/>
     </state>
     <state_diagram size="125,142"/>
    </statechart>
@@ -248,6 +305,7 @@ $define${Components::DetectorController}
 #include &quot;Evts.hpp&quot;
 #include &quot;Config.hpp&quot;
 #include &quot;CameraGrabberImpl.hpp&quot;
+#include &quot;DepthEstimatorController.hpp&quot;
 
 Q_DEFINE_THIS_FILE
 
@@ -315,6 +373,7 @@ $declare ${Evts}
 #include &quot;ICameraGrabber.hpp&quot;
 #include &quot;LoggerInterface.hpp&quot;
 #include &quot;GofkuCamCommon.hpp&quot;
+#include &quot;DepthEstimatorController.hpp&quot;
 
 namespace GofkuCam
 {

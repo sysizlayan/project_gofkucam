@@ -1,6 +1,7 @@
 #ifndef DEPTH_ESTIMATOR_CONTROLLER_IMPL_HPP_
 #define DEPTH_ESTIMATOR_CONTROLLER_IMPL_HPP_
 
+#include "GofkuCamCommon.hpp"
 #include "IDetectorController.hpp"
 #include "LoggerInterface.hpp"
 #include "ObjectDetector.hpp"
@@ -15,14 +16,18 @@ private:
     QP::QActive * m_owner; 
     LoggerInterfacePtr m_logger;
     DepthEstimatorPtr m_depth_estimator;
+    FramePtr m_frame_to_process;
+    std::int8_t m_estimator_id;
 public:
-    DepthEstimatorControllerImpl(QP::QActive * const owner, LoggerInterfacePtr logger);
+    DepthEstimatorControllerImpl(QP::QActive * const owner, LoggerInterfacePtr logger, std::int8_t estimator_id);
     
     // IDetectorController interface implementation
     void start_req(QP::QEvt const * const e) override;
     void stream_end(QP::QEvt const * const e) override;
     void running_entry(QP::QEvt const * const e) override;
     void frame_captured(QP::QEvt const * const e) override;
+    void calculating_entry(QP::QEvt const * const e) override;
+    void idle_entry(QP::QEvt const * const e) override;
 }; // class DetectorControllerImpl
 
 } // namespace GofkuCam

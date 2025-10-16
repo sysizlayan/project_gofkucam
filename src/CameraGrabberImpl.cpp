@@ -1,11 +1,13 @@
 #include "CameraGrabberImpl.hpp"
 #include "Config.hpp"
+#include "DepthEstimatorController.hpp"
 #include "Evts.hpp"
 #include "qp.hpp"
+#include <cstdint>
 #include <memory>
 namespace GofkuCam {
 
-CameraGrabberImpl::CameraGrabberImpl(QP::QActive * owner, LoggerInterfacePtr logger)
+CameraGrabberImpl::CameraGrabberImpl(QP::QActive * owner, LoggerInterfacePtr logger, std::vector<std::shared_ptr<DepthEstimatorController>> depth_estimator_controllers)
    : m_owner(owner)
    , m_logger(logger)
    , m_cap(nullptr)
@@ -14,7 +16,12 @@ CameraGrabberImpl::CameraGrabberImpl(QP::QActive * owner, LoggerInterfacePtr log
    , m_polling_timer{m_owner, EvtSignals::POLLING_TIMER_TIMEOUT_SIG}
    , m_is_new_frame_available(false)
    , m_current_frame(std::make_shared<Frame>())
+   , m_depth_estimator_controllers(depth_estimator_controllers)
 {
+   for(int i=0; i<NUM_DEPTH_ESTIMATORS;i++)
+   {
+      m_estimator_available[i] = true;
+   }
 }
 
 void CameraGrabberImpl::start_req(QP::QEvt const * const e)
@@ -41,7 +48,27 @@ void CameraGrabberImpl::frame_timer_timeout(QP::QEvt const * const e)
       FrameCapturedEvt* fce = Q_NEW(FrameCapturedEvt, FRAME_CAPTURED_SIG);
       fce->m_frame = m_current_frame;
       m_logger->trace("Captured a new frame");
+      for(int i=0; i<NUM_DEPTH_ESTIMATORS;i++)
+      {
+         m_logger->info("Estimator availability: " + std::to_string(m_estimator_available[i]) + " " +std::to_string(i));
+      }
+      for(int i=0; i<NUM_DEPTH_ESTIMATORS;i++)
+      {
+         if(m_estimator_available[i])
+         {
+            m_logger->trace("Depth estimator id: " + std::to_string(i) + " will process the frame.");
+
+            m_estimator_available[i] = false;
+            m_depth_estimator_controllers[i]->post_(fce, this);
+            break; // Post to only one available estimator
+         }
+         else 
+         {
+            m_logger->trace("Depth estimator id: " + std::to_string(i) + " is busy.");
+         }
+      }
       QP::QF::PUBLISH(fce, this);
+
       m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
       m_is_new_frame_available = false;
    }
@@ -92,7 +119,7 @@ void CameraGrabberImpl::poll_the_camera(QP::QEvt const * const e)
       {
          m_logger->trace("Polled empty frame");
       }
-      m_polling_timer.armX(30, 0);
+      m_polling_timer.armX(10, 0);
    }
    else
    {
@@ -103,11 +130,21 @@ void CameraGrabberImpl::poll_the_camera(QP::QEvt const * const e)
    }
 }
 
+void CameraGrabberImpl::depth_estimation_completed(QP::QEvt const * const e)
+{
+   std::int8_t detector_id =  Q_EVT_CAST(DepthEstimationCompleted)->m_id;
+   if(detector_id >=0 && detector_id < NUM_DEPTH_ESTIMATORS)
+   {
+      m_logger->error("Depth estimation completed from estimator id: " + std::to_string(detector_id));
+      m_estimator_available[detector_id] = true;
+   }
+}
+
 void CameraGrabberImpl::running_entry(QP::QEvt const * const e)
 {
    (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber running entry");
    m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
-   m_polling_timer.armX(30, 0);
+   m_polling_timer.armX(10, 0);
 }
 } // namespace GofkuCam

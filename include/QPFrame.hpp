@@ -37,7 +37,7 @@ public:
 private:
     LoggerInterfacePtr  m_logger;
     std::shared_ptr<DetectorController>   m_detector_controller;
-    std::shared_ptr<DepthEstimatorController>   m_depth_estimator_controller;
+    std::vector<std::shared_ptr<DepthEstimatorController>>   m_depth_estimator_controllers;
     std::shared_ptr<CameraGrabber> m_camera_grabber;
 
     QP::QEvt const *m_gofkucam_controller_queue[NUM_STORED_EVENTS];

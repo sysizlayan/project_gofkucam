@@ -30,6 +30,9 @@ QPFrame::QPFrame(LoggerInterfacePtr logger)
    std::stringstream ss;
    ss<<"Using " << source << " as video source! QP Framework constructed.";
    m_logger->info(ss.str());
+
+   for(int i = 0; i<NUM_DEPTH_ESTIMATORS;i++)
+      m_depth_estimator_controllers.emplace_back(std::make_shared<DepthEstimatorController>(m_logger, i));
 }
 
 void QPFrame::start()
@@ -44,10 +47,10 @@ void QPFrame::ao_thread_func()
    m_logger->info("QPFrame external thread started.");
 
    m_camera_grabber = std::make_shared<CameraGrabber>(m_logger, 
-         Config::config().get<std::string>("stream_address"));
+         Config::config().get<std::string>("stream_address"),
+         m_depth_estimator_controllers);
 
    m_detector_controller = std::make_shared<DetectorController>(m_logger);
-   m_depth_estimator_controller = std::make_shared<DepthEstimatorController>(m_logger);
 
    m_camera_grabber->start(
       1, 
@@ -62,30 +65,16 @@ void QPFrame::ao_thread_func()
       Q_DIM(m_gofkucam_controller_queue),
       nullptr,
       256*MB);
-   m_depth_estimator_controller->start(
-      3, 
-      m_gofkucam_controller_queue,
-      Q_DIM(m_gofkucam_controller_queue),
-      nullptr,
-      256*MB);
-
    
-   m_camera_grabber->subscribe(START_REQ_SIG);
-   m_camera_grabber->subscribe(STOP_REQ_SIG);
-   m_camera_grabber->subscribe(FRAME_TIMER_TIMEOUT_SIG);
-   m_camera_grabber->subscribe(STREAM_ENDED_SIG);
-
-   m_detector_controller->subscribe(START_REQ_SIG);
-   m_detector_controller->subscribe(STOP_REQ_SIG);
-   m_detector_controller->subscribe(FRAME_CAPTURED_SIG);
-   m_detector_controller->subscribe(STREAM_ENDED_SIG);
-   m_detector_controller->subscribe(CAPTURE_ERROR_SIG);
-
-   m_depth_estimator_controller->subscribe(START_REQ_SIG);
-   m_depth_estimator_controller->subscribe(STOP_REQ_SIG);
-   m_depth_estimator_controller->subscribe(FRAME_CAPTURED_SIG);
-   m_depth_estimator_controller->subscribe(STREAM_ENDED_SIG);
-   m_depth_estimator_controller->subscribe(CAPTURE_ERROR_SIG);
+   for(int i = 0; i<NUM_DEPTH_ESTIMATORS;i++)
+   {
+      m_depth_estimator_controllers[i]->start(
+         3+i, 
+         nullptr,
+         0,
+         nullptr,
+         256*MB);
+   }
 
    StartRequested* sr = Q_NEW(StartRequested, START_REQ_SIG);
    QP::QF::PUBLISH(sr, this);

@@ -58,10 +58,12 @@ namespace GofkuCam
 //${Components::DepthEstimatorController} ....................................
 
 //${Components::DepthEstimatorCo~::DepthEstimatorController} .................
-DepthEstimatorController::DepthEstimatorController(LoggerInterfacePtr logger)
+DepthEstimatorController::DepthEstimatorController(
+    LoggerInterfacePtr logger,
+    std::int8_t estimator_id)
 : QActive(&initial)
 , m_logger(logger)
-, m_depth_estimator_controller{std::make_shared<DepthEstimatorControllerImpl>(this, logger)}
+, m_depth_estimator_controller{std::make_shared<DepthEstimatorControllerImpl>(this, logger, estimator_id)}
 {
     m_logger->trace("Depth Estimator started!");
 }
@@ -72,29 +74,75 @@ Q_STATE_DEF(DepthEstimatorController, initial) {
     (void)e; // Just to supress compiler warning
     (void)Q_this_module_; // Just to supress compiler warning
 
+    this->subscribe(START_REQ_SIG);
+    this->subscribe(STOP_REQ_SIG);
+    this->subscribe(STREAM_ENDED_SIG);
+    this->subscribe(CAPTURE_ERROR_SIG);
     return tran(&NOT_STARTED);
 }
 
-//${Components::DepthEstimatorCo~::SM::operating} ............................
-Q_STATE_DEF(DepthEstimatorController, operating) {
+//${Components::DepthEstimatorCo~::SM::OPERATING} ............................
+Q_STATE_DEF(DepthEstimatorController, OPERATING) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::DepthEstimatorCo~::SM::operating::FRAME_CAPTURED}
-        case FRAME_CAPTURED_SIG: {
-            m_depth_estimator_controller->frame_captured(e);
-            status_ = Q_RET_HANDLED;
-            break;
-        }
-        //${Components::DepthEstimatorCo~::SM::operating::STREAM_ENDED, CAPTURE_ERROR, STO~}
+        //${Components::DepthEstimatorCo~::SM::OPERATING::STREAM_ENDED, CAPTURE_ERROR, STO~}
         case STREAM_ENDED_SIG: // intentionally fall through
         case CAPTURE_ERROR_SIG: // intentionally fall through
-        case STOP_REQ_SIG: {
+        case STOP_REQ_SIG: // intentionally fall through
+        case DEPTH_ESTIMATION_FAILED_SIG: {
             m_depth_estimator_controller->stream_end(e);
             status_ = tran(&NOT_STARTED);
             break;
         }
         default: {
             status_ = super(&top);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::DepthEstimatorCo~::SM::OPERATING::IDLE} ......................
+Q_STATE_DEF(DepthEstimatorController, IDLE) {
+    QP::QState status_;
+    switch (e->sig) {
+        //${Components::DepthEstimatorCo~::SM::OPERATING::IDLE}
+        case Q_ENTRY_SIG: {
+            m_depth_estimator_controller->idle_entry(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::DepthEstimatorCo~::SM::OPERATING::IDLE::FRAME_CAPTURED}
+        case FRAME_CAPTURED_SIG: {
+            m_depth_estimator_controller->frame_captured(e);
+            status_ = tran(&CALCULATING);
+            break;
+        }
+        default: {
+            status_ = super(&OPERATING);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::DepthEstimatorCo~::SM::OPERATING::CALCULATING} ...............
+Q_STATE_DEF(DepthEstimatorController, CALCULATING) {
+    QP::QState status_;
+    switch (e->sig) {
+        //${Components::DepthEstimatorCo~::SM::OPERATING::CALCULATING}
+        case Q_ENTRY_SIG: {
+            m_depth_estimator_controller->calculating_entry(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::DepthEstimatorCo~::SM::OPERATING::CALCULATING::DEPTH_ESTIMATION_COMPLETED}
+        case DEPTH_ESTIMATION_COMPLETED_SIG: {
+            status_ = tran(&IDLE);
+            break;
+        }
+        default: {
+            status_ = super(&OPERATING);
             break;
         }
     }
@@ -108,7 +156,7 @@ Q_STATE_DEF(DepthEstimatorController, NOT_STARTED) {
         //${Components::DepthEstimatorCo~::SM::NOT_STARTED::START_REQ}
         case START_REQ_SIG: {
             m_depth_estimator_controller->start_req(e);
-            status_ = tran(&operating);
+            status_ = tran(&IDLE);
             break;
         }
         default: {

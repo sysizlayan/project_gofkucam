@@ -16,6 +16,7 @@ public:
     virtual void stream_end(QP::QEvt const * const e) = 0;
     virtual bool is_opened() = 0;  // No event parameter needed as this is a query
     virtual void poll_the_camera(QP::QEvt const * const e) = 0;
+    virtual void depth_estimation_completed(QP::QEvt const * const e) = 0;
     virtual ~ICameraGrabber() = default;
 }; // class ICameraGrabber
 
