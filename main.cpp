@@ -1,12 +1,17 @@
 #include <memory>
+#include <opencv2/highgui.hpp>
 #include <string>
 #include "LoggerInterface.hpp"
 #include "QPFrame.hpp"
 #include "SpdlogLogger.hpp"
-
+#include "GofkuCamCommon.hpp"
 
 
 using namespace GofkuCam;
+
+std::atomic<Frame*> GofkuCam::g_depth_visualization_frame{nullptr};
+std::atomic<Frame*> GofkuCam::g_detection_visualization_frame{nullptr};
+
 int main(int argc, char **argv)
 {
    (void)argc;
@@ -23,10 +28,20 @@ int main(int argc, char **argv)
    // Convert to tensor
    while (true)
    {
+      if(GofkuCam::g_detection_visualization_frame.load() != nullptr)
+      {
+         cv::imshow("Detections", *(GofkuCam::g_detection_visualization_frame.load()));
+         cv::waitKey(1); // Allow the window to update, wait 1ms
+      }
+      if(GofkuCam::g_depth_visualization_frame.load() != nullptr)
+      {
+         cv::imshow("Depth Map", *(GofkuCam::g_depth_visualization_frame.load()));
+         cv::waitKey(1);
+      }
       // Simulate some processing
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
       seconds_from_start++;
-      logger->info("Running main loop for  " + std::to_string(seconds_from_start) + " seconds");
+      //logger->info("Running main loop for  " + std::to_string(seconds_from_start) + " seconds");
    }
    return 0;
 }

@@ -1,6 +1,7 @@
 #include "DepthEstimatorControllerImpl.hpp"
 #include "Config.hpp"
 #include "Evts.hpp"
+#include "GofkuCamCommon.hpp"
 #include "ObjectDetector.hpp"
 #include "qp.hpp"
 #include <memory>
@@ -88,12 +89,10 @@ void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
     m_logger->info("Depth estimaton took " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) + "[ms]");
     #endif
 
-    // Display the frame
-    Frame display_frame;
+    // // Display the frame
+    static Frame display_frame;
     cv::resize(*depth_map, display_frame, cv::Size(640, 480));
-    cv::imshow("GofkuCam Depth", display_frame);
-    cv::waitKey(2); // Allow the window to update, wait 1ms
-
+    g_depth_visualization_frame.store(&display_frame);
 }
 
 } // namespace GofkuCam

@@ -104,12 +104,10 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     m_logger->info("Detection took " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) + "[ms]");
     #endif
 
-    // Display the frame
-    Frame display_frame;
+    // // Display the frame
+    static Frame display_frame;
     cv::resize(*copy_of_frame, display_frame, cv::Size(640, 480));
-    cv::imshow("GofkuCam Stream", display_frame);
-    cv::waitKey(2); // Allow the window to update, wait 1ms
-
+    g_detection_visualization_frame.store(&display_frame);
 }
 
 } // namespace GofkuCam

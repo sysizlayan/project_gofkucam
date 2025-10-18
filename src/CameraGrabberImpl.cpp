@@ -21,7 +21,9 @@ void CameraGrabberImpl::start_req(QP::QEvt const * const e)
 {
    (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber start requested");
+   
    m_cap = std::make_unique<cv::VideoCapture>(m_source);
+   m_cap->set(cv::CAP_PROP_BUFFERSIZE, 1);
 
    if(!m_cap->isOpened())
    {
