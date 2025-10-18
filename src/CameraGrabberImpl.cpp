@@ -29,6 +29,7 @@ void CameraGrabberImpl::start_req(QP::QEvt const * const e)
    (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber start requested");
    m_cap = std::make_unique<cv::VideoCapture>(m_source);
+   m_cap->set(cv::CAP_PROP_BUFFERSIZE, 1); // Set buffer size to 1 frame to reduce latency
 
    if(!m_cap->isOpened())
    {
@@ -119,7 +120,7 @@ void CameraGrabberImpl::poll_the_camera(QP::QEvt const * const e)
       {
          m_logger->trace("Polled empty frame");
       }
-      m_polling_timer.armX(10, 0);
+      m_polling_timer.armX(300, 0);
    }
    else
    {
@@ -145,6 +146,6 @@ void CameraGrabberImpl::running_entry(QP::QEvt const * const e)
    (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber running entry");
    m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
-   m_polling_timer.armX(10, 0);
+   m_polling_timer.armX(300, 0);
 }
 } // namespace GofkuCam

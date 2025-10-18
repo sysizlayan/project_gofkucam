@@ -10,7 +10,7 @@ namespace GofkuCam
     using FramePtr = std::shared_ptr<Frame>;
     using ActiveObjPtr = std::shared_ptr<QP::QActive>;
     constexpr int TICKS_PER_SEC = 1000;
-    constexpr int NUM_DEPTH_ESTIMATORS = 4;
+    constexpr int NUM_DEPTH_ESTIMATORS = 2;
 }
 
 #endif
