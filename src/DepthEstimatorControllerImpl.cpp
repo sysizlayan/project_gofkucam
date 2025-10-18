@@ -17,7 +17,8 @@ DepthEstimatorControllerImpl::DepthEstimatorControllerImpl(QP::QActive * const o
     , m_logger(logger)
     , m_depth_estimator(std::make_shared<DepthEstimator>(
                     Config::config().get<std::string>("depth_model_path"),
-                    logger))
+                    logger,
+                    Config::config().get<bool>("use_gpu")))
 {
     m_logger->info("Depth estimator with model: " + Config::config().get<std::string>("depth_model_path"));
 
