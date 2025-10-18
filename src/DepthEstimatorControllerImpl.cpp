@@ -89,7 +89,9 @@ void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
     #endif
 
     // Display the frame
-    cv::imshow("GofkuCam Depth", *depth_map);
+    Frame display_frame;
+    cv::resize(*depth_map, display_frame, cv::Size(640, 480));
+    cv::imshow("GofkuCam Depth", display_frame);
     cv::waitKey(2); // Allow the window to update, wait 1ms
 
 }
