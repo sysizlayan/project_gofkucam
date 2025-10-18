@@ -45,7 +45,7 @@ void DepthEstimatorControllerImpl::running_entry(QP::QEvt const * const e)
 
 void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
 {
-    m_logger->info("New frame");
+    m_logger->info("New frame to depth estimator");
     std::shared_ptr<Frame> frame = Q_EVT_CAST(FrameCapturedEvt)->m_frame;
     m_logger->trace("Captured frame with size: " + std::to_string(frame->cols) + "x" + std::to_string(frame->rows));
 
