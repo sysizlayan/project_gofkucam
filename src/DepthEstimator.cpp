@@ -196,40 +196,66 @@ FramePtr DepthEstimator::estimate_depth(FramePtr image)
 // Preprocess function implementation
 FramePtr DepthEstimator::preprocess(FramePtr image, float *&blob, std::vector<int64_t> &inputTensorShape)
 {
-    FramePtr resized_image = std::make_shared<Frame>();
-    // Resize and pad the image using letterBox utility
-    DepthEstimator::letter_box(image, resized_image, inputImageShape, cv::Scalar(114, 114, 114), isDynamicInputShape, false, true, 32);
+    FramePtr resized_image = std::make_shared<Frame>(image->clone());
+
+    cv::Mat result;
+    int nw, nh;
+    int ih = image->rows;
+    int iw = image->cols;
+    float aspectRatio = (float)image->cols / (float)image->rows;
+
+    if (aspectRatio >= 1)
+    {
+        nw = 518;
+        nh = int(518 / aspectRatio);
+    }
+    else
+    {
+        nw = int(518 * aspectRatio);
+        nh = 518;
+    }
+    cv::resize(*resized_image, *resized_image, cv::Size(nw, nh));
+    result = cv::Mat::ones(cv::Size(518, 518), CV_8UC1) * 128;
+    cv::cvtColor(result, result, cv::COLOR_GRAY2RGB);
+    cv::cvtColor(*resized_image, *resized_image, cv::COLOR_BGR2RGB);
+
+    cv::Mat re(518, 518, CV_8UC3);
+    cv::resize(*resized_image, re, re.size(), 0, 0, cv::INTER_LINEAR);
+    cv::Mat out(518, 518, CV_8UC3, 0.0);
+    re.copyTo(out(cv::Rect(0, 0, re.cols, re.rows)));
+    
+    // // Resize and pad the image using letterBox utility
+    // DepthEstimator::letter_box(image, resized_image, inputImageShape, cv::Scalar(255, 255, 255), isDynamicInputShape, false, true, 32);
 
     // Update input tensor shape based on resized image dimensions
-    inputTensorShape[2] = resized_image->rows;
-    inputTensorShape[3] = resized_image->cols;
+    inputTensorShape[2] = out.rows;
+    inputTensorShape[3] = out.cols;
 
     // for (int k = 0; k < 3; k++)
     // {
-    //     for (int i = 0; i < resized_image->rows; i++)
+    //     for (int i = 0; i < out.rows; i++)
     //     {
-    //         for (int j = 0; j < resized_image->cols; j++)
+    //         for (int j = 0; j < out.cols; j++)
     //         {
-    //             resized_image->at<cv::Vec3b>(i, j) = (resized_image->at<cv::Vec3b>(i, j)[k] - mean[k]) / std[k];
+    //             out.at<cv::Vec3b>(i, j) = ((float)out.at<cv::Vec3b>(i, j)[k] - mean[k]) / std[k];
     //         }
     //     }
     // }
-
     // Convert image to float and normalize to [0, 1]
-    resized_image->convertTo(*resized_image, CV_32FC3, 1 / 255.0f);
+    out.convertTo(out, CV_32FC3, 1 / 255.0f);
 
     // Allocate memory for the image blob in CHW format
-    blob = new float[resized_image->cols * resized_image->rows * resized_image->channels()];
+    blob = new float[out.cols * out.rows * resized_image->channels()];
 
     // Split the image into separate channels and store in the blob
-    std::vector<Frame> chw(resized_image->channels());
-    for (int i = 0; i < resized_image->channels(); ++i)
+    std::vector<Frame> chw(out.channels());
+    for (int i = 0; i < out.channels(); ++i)
     {
-        chw[i] = Frame(resized_image->rows, resized_image->cols, CV_32FC1, blob + i * resized_image->cols * resized_image->rows);
+        chw[i] = Frame(out.rows, out.cols, CV_32FC1, blob + i * out.cols * out.rows);
     }
-    cv::split(*resized_image, chw); // Split channels into the blob
+    cv::split(out, chw); // Split channels into the blob
 
-    return resized_image;
+    return std::make_shared<Frame>(out);
 }
 
 // Postprocess function to convert raw model output into detections

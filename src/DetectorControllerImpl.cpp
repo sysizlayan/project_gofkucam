@@ -97,7 +97,7 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     //     }
     // }
 
-    m_detector->draw_bounding_box(frame, cat_or_dog_detections, m_class_names, m_class_colors);
+    m_detector->draw_bounding_box(copy_of_frame, cat_or_dog_detections, m_class_names, m_class_colors);
     
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -105,8 +105,8 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     #endif
 
     // Display the frame
-    cv::Mat display_frame;
-    cv::resize(*frame, display_frame, cv::Size(640, 480));
+    Frame display_frame;
+    cv::resize(*copy_of_frame, display_frame, cv::Size(640, 480));
     cv::imshow("GofkuCam Stream", display_frame);
     cv::waitKey(2); // Allow the window to update, wait 1ms
 
