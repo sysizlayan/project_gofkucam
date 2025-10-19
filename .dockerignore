@@ -1,0 +1,14 @@
+# Ignore build artifacts
+build/
+captured_frames/
+
+# Ignore git files
+.git/
+.gitignore
+
+# Ignore VSCode settings
+.vscode/
+
+# Ignore docker files
+Dockerfile
+.dockerignore

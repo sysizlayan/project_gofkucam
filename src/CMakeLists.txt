@@ -7,7 +7,7 @@ set(CMAKE_CXX_COMPILER "clang++")
 set(CMAKE_C_COMPILER "clang")
 
 # Remove the forced Debug mode
-#set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Debug)
 
 # Add configuration types
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
@@ -19,11 +19,16 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 # Set compile flags for different build types
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
-set(ONNXRUNTIME_DIR "../extern/onnxruntime-linux-x64-gpu-1.20.1")
+
+if(NOT ONNXRUNTIME_DIR)
+    set(ONNXRUNTIME_DIR "${CMAKE_SOURCE_DIR}/extern/onnxruntime-linux-x64-1.20.1")
+endif()
+
+message(STATUS "ONNX runtime directory: ${ONNXRUNTIME_DIR}")
 
 # Update C++ standard
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_PREFIX_PATH ../extern/libtorch)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
@@ -60,13 +65,14 @@ add_library(gofkucam_lib
 
 target_include_directories(gofkucam_lib
     PUBLIC
-    ../include
-    ../include/qm_generated
-    ../extern/qp-bundle/qpcpp/include
-    ../extern/qp-bundle/qpcpp/src
-    ../extern/qp-bundle/qpcpp/ports/posix
-    ../extern/json/include
-    ../extern/onnxruntime-linux-x64-1.20.1/include
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/qm_generated
+    ${CMAKE_SOURCE_DIR}/extern/qp-bundle/qpcpp/include
+    ${CMAKE_SOURCE_DIR}/extern/qp-bundle/qpcpp/src
+    ${CMAKE_SOURCE_DIR}/extern/qp-bundle/qpcpp/ports/posix
+    ${CMAKE_SOURCE_DIR}/extern/json/include
+    ${CMAKE_SOURCE_DIR}/extern/spdlog/include
+    ${ONNXRUNTIME_DIR}/include
 )
 
 target_compile_options(gofkucam_lib
@@ -80,7 +86,8 @@ target_link_libraries(gofkucam_lib
     qpcpp
     ${OpenCV_LIBS}
     #"${TORCH_LIBRARIES}"
-    "/home/sysizlayan/git/project_gofkucam/extern/onnxruntime-linux-x64-1.20.1/lib/libonnxruntime.so"
+    ${ONNXRUNTIME_DIR}/lib/libonnxruntime.so
+    spdlog::spdlog
 )
 
 # Target: The executable for the gofkucam
@@ -90,7 +97,7 @@ add_executable(gofkucam
 
 target_compile_features(gofkucam
     PRIVATE
-    cxx_std_23
+    cxx_std_20
 )
 
 # Add build-specific compile definitions
@@ -115,4 +122,5 @@ target_link_libraries(gofkucam
     PUBLIC
     gofkucam_lib
     Threads::Threads
+    spdlog::spdlog
 )

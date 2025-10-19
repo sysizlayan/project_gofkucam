@@ -2,7 +2,6 @@
 # build.sh - Build script for GofkuCam C++ project using CMake
 set -e
 
-sudo apt install -y libspdlog-dev
 BUILD_DIR=build
 
 set -euo pipefail
