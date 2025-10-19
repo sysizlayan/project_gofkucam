@@ -19,16 +19,25 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 # Set compile flags for different build types
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
-set(ONNXRUNTIME_DIR "../extern/onnxruntime-linux-x64-gpu-1.20.1")
+
+if(NOT ONNXRUNTIME_DIR)
+    set(ONNXRUNTIME_DIR "${CMAKE_SOURCE_DIR}/extern/onnxruntime-linux-x64-1.20.1")
+endif()
+
+message(STATUS "ONNX runtime directory: ${ONNXRUNTIME_DIR}")
 
 # Update C++ standard
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_PREFIX_PATH ../extern/libtorch)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 find_package(OpenCV REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(CURL REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB REQUIRED glib-2.0)
 #find_package(Torch REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -66,7 +75,9 @@ target_include_directories(gofkucam_lib
     ../extern/qp-bundle/qpcpp/src
     ../extern/qp-bundle/qpcpp/ports/posix
     ../extern/json/include
-    ../extern/onnxruntime-linux-x64-1.20.1/include
+    ${ONNXRUNTIME_DIR}/include
+    ${CURL_INCLUDE_DIRS}
+    ${GLIB_INCLUDE_DIRS}
 )
 
 target_compile_options(gofkucam_lib
@@ -78,9 +89,12 @@ target_compile_options(gofkucam_lib
 target_link_libraries(gofkucam_lib
     PUBLIC
     qpcpp
+    spdlog::spdlog
     ${OpenCV_LIBS}
+    CURL::libcurl
+    ${GLIB_LIBRARIES}
     #"${TORCH_LIBRARIES}"
-    "/home/sysizlayan/git/project_gofkucam/extern/onnxruntime-linux-x64-1.20.1/lib/libonnxruntime.so"
+    ${ONNXRUNTIME_DIR}/lib/libonnxruntime.so
 )
 
 # Target: The executable for the gofkucam
@@ -90,7 +104,7 @@ add_executable(gofkucam
 
 target_compile_features(gofkucam
     PRIVATE
-    cxx_std_23
+    cxx_std_20
 )
 
 # Add build-specific compile definitions
@@ -115,4 +129,7 @@ target_link_libraries(gofkucam
     PUBLIC
     gofkucam_lib
     Threads::Threads
+    spdlog::spdlog
+    CURL::libcurl
+    ${GLIB_LIBRARIES}
 )

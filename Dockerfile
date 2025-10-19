@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y \
     libspdlog-dev \
     libopencv-dev \
     libxcb-cursor0 \
+    libcurl4-openssl-dev \
+    libglib2.0-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
@@ -24,10 +26,10 @@ WORKDIR /app
 COPY . .
 
 # Make scripts executable
-RUN chmod +x build.sh
+RUN chmod +x build_docker.sh
 
 # Build the project
-RUN ./build.sh
+RUN ./build_docker.sh
 
 # --- Runtime Stage ---
 # Use the same Ubuntu base for the final image

@@ -2,9 +2,10 @@
 #define SPDLOG_LOGGER_H
 
 #include "LoggerInterface.hpp"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 #define SPDLOG_USE_STD_FORMAT
-#include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace GofkuCam
 {
