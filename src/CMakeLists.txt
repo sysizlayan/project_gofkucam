@@ -7,7 +7,7 @@ set(CMAKE_CXX_COMPILER "clang++")
 set(CMAKE_C_COMPILER "clang")
 
 # Remove the forced Debug mode
-#set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Debug)
 
 # Add configuration types
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
@@ -34,10 +34,6 @@ set(CMAKE_PREFIX_PATH ../extern/libtorch)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 find_package(OpenCV REQUIRED)
-find_package(spdlog REQUIRED)
-find_package(CURL REQUIRED)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLIB REQUIRED glib-2.0)
 #find_package(Torch REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -69,15 +65,14 @@ add_library(gofkucam_lib
 
 target_include_directories(gofkucam_lib
     PUBLIC
-    ../include
-    ../include/qm_generated
-    ../extern/qp-bundle/qpcpp/include
-    ../extern/qp-bundle/qpcpp/src
-    ../extern/qp-bundle/qpcpp/ports/posix
-    ../extern/json/include
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/qm_generated
+    ${CMAKE_SOURCE_DIR}/extern/qp-bundle/qpcpp/include
+    ${CMAKE_SOURCE_DIR}/extern/qp-bundle/qpcpp/src
+    ${CMAKE_SOURCE_DIR}/extern/qp-bundle/qpcpp/ports/posix
+    ${CMAKE_SOURCE_DIR}/extern/json/include
+    ${CMAKE_SOURCE_DIR}/extern/spdlog/include
     ${ONNXRUNTIME_DIR}/include
-    ${CURL_INCLUDE_DIRS}
-    ${GLIB_INCLUDE_DIRS}
 )
 
 target_compile_options(gofkucam_lib
@@ -89,12 +84,10 @@ target_compile_options(gofkucam_lib
 target_link_libraries(gofkucam_lib
     PUBLIC
     qpcpp
-    spdlog::spdlog
     ${OpenCV_LIBS}
-    CURL::libcurl
-    ${GLIB_LIBRARIES}
     #"${TORCH_LIBRARIES}"
     ${ONNXRUNTIME_DIR}/lib/libonnxruntime.so
+    spdlog::spdlog
 )
 
 # Target: The executable for the gofkucam
@@ -130,6 +123,4 @@ target_link_libraries(gofkucam
     gofkucam_lib
     Threads::Threads
     spdlog::spdlog
-    CURL::libcurl
-    ${GLIB_LIBRARIES}
 )

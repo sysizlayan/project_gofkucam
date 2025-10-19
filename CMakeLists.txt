@@ -19,6 +19,7 @@ set(QPCPP_CFG_VERBOSE OFF)
 
 add_subdirectory(extern/json)
 add_subdirectory(extern/qpcpp)
+add_subdirectory(extern/spdlog)
 #add_subdirectory(extern/libtorch)
 add_subdirectory(src)
 
