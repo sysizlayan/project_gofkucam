@@ -94,7 +94,7 @@ void CameraGrabberImpl::poll_the_camera(QP::QEvt const * const e)
       {
          m_logger->trace("Polled empty frame");
       }
-      m_polling_timer.armX(1000, 0);
+      m_polling_timer.armX(30, 0);
    }
    else
    {
@@ -110,6 +110,6 @@ void CameraGrabberImpl::running_entry(QP::QEvt const * const e)
    (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber running entry");
    m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
-   m_polling_timer.armX(1000, 0);
+   m_polling_timer.armX(30, 0);
 }
 } // namespace GofkuCam
