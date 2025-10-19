@@ -34,6 +34,10 @@ void DetectorControllerImpl::start_req(QP::QEvt const * const e)
 {
     (void)e; // Suppress unused parameter warning
     m_logger->info("Detector controller start requested");
+
+    m_owner->subscribe(FRAME_CAPTURED_SIG);
+    m_owner->subscribe(STREAM_ENDED_SIG);
+    m_owner->subscribe(CAPTURE_ERROR_SIG);
 }
 
 void DetectorControllerImpl::stream_end(QP::QEvt const * const e)
@@ -50,7 +54,7 @@ void DetectorControllerImpl::running_entry(QP::QEvt const * const e)
 
 void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
 {
-    m_logger->info("New frame to object detector");
+    m_logger->trace("New frame to object detector");
 
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -59,7 +63,7 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
 
         if (copy_of_frame && !copy_of_frame->empty())
         {
-            m_logger->info("Object detection completed with size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
+            m_logger->info("Object detection input size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
             // You can further process or visualize the depth map as needed
         }
 

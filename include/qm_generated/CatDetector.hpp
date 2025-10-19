@@ -60,7 +60,11 @@ public:
 
 protected:
     Q_STATE_DECL(initial);
-    Q_STATE_DECL(operating);
+    Q_STATE_DECL(OPERAING);
+    Q_STATE_DECL(WAITING_DETECTORS);
+    Q_STATE_DECL(WAITING_OBJECT_DETECTION);
+    Q_STATE_DECL(WAITING_DEPTH_MAP);
+    Q_STATE_DECL(DETERMINE_CAT_FEEDING);
     Q_STATE_DECL(NOT_STARTED);
 }; // class CatDetector
 //$enddecl${Components::CatDetector} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

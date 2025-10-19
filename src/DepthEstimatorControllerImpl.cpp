@@ -29,6 +29,10 @@ void DepthEstimatorControllerImpl::start_req(QP::QEvt const * const e)
 {
     (void)e; // Suppress unused parameter warning
     m_logger->info("Depth estimator controller start requested");
+
+    m_owner->subscribe(FRAME_CAPTURED_SIG);
+    m_owner->subscribe(STREAM_ENDED_SIG);
+    m_owner->subscribe(CAPTURE_ERROR_SIG);
 }
 
 void DepthEstimatorControllerImpl::stream_end(QP::QEvt const * const e)
@@ -45,7 +49,7 @@ void DepthEstimatorControllerImpl::running_entry(QP::QEvt const * const e)
 
 void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
 {
-    m_logger->info("New frame to depth estimator");
+    m_logger->trace("New frame to depth estimator");
 
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -53,7 +57,7 @@ void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
         FramePtr copy_of_frame = std::make_shared<Frame>(Q_EVT_CAST(FrameCapturedEvt)->m_frame->clone());
         if (copy_of_frame && !copy_of_frame->empty())
         {
-            m_logger->info("Object detection completed with size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
+            m_logger->info("Depth Estimation input size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
             // You can further process or visualize the depth map as needed
         }
 
