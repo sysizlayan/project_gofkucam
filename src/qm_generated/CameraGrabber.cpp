@@ -72,6 +72,12 @@ Q_STATE_DEF(CameraGrabber, initial) {
     //${Components::CameraGrabber::SM::initial}
     (void)e; // Just to supress compiler warning
     (void)Q_this_module_; // Just to supress compiler warning
+
+
+    this->subscribe(START_REQ_SIG);
+    this->subscribe(STOP_REQ_SIG);
+    this->subscribe(FRAME_TIMER_TIMEOUT_SIG);
+    this->subscribe(STREAM_ENDED_SIG);
     return tran(&NOT_STARTED);
 }
 

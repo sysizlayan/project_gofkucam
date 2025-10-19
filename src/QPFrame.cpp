@@ -43,11 +43,10 @@ void QPFrame::ao_thread_func()
 {
    m_logger->info("QPFrame external thread started.");
 
-   m_camera_grabber = std::make_shared<CameraGrabber>(m_logger, 
-         Config::config().get<std::string>("stream_address"));
-
+   m_camera_grabber = std::make_shared<CameraGrabber>(m_logger, Config::config().get<std::string>("stream_address"));
    m_detector_controller = std::make_shared<DetectorController>(m_logger);
    m_depth_estimator_controller = std::make_shared<DepthEstimatorController>(m_logger);
+   m_cat_detector = std::make_shared<CatDetector>(m_logger);
 
    m_camera_grabber->start(
       1, 
@@ -62,6 +61,7 @@ void QPFrame::ao_thread_func()
       Q_DIM(m_gofkucam_controller_queue),
       nullptr,
       256*MB);
+
    m_depth_estimator_controller->start(
       3, 
       m_gofkucam_controller_queue,
@@ -69,23 +69,13 @@ void QPFrame::ao_thread_func()
       nullptr,
       256*MB);
 
-   
-   m_camera_grabber->subscribe(START_REQ_SIG);
-   m_camera_grabber->subscribe(STOP_REQ_SIG);
-   m_camera_grabber->subscribe(FRAME_TIMER_TIMEOUT_SIG);
-   m_camera_grabber->subscribe(STREAM_ENDED_SIG);
+   m_cat_detector->start(
+      4, 
+      m_gofkucam_controller_queue,
+      Q_DIM(m_gofkucam_controller_queue),
+      nullptr,
+      256*MB);
 
-   m_detector_controller->subscribe(START_REQ_SIG);
-   m_detector_controller->subscribe(STOP_REQ_SIG);
-   m_detector_controller->subscribe(FRAME_CAPTURED_SIG);
-   m_detector_controller->subscribe(STREAM_ENDED_SIG);
-   m_detector_controller->subscribe(CAPTURE_ERROR_SIG);
-
-   m_depth_estimator_controller->subscribe(START_REQ_SIG);
-   m_depth_estimator_controller->subscribe(STOP_REQ_SIG);
-   m_depth_estimator_controller->subscribe(FRAME_CAPTURED_SIG);
-   m_depth_estimator_controller->subscribe(STREAM_ENDED_SIG);
-   m_depth_estimator_controller->subscribe(CAPTURE_ERROR_SIG);
 
    StartRequested* sr = Q_NEW(StartRequested, START_REQ_SIG);
    QP::QF::PUBLISH(sr, this);
@@ -117,7 +107,6 @@ void QP::QF::onClockTick()
    QTimeEvt::TICK_X(0U, 0); // process time events at rate 0
    //  QS_RX_INPUT(); // handle the QS-RX input
    //  QS_OUTPUT();   // handle the QS output
-
 }
 
 /*--------------------------------------------------------------------------*/

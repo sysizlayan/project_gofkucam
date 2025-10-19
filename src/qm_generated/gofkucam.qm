@@ -70,7 +70,13 @@ m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
    <statechart properties="0x00">
     <initial target="../1">
      <action>(void)e; // Just to supress compiler warning
-(void)Q_this_module_; // Just to supress compiler warning</action>
+(void)Q_this_module_; // Just to supress compiler warning
+
+   
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
+this-&gt;subscribe(FRAME_TIMER_TIMEOUT_SIG);
+this-&gt;subscribe(STREAM_ENDED_SIG);</action>
      <initial_glyph conn="9,4,5,1,67,7,-4">
       <action box="1,-3,10,2"/>
      </initial_glyph>
@@ -144,7 +150,12 @@ m_logger-&gt;trace(&quot;Object Detector started!&quot;);</code>
     <initial target="../2">
      <action>(void)e; // Just to supress compiler warning
 (void)Q_this_module_; // Just to supress compiler warning
-</action>
+
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
+this-&gt;subscribe(FRAME_CAPTURED_SIG);
+this-&gt;subscribe(STREAM_ENDED_SIG);
+this-&gt;subscribe(CAPTURE_ERROR_SIG);</action>
      <initial_glyph conn="9,4,5,1,42,8,-7">
       <action box="1,-3,10,2"/>
      </initial_glyph>
@@ -191,6 +202,12 @@ m_logger-&gt;trace(&quot;Depth Estimator started!&quot;);</code>
     <initial target="../2">
      <action>(void)e; // Just to supress compiler warning
 (void)Q_this_module_; // Just to supress compiler warning
+
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
+this-&gt;subscribe(FRAME_CAPTURED_SIG);
+this-&gt;subscribe(STREAM_ENDED_SIG);
+this-&gt;subscribe(CAPTURE_ERROR_SIG);
 </action>
      <initial_glyph conn="9,4,5,1,42,8,-7">
       <action box="1,-3,10,2"/>
@@ -238,6 +255,12 @@ m_logger-&gt;trace(&quot;Cat detector started!&quot;);</code>
     <initial target="../2">
      <action>(void)e; // Just to supress compiler warning
 (void)Q_this_module_; // Just to supress compiler warning
+
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
+this-&gt;subscribe(FRAME_CAPTURED_SIG);
+this-&gt;subscribe(STREAM_ENDED_SIG);
+this-&gt;subscribe(CAPTURE_ERROR_SIG);
 </action>
      <initial_glyph conn="9,4,5,1,42,8,-7">
       <action box="1,-3,10,2"/>

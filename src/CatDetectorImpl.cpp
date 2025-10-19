@@ -25,24 +25,24 @@ CatDetectorImpl::CatDetectorImpl(QP::QActive * const owner, LoggerInterfacePtr l
 void CatDetectorImpl::start_req(QP::QEvt const * const e)
 {
     (void)e; // Suppress unused parameter warning
-    m_logger->info("Depth estimator controller start requested");
+    m_logger->info("Cat Detector  start requested");
 }
 
 void CatDetectorImpl::stream_end(QP::QEvt const * const e)
 {
     (void)e; // Suppress unused parameter warning
-    m_logger->info("Stream ended, stopping depth estimator controller");
+    m_logger->info("Stream ended, stopping Cat Detector ");
 }
 
 void CatDetectorImpl::running_entry(QP::QEvt const * const e)
 {
     (void)e; // Suppress unused parameter warning
-    m_logger->info("Depth estimator controller running entry");
+    m_logger->info("Cat Detector  running entry");
 }
 
 void CatDetectorImpl::frame_captured(QP::QEvt const * const e)
 {
-    m_logger->info("New frame to depth estimator");
+    m_logger->info("New frame to Cat Detector");
     std::shared_ptr<Frame> frame = Q_EVT_CAST(FrameCapturedEvt)->m_frame;
     m_logger->trace("Captured frame with size: " + std::to_string(frame->cols) + "x" + std::to_string(frame->rows));
 
