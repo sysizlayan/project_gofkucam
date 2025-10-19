@@ -44,10 +44,10 @@ build/
 extern/libtorch/
 test___/
 extern/onnxruntime-*
-*.onnx
+
 *.pt
 resources/yolo/venv/
-config/config.json
+config/*
 captured_frames/
 captured_frames/*
 CmakePresets.json
