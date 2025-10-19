@@ -37,6 +37,10 @@ Repo/Development requirements:
 * extern: External libraries like libtorch
 * resouces: neural weights, videos for testing etc.
 
+## Up to object detection and depth estimation
+<img width="1174" height="543" alt="gofkucam" src="https://github.com/user-attachments/assets/edfb83f5-20ca-4951-8ad4-7d001004c8cc" />
+
+
 ### Changelog:
 30.05.2025 - Camera connection, frame acquisition and the QP framework active object framework is working. I will continue with choosing neural models.
 
@@ -44,6 +48,21 @@ My laptop is not that good, developing in the old desktop I have migth be a good
 
 27.05.2025 - Let's start :) I started with the observation system, using the Tapo camera I had. Execution will be based on Quantum Leaps' QP framework, written in C++.
 23.05.2025 - Vet visit, advising Haku to lose some weight
+## Used or Inspired Repos
+Depth Estimation model:
+https://github.com/DepthAnything/Depth-Anything-V2
+
+Its C++ wrapper with ONNX:
+https://github.com/spacewalk01/depth-anything-tensorrt
+
+Object detection model is YOLO, its C++ wrapper with ONNX:
+https://github.com/Geekgineer/YOLOs-CPP
+
+Active object framework:
+https://github.com/QuantumLeaps/qpcpp
+
+Configuration JSON parser:
+https://github.com/nlohmann/json
 
 ## Disclaimer
 This is a personal project but open source, so I am not paying too much attention on the licence(s) (yet) since it is not distributed commercially.
