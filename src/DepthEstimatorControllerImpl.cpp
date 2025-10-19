@@ -49,11 +49,6 @@ void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
     std::shared_ptr<Frame> frame = Q_EVT_CAST(FrameCapturedEvt)->m_frame;
     m_logger->trace("Captured frame with size: " + std::to_string(frame->cols) + "x" + std::to_string(frame->rows));
 
-    // // Here you would:
-    // // 1. Get the frame from the event
-    // // 2. Run object detection
-    // // 3. Publish detection results
-    
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     #endif

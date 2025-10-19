@@ -41,7 +41,7 @@ void CameraGrabberImpl::frame_timer_timeout(QP::QEvt const * const e)
    if (m_is_new_frame_available)
    {
       FrameCapturedEvt* fce = Q_NEW(FrameCapturedEvt, FRAME_CAPTURED_SIG);
-      fce->m_frame = m_current_frame;
+      fce->m_frame = std::make_shared<Frame>(m_current_frame->clone());
       m_logger->trace("Captured a new frame");
       QP::QF::PUBLISH(fce, this);
       m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
@@ -94,7 +94,7 @@ void CameraGrabberImpl::poll_the_camera(QP::QEvt const * const e)
       {
          m_logger->trace("Polled empty frame");
       }
-      m_polling_timer.armX(30, 0);
+      m_polling_timer.armX(1000, 0);
    }
    else
    {
@@ -110,6 +110,6 @@ void CameraGrabberImpl::running_entry(QP::QEvt const * const e)
    (void)e; // Suppress unused parameter warning
    m_logger->info("Camera grabber running entry");
    m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
-   m_polling_timer.armX(30, 0);
+   m_polling_timer.armX(1000, 0);
 }
 } // namespace GofkuCam
