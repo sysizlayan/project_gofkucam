@@ -27,27 +27,6 @@ const float IOU_THRESHOLD = 0.4f;
 namespace GofkuCam
 {
 
-// Struct to represent a bounding box
-struct BoundingBox {
-    int x;
-    int y;
-    int width;
-    int height;
-
-    BoundingBox() : x(0), y(0), width(0), height(0) {}
-    BoundingBox(int x_, int y_, int width_, int height_)
-        : x(x_), y(y_), width(width_), height(height_) {}
-};
-
-/**
- * @brief Struct to represent a detection.
- */
-struct Detection {
-    BoundingBox box;
-    float conf{};
-    int classId{};
-};
-
 class ObjectDetector
 {
 public:

@@ -73,6 +73,23 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
         }
     }
 
+    if (copy_of_frame && !copy_of_frame->empty())
+    {
+        m_logger->info("Object detection completed with size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
+        // You can further process or visualize the depth map as needed
+    }
+    m_detector->draw_bounding_box(copy_of_frame, cat_or_dog_detections, m_class_names, m_class_colors);
+
+    if(!cat_or_dog_detections.empty())
+    {
+        ObjectDetectionCompletedEvt* odce = Q_NEW(ObjectDetectionCompletedEvt, OBJECT_DETECTION_COMPLETED_SIG);
+        odce->m_cat_or_dog_detections = std::make_shared<std::vector<Detection>>();
+        for(auto& item:cat_or_dog_detections)
+            odce->m_cat_or_dog_detections->push_back(item);
+        m_logger->trace("Cat and dog detections are sent");
+        QP::QF::PUBLISH(odce, this);
+    }
+
     // // Save frame if it contains a dog or cat detection
     // for (const auto& detection : detections) {
     //     std::string class_name = m_class_names[detection.classId];
@@ -92,7 +109,6 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     //     }
     // }
 
-    m_detector->draw_bounding_box(copy_of_frame, cat_or_dog_detections, m_class_names, m_class_colors);
     
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();

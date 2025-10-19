@@ -78,6 +78,9 @@ Q_STATE_DEF(CatDetector, initial) {
     this->subscribe(STREAM_ENDED_SIG);
     this->subscribe(CAPTURE_ERROR_SIG);
 
+    this->subscribe(OBJECT_DETECTION_COMPLETED_SIG);
+    this->subscribe(DEPTH_ESTIMATION_COMPLETED_SIG);
+
     return tran(&NOT_STARTED);
 }
 
@@ -97,6 +100,18 @@ Q_STATE_DEF(CatDetector, operating) {
         case STOP_REQ_SIG: {
             m_cat_detector->stream_end(e);
             status_ = tran(&NOT_STARTED);
+            break;
+        }
+        //${Components::CatDetector::SM::operating::OBJECT_DETECTION_COMPLETED}
+        case OBJECT_DETECTION_COMPLETED_SIG: {
+            m_cat_detector->object_detection_completed(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::operating::DEPTH_ESTIMATION_COMPLETED}
+        case DEPTH_ESTIMATION_COMPLETED_SIG: {
+            m_cat_detector->depth_estimation_completed(e);
+            status_ = Q_RET_HANDLED;
             break;
         }
         default: {

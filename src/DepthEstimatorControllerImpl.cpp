@@ -60,6 +60,11 @@ void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
         // You can further process or visualize the depth map as needed
     }
 
+    DepthEstimationCompletedEvt* dece = Q_NEW(DepthEstimationCompletedEvt, DEPTH_ESTIMATION_COMPLETED_SIG);
+    dece->m_depth_frame = std::make_shared<Frame>(depth_map->clone());
+    m_logger->trace("New Depth frame");
+    QP::QF::PUBLISH(dece, this);
+
     // // Save frame if it contains a dog or cat detection
     // for (const auto& detection : detections) {
     //     std::string class_name = m_class_names[detection.classId];

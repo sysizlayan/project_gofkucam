@@ -20,6 +20,8 @@ public:
     void stream_end(QP::QEvt const * const e) override;
     void running_entry(QP::QEvt const * const e) override;
     void frame_captured(QP::QEvt const * const e) override;
+    void object_detection_completed(QP::QEvt const * const e) override;
+    void depth_estimation_completed(QP::QEvt const * const e) override;
 }; // class CatDetectorImpl
 
 } // namespace GofkuCam

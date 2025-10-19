@@ -9,7 +9,7 @@
 #include <iomanip>
 #include <sstream>
 
-#define MINI_PROFILER
+//#define MINI_PROFILER
 
 namespace GofkuCam
 {
@@ -43,25 +43,41 @@ void CatDetectorImpl::running_entry(QP::QEvt const * const e)
 void CatDetectorImpl::frame_captured(QP::QEvt const * const e)
 {
     m_logger->info("New frame to Cat Detector");
-    std::shared_ptr<Frame> frame = Q_EVT_CAST(FrameCapturedEvt)->m_frame;
-    m_logger->trace("Captured frame with size: " + std::to_string(frame->cols) + "x" + std::to_string(frame->rows));
 
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     #endif
-    FramePtr copy_of_frame = std::make_shared<Frame>(frame->clone());
+    FramePtr copy_of_frame = std::make_shared<Frame>(Q_EVT_CAST(FrameCapturedEvt)->m_frame->clone());
+    m_logger->trace("Captured frame with size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
 
     
     
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    m_logger->info("Depth estimaton took " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) + "[ms]");
+    m_logger->info("Cat detection took " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) + "[ms]");
     #endif
 
     // // // Display the frame
     // static Frame display_frame;
     // cv::resize(*depth_map, display_frame, cv::Size(640, 480));
     // g_depth_visualization_frame.store(&display_frame);
+}
+
+void CatDetectorImpl::object_detection_completed(QP::QEvt const * const e)
+{
+    m_logger->info("Object detection completed event received in Cat Detector");
+    auto odce = Q_EVT_CAST(ObjectDetectionCompletedEvt);
+    std::vector<Detection>& cat_or_dog_detections = *odce->m_cat_or_dog_detections;
+    m_logger->info("CAT Number of cat or dog detections: " + std::to_string(cat_or_dog_detections.size()));
+}
+
+void CatDetectorImpl::depth_estimation_completed(QP::QEvt const * const e)
+{
+    m_logger->info("Depth estimation completed event received in Cat Detector");
+    auto dece = Q_EVT_CAST(DepthEstimationCompletedEvt);
+    FramePtr depth_frame = std::make_shared<Frame>(dece->m_depth_frame->clone());
+    m_logger->info("CAT Depth frame size: " + std::to_string(depth_frame->cols) + "x" + std::to_string(depth_frame->rows));
+    // Further processing can be done here
 }
 
 } // namespace GofkuCam
