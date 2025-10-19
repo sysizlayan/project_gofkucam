@@ -7,6 +7,7 @@
 #include "LoggerInterface.hpp"
 #include "DetectorController.hpp"
 #include "CameraGrabber.hpp"
+#include "CatDetector.hpp"
 #include "DepthEstimatorController.hpp"
 #include <variant>
 constexpr size_t NUM_STORED_EVENTS = 100;
@@ -14,7 +15,7 @@ constexpr size_t NUM_STORED_EVENTS = 100;
 
 namespace GofkuCam
 {
-using EventTyp = std::variant<FrameCapturedEvt, FrameTimerTimeout, StreamEnded, CaptureError, StopRequested>;
+using EventTyp = std::variant<FrameCapturedEvt, FrameTimerTimeout, StreamEnded, CaptureError, StartRequested, StopRequested, PollingTimerTimeout, ObjectDetectionCompletedEvt, DepthEstimationCompletedEvt>;
 class QPFrame
 /**
  * @class QPFrame
@@ -39,6 +40,8 @@ private:
     std::shared_ptr<DetectorController>   m_detector_controller;
     std::shared_ptr<DepthEstimatorController>   m_depth_estimator_controller;
     std::shared_ptr<CameraGrabber> m_camera_grabber;
+    std::shared_ptr<CatDetector> m_cat_detector;
+
 
     QP::QEvt const *m_gofkucam_controller_queue[NUM_STORED_EVENTS];
     QP::QEvt const *m_gofkucam_camera_grabber_queue[NUM_STORED_EVENTS];

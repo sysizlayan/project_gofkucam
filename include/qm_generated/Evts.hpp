@@ -55,6 +55,9 @@ enum EvtSignals : QP::QSignal
     CAPTURE_ERROR_SIG,
     START_REQ_SIG,
     STOP_REQ_SIG,
+    OBJECT_DETECTION_COMPLETED_SIG,
+    DEPTH_ESTIMATION_COMPLETED_SIG,
+    CAT_FEEDING_DETERMINED_SIG,
 
     MAX_GOFKU_CAM_SIG
 };
@@ -108,6 +111,30 @@ class PollingTimerTimeout : public QP::QEvt {
 public:
     PollingTimerTimeout();
 }; // class PollingTimerTimeout
+
+//${Evts::ObjectDetectionCompletedEvt} .......................................
+class ObjectDetectionCompletedEvt : public QP::QEvt {
+public:
+    std::shared_ptr<std::vector<Detection>> m_cat_or_dog_detections;
+
+public:
+    ObjectDetectionCompletedEvt()
+    : QEvt(EvtSignals::OBJECT_DETECTION_COMPLETED_SIG)
+    , m_cat_or_dog_detections{nullptr}
+    {}
+}; // class ObjectDetectionCompletedEvt
+
+//${Evts::DepthEstimationCompletedEvt} .......................................
+class DepthEstimationCompletedEvt : public QP::QEvt {
+public:
+    std::shared_ptr<Frame> m_depth_frame;
+
+public:
+    DepthEstimationCompletedEvt()
+    : QEvt(EvtSignals::DEPTH_ESTIMATION_COMPLETED_SIG)
+    , m_depth_frame{nullptr}
+    {}
+}; // class DepthEstimationCompletedEvt
 
 } // namespace GofkuCam
 //$enddecl${Evts} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

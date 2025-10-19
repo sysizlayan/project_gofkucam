@@ -27,27 +27,6 @@ const float IOU_THRESHOLD = 0.4f;
 namespace GofkuCam
 {
 
-// Struct to represent a bounding box
-struct BoundingBox {
-    int x;
-    int y;
-    int width;
-    int height;
-
-    BoundingBox() : x(0), y(0), width(0), height(0) {}
-    BoundingBox(int x_, int y_, int width_, int height_)
-        : x(x_), y(y_), width(width_), height(height_) {}
-};
-
-/**
- * @brief Struct to represent a detection.
- */
-struct Detection {
-    BoundingBox box;
-    float conf{};
-    int classId{};
-};
-
 class ObjectDetector
 {
 public:
@@ -56,7 +35,7 @@ public:
     ObjectDetector(const ObjectDetector &) = delete; // Disable copy constructor
     ObjectDetector &operator=(const ObjectDetector &) = delete; // Disable copy assignment operator
 
-    std::vector<Detection> detect(FramePtr image, float confThreshold = 0.4f, float iouThreshold = 0.45f);
+    std::vector<Detection> detect(FramePtr image, float confThreshold = 0.35f, float iouThreshold = 0.40f);
 
     void draw_bounding_box(FramePtr image, const std::vector<Detection> &detections,
                             const std::vector<std::string> &classNames, const std::vector<cv::Scalar> &colors);
@@ -68,15 +47,15 @@ public:
     static std::vector<cv::Scalar> generate_colors(const std::vector<std::string> &classNames, int seed);
 
 private:
-    std::string m_model_path;                   // Path to the ONNX model file
+        std::string m_model_path;                   // Path to the ONNX model file
     std::string m_label_file_path;                  // Path to the labels file containing class names
-    LoggerInterfacePtr m_logger; // Logger for debug messages
-    Ort::Env m_env;                         // ONNX Runtime environment
-    Ort::SessionOptions m_session_options;   // Session options for ONNX Runtime
-    Ort::Session m_session;                 // ONNX Runtime session for running inference
+    LoggerInterfacePtr m_logger;                    // Logger for debug messages
+    Ort::Env m_env;                                 // ONNX Runtime environment
+    Ort::SessionOptions m_session_options;          // Session options for ONNX Runtime
+    Ort::Session m_session;                         // ONNX Runtime session for running inference
 
-    bool isDynamicInputShape{};                    // Flag indicating if input shape is dynamic
-    cv::Size inputImageShape;                      // Expected input image shape for the model
+    bool isDynamicInputShape{};                     // Flag indicating if input shape is dynamic
+    cv::Size inputImageShape;                       // Expected input image shape for the model
 
     // Vectors to hold allocated input and output node names
     std::vector<Ort::AllocatedStringPtr> inputNodeNameAllocatedStrings;
@@ -84,10 +63,10 @@ private:
     std::vector<Ort::AllocatedStringPtr> outputNodeNameAllocatedStrings;
     std::vector<const char *> outputNames;
 
-    size_t numInputNodes, numOutputNodes;          // Number of input and output nodes in the model
+    size_t numInputNodes, numOutputNodes;           // Number of input and output nodes in the model
 
-    std::vector<std::string> m_classes;            // Vector of class names loaded from file
-    std::vector<cv::Scalar> m_class_colors;            // Vector of colors for each class
+    std::vector<std::string> m_classes;             // Vector of class names loaded from file
+    std::vector<cv::Scalar> m_class_colors;         // Vector of colors for each class
 
     /**
      * @brief Preprocesses the input image for model inference.

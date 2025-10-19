@@ -12,6 +12,9 @@
     CAPTURE_ERROR_SIG,
     START_REQ_SIG,
     STOP_REQ_SIG,
+    OBJECT_DETECTION_COMPLETED_SIG,
+    DEPTH_ESTIMATION_COMPLETED_SIG,
+    CAT_FEEDING_DETERMINED_SIG,
 
     MAX_GOFKU_CAM_SIG
 };</code>
@@ -53,6 +56,20 @@
     <code>: QEvt(EvtSignals::POLLING_TIMER_TIMEOUT_SIG)</code>
    </operation>
   </class>
+  <class name="ObjectDetectionCompletedEvt" superclass="qpcpp::QEvt">
+   <attribute name="m_cat_or_dog_detections" type="std::shared_ptr&lt;std::vector&lt;Detection&gt;&gt;" visibility="0x00" properties="0x00"/>
+   <operation name="ObjectDetectionCompletedEvt" type="" visibility="0x00" properties="0x02">
+    <code>: QEvt(EvtSignals::OBJECT_DETECTION_COMPLETED_SIG)
+, m_cat_or_dog_detections{nullptr}</code>
+   </operation>
+  </class>
+  <class name="DepthEstimationCompletedEvt" superclass="qpcpp::QEvt">
+   <attribute name="m_depth_frame" type="std::shared_ptr&lt;Frame&gt;" visibility="0x00" properties="0x00"/>
+   <operation name="DepthEstimationCompletedEvt" type="" visibility="0x00" properties="0x02">
+    <code>: QEvt(EvtSignals::DEPTH_ESTIMATION_COMPLETED_SIG)
+, m_depth_frame{nullptr}</code>
+   </operation>
+  </class>
  </package>
  <package name="Components" stereotype="0x02">
   <class name="CameraGrabber" superclass="qpcpp::QActive">
@@ -70,7 +87,13 @@ m_logger-&gt;trace(&quot;The Controller ctor!&quot;);</code>
    <statechart properties="0x00">
     <initial target="../1">
      <action>(void)e; // Just to supress compiler warning
-(void)Q_this_module_; // Just to supress compiler warning</action>
+(void)Q_this_module_; // Just to supress compiler warning
+
+   
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
+this-&gt;subscribe(FRAME_TIMER_TIMEOUT_SIG);
+this-&gt;subscribe(STREAM_ENDED_SIG);</action>
      <initial_glyph conn="9,4,5,1,67,7,-4">
       <action box="1,-3,10,2"/>
      </initial_glyph>
@@ -144,7 +167,9 @@ m_logger-&gt;trace(&quot;Object Detector started!&quot;);</code>
     <initial target="../2">
      <action>(void)e; // Just to supress compiler warning
 (void)Q_this_module_; // Just to supress compiler warning
-</action>
+
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);</action>
      <initial_glyph conn="9,4,5,1,42,8,-7">
       <action box="1,-3,10,2"/>
      </initial_glyph>
@@ -191,6 +216,9 @@ m_logger-&gt;trace(&quot;Depth Estimator started!&quot;);</code>
     <initial target="../2">
      <action>(void)e; // Just to supress compiler warning
 (void)Q_this_module_; // Just to supress compiler warning
+
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
 </action>
      <initial_glyph conn="9,4,5,1,42,8,-7">
       <action box="1,-3,10,2"/>
@@ -215,6 +243,106 @@ m_logger-&gt;trace(&quot;Depth Estimator started!&quot;);</code>
      <tran trig="START_REQ" target="../../1">
       <action>m_depth_estimator_controller-&gt;start_req(e);</action>
       <tran_glyph conn="8,18,3,1,41,9,-5">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="8,8,36,12"/>
+    </state>
+    <state_diagram size="125,142"/>
+   </statechart>
+  </class>
+  <class name="CatDetector" superclass="qpcpp::QActive">
+   <attribute name="m_logger" type="LoggerInterfacePtr" visibility="0x02" properties="0x00"/>
+   <attribute name="m_cat_detector" type="std::shared_ptr&lt;ICatDetector&gt;" visibility="0x00" properties="0x00"/>
+   <operation name="CatDetector" type="" visibility="0x00" properties="0x00">
+    <parameter name="logger" type="LoggerInterfacePtr"/>
+    <code>: QActive(&amp;initial)
+, m_logger(logger)
+, m_cat_detector{std::make_shared&lt;CatDetectorImpl&gt;(this, logger)}
+
+m_logger-&gt;trace(&quot;Cat detector started!&quot;);</code>
+   </operation>
+   <statechart properties="0x00">
+    <initial target="../2">
+     <action>(void)e; // Just to supress compiler warning
+(void)Q_this_module_; // Just to supress compiler warning
+
+this-&gt;subscribe(START_REQ_SIG);
+this-&gt;subscribe(STOP_REQ_SIG);
+
+</action>
+     <initial_glyph conn="9,4,5,1,42,8,-7">
+      <action box="1,-3,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="OPERAING">
+     <tran trig="FRAME_CAPTURED" target="../2">
+      <action>m_cat_detector-&gt;frame_captured(e);</action>
+      <tran_glyph conn="8,27,3,1,104,5,-2">
+       <action box="0,-2,20,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="STREAM_ENDED, CAPTURE_ERROR, STOP_REQ" target="../../2">
+      <action>m_cat_detector-&gt;stream_end(e);</action>
+      <tran_glyph conn="8,88,3,3,-6,-74,6">
+       <action box="0,-2,39,2"/>
+      </tran_glyph>
+     </tran>
+     <state name="WAITING_DETECTORS">
+      <tran trig="OBJECT_DETECTION_COMPLETED" target="../3">
+       <action>m_cat_detector-&gt;object_detection_completed(e);</action>
+       <tran_glyph conn="11,35,3,1,96,20,-49">
+        <action box="0,-2,31,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="DEPTH_ESTIMATION_COMPLETED" target="../2">
+       <action>m_cat_detector-&gt;depth_estimation_completed(e);</action>
+       <tran_glyph conn="11,37,3,1,90,6,-43">
+        <action box="0,-2,32,2"/>
+       </tran_glyph>
+      </tran>
+      <state name="WAITING_OBJECT_DETECTION">
+       <tran trig="OBJECT_DETECTION_COMPLETED" target="../../4">
+        <tran_glyph conn="20,49,3,3,-4,27,12">
+         <action box="0,-2,28,3"/>
+        </tran_glyph>
+       </tran>
+       <tran trig="FRAME_CAPTURED" target="../..">
+        <tran_glyph conn="20,44,3,3,-9">
+         <action box="0,-2,17,3"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="20,39,38,12"/>
+      </state>
+      <state name="WAITING_DEPTH_MAP">
+       <tran trig="DEPTH_ESTIMATION_COMPLETED" target="../../4">
+        <tran_glyph conn="20,57,3,3,-2,17,10">
+         <action box="0,-2,29,2"/>
+        </tran_glyph>
+       </tran>
+       <tran trig="FRAME_CAPTURED" target="../..">
+        <tran_glyph conn="58,62,1,1,52">
+         <action box="0,-2,16,2"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="20,52,38,11"/>
+      </state>
+      <state name="DETERMINE_CAT_FEEDING">
+       <tran trig="CAT_FEEDING_DETERMINED" target="../../..">
+        <tran_glyph conn="66,75,1,1,48">
+         <action box="0,-2,26,2"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="28,66,38,12"/>
+      </state>
+      <state_glyph node="11,28,99,52"/>
+     </state>
+     <state_glyph node="8,22,106,68"/>
+    </state>
+    <state name="NOT_STARTED">
+     <tran trig="START_REQ" target="../../1">
+      <action>m_cat_detector-&gt;start_req(e);</action>
+      <tran_glyph conn="8,18,3,1,111,9,-5">
        <action box="0,-2,10,2"/>
       </tran_glyph>
      </tran>
@@ -272,6 +400,23 @@ namespace GofkuCam
 {
 
 $define${Components::DepthEstimatorController}
+
+} // namespace GofkuCam</text>
+  </file>
+  <file name="CatDetector.cpp">
+   <text>#include &quot;qpcpp.hpp&quot;
+#include &quot;ICatDetector.hpp&quot;
+#include &quot;CatDetector.hpp&quot;
+#include &quot;CatDetectorImpl.hpp&quot;
+#include &quot;Evts.hpp&quot;
+#include &quot;Config.hpp&quot;
+
+Q_DEFINE_THIS_FILE
+
+namespace GofkuCam
+{
+
+$define${Components::CatDetector}
 
 } // namespace GofkuCam</text>
   </file>
@@ -338,6 +483,23 @@ namespace GofkuCam
 {
 
 $declare${Components::DepthEstimatorController}
+
+} // namespace GofkuCam
+
+#endif</text>
+  </file>
+  <file name="CatDetector.hpp">
+   <text>#ifndef CAT_DETECTOR_HPP_
+#define CAT_DETECTOR_HPP_
+
+#include &quot;qpcpp.hpp&quot;
+#include &quot;LoggerInterface.hpp&quot;
+#include &quot;ICatDetector.hpp&quot;
+
+namespace GofkuCam
+{
+
+$declare${Components::CatDetector}
 
 } // namespace GofkuCam
 
