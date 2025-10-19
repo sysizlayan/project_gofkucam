@@ -1,6 +1,8 @@
 #include "DepthEstimator.hpp"
 #include "LoggerInterface.hpp"
 #include <memory>
+#include <opencv2/core.hpp>
+#include <opencv2/core/types.hpp>
 #include <sstream>
 #include "GofkuCamExceptions.hpp"
 #include "GofkuCamCommon.hpp"
@@ -17,8 +19,9 @@
 namespace GofkuCam
 {
 
-float mean[3] = { 123.675, 116.28, 103.53 };
-float std[3] = { 58.395, 57.12, 57.375 };
+float mean[3] = { 0.485, 0.456, 0.406};
+float std[3] = { 0.229, 0.224, 0.225};
+
 // Helper to get OpenCV type from ONNX Runtime type
 int GetCvType(ONNXTensorElementDataType onnx_type) {
     switch (onnx_type) {
@@ -184,7 +187,7 @@ FramePtr DepthEstimator::estimate_depth(FramePtr image)
         ss << "] ";
     }
     ss << "\n";
-    m_logger->info(ss.str()); 
+    m_logger->trace(ss.str()); 
 
     // Determine the resized image shape based on input tensor shape
     cv::Size resizedImageShape(static_cast<int>(inputTensorShape[3]), static_cast<int>(inputTensorShape[2]));
@@ -196,30 +199,18 @@ FramePtr DepthEstimator::estimate_depth(FramePtr image)
 // Preprocess function implementation
 FramePtr DepthEstimator::preprocess(FramePtr image, float *&blob, std::vector<int64_t> &inputTensorShape)
 {
-    FramePtr resized_image = std::make_shared<Frame>();
-    // Resize and pad the image using letterBox utility
-    DepthEstimator::letter_box(image, resized_image, inputImageShape, cv::Scalar(114, 114, 114), isDynamicInputShape, false, true, 32);
-
-    // Update input tensor shape based on resized image dimensions
-    inputTensorShape[2] = resized_image->rows;
-    inputTensorShape[3] = resized_image->cols;
-
-    // for (int k = 0; k < 3; k++)
-    // {
-    //     for (int i = 0; i < resized_image->rows; i++)
-    //     {
-    //         for (int j = 0; j < resized_image->cols; j++)
-    //         {
-    //             resized_image->at<cv::Vec3b>(i, j) = (resized_image->at<cv::Vec3b>(i, j)[k] - mean[k]) / std[k];
-    //         }
-    //     }
-    // }
+    FramePtr resized_image = std::make_shared<Frame>(image->clone());
+    cv::resize(*resized_image, *resized_image, cv::Size(518, 518));
 
     // Convert image to float and normalize to [0, 1]
     resized_image->convertTo(*resized_image, CV_32FC3, 1 / 255.0f);
 
+    // Update input tensor shape based on resized image dimensions
+    inputTensorShape[2] = 518;
+    inputTensorShape[3] = 518;
+
     // Allocate memory for the image blob in CHW format
-    blob = new float[resized_image->cols * resized_image->rows * resized_image->channels()];
+    blob = new float[518 * 518 * resized_image->channels()];
 
     // Split the image into separate channels and store in the blob
     std::vector<Frame> chw(resized_image->channels());
@@ -228,7 +219,6 @@ FramePtr DepthEstimator::preprocess(FramePtr image, float *&blob, std::vector<in
         chw[i] = Frame(resized_image->rows, resized_image->cols, CV_32FC1, blob + i * resized_image->cols * resized_image->rows);
     }
     cv::split(*resized_image, chw); // Split channels into the blob
-
     return resized_image;
 }
 
@@ -263,104 +253,15 @@ FramePtr DepthEstimator::postprocess(const Ort::Value &ort_value)
 
     // Create cv::Mat. Since it's grayscale, we just need height, width, and type.
     // The Mat will be a view into the Ort::Value's memory.
-    cv::Mat depth_mat(height, width, CV_32F, const_cast<void*>(raw_data_ptr));
-    cv::normalize(depth_mat, depth_mat, 0, 255, cv::NORM_MINMAX, CV_8U);
-
+    FramePtr depth_mat = std::make_shared<Frame>(height, width, CV_32F, const_cast<void*>(raw_data_ptr));
+    cv::normalize(*depth_mat, *depth_mat, 0, 255, cv::NORM_MINMAX, CV_8U);
+    cv::resize(*depth_mat, *depth_mat, cv::Size(1920, 1080));
     // Create a colormap from the depth data
-    cv::Mat colormap;
-    cv::applyColorMap(depth_mat, colormap, cv::COLORMAP_INFERNO);
+    // cv::Mat colormap;
+    // cv::applyColorMap(depth_mat, colormap, cv::COLORMAP_INFERNO);
     //cv::resize(colormap, colormap, cv::Size(518, 518));
     
-    return std::make_shared<Frame>(colormap);
+    return depth_mat;
 }
-
-
-void DepthEstimator::letter_box(FramePtr image, FramePtr outImage,
-                    const cv::Size& newShape,
-                    const cv::Scalar& color,
-                    bool auto_,
-                    bool scaleFill,
-                    bool scaleUp,
-                    int stride)
-{
-    // Calculate the scaling ratio to fit the image within the new shape
-    float ratio = std::min(static_cast<float>(newShape.height) / image->rows,
-                        static_cast<float>(newShape.width) / image->cols);
-
-    // Prevent scaling up if not allowed
-    if (!scaleUp) {
-        ratio = std::min(ratio, 1.0f);
-    }
-
-    // Calculate new dimensions after scaling
-    int newUnpadW = static_cast<int>(std::round(image->cols * ratio));
-    int newUnpadH = static_cast<int>(std::round(image->rows * ratio));
-
-    // Calculate padding needed to reach the desired shape
-    int dw = newShape.width - newUnpadW;
-    int dh = newShape.height - newUnpadH;
-
-    if (auto_)
-    {
-        // Ensure padding is a multiple of stride for model compatibility
-        dw = (dw % stride) / 2;
-        dh = (dh % stride) / 2;
-    } 
-    else if (scaleFill)
-    {
-        // Scale to fill without maintaining aspect ratio
-        newUnpadW = newShape.width;
-        newUnpadH = newShape.height;
-        ratio = std::min(static_cast<float>(newShape.width) / image->cols,
-                        static_cast<float>(newShape.height) / image->rows);
-        dw = 0;
-        dh = 0;
-    } 
-    else
-    {
-        // Evenly distribute padding on both sides
-        // Calculate separate padding for left/right and top/bottom to handle odd padding
-        int padLeft = dw / 2;
-        int padRight = dw - padLeft;
-        int padTop = dh / 2;
-        int padBottom = dh - padTop;
-
-        // Resize the image if the new dimensions differ
-        if (image->cols != newUnpadW || image->rows != newUnpadH)
-        {
-            cv::resize(*image, *outImage, cv::Size(newUnpadW, newUnpadH), 0, 0, cv::INTER_LINEAR);
-        } 
-        else
-        {
-            // Avoid unnecessary copying if dimensions are the same
-            *outImage = *image;
-        }
-
-        // Apply padding to reach the desired shape
-        cv::copyMakeBorder(*outImage, *outImage, padTop, padBottom, padLeft, padRight, cv::BORDER_CONSTANT, color);
-        return; // Exit early since padding is already applied
-    }
-
-    // Resize the image if the new dimensions differ
-    if (image->cols != newUnpadW || image->rows != newUnpadH)
-    {
-        cv::resize(*image, *outImage, cv::Size(newUnpadW, newUnpadH), 0, 0, cv::INTER_LINEAR);
-    } 
-    else
-    {
-        // Avoid unnecessary copying if dimensions are the same
-        *outImage = *image;
-    }
-
-    // Calculate separate padding for left/right and top/bottom to handle odd padding
-    int padLeft = dw / 2;
-    int padRight = dw - padLeft;
-    int padTop = dh / 2;
-    int padBottom = dh - padTop;
-
-    // Apply padding to reach the desired shape
-    cv::copyMakeBorder(*outImage, *outImage, padTop, padBottom, padLeft, padRight, cv::BORDER_CONSTANT, color);
-}
-
 
 } // namespace GpfkuCam

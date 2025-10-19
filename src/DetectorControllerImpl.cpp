@@ -48,15 +48,10 @@ void DetectorControllerImpl::running_entry(QP::QEvt const * const e)
 
 void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
 {
-    m_logger->info("New frame");
+    m_logger->info("New frame to object detector");
     std::shared_ptr<Frame> frame = Q_EVT_CAST(FrameCapturedEvt)->m_frame;
     m_logger->trace("Captured frame with size: " + std::to_string(frame->cols) + "x" + std::to_string(frame->rows));
 
-    // // Here you would:
-    // // 1. Get the frame from the event
-    // // 2. Run object detection
-    // // 3. Publish detection results
-    
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     #endif
@@ -97,19 +92,17 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     //     }
     // }
 
-    m_detector->draw_bounding_box(frame, cat_or_dog_detections, m_class_names, m_class_colors);
+    m_detector->draw_bounding_box(copy_of_frame, cat_or_dog_detections, m_class_names, m_class_colors);
     
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     m_logger->info("Detection took " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) + "[ms]");
     #endif
 
-    // Display the frame
-    cv::Mat display_frame;
-    cv::resize(*frame, display_frame, cv::Size(640, 480));
-    cv::imshow("GofkuCam Stream", display_frame);
-    cv::waitKey(2); // Allow the window to update, wait 1ms
-
+    // // Display the frame
+    static Frame display_frame;
+    cv::resize(*copy_of_frame, display_frame, cv::Size(640, 480));
+    g_detection_visualization_frame.store(&display_frame);
 }
 
 } // namespace GofkuCam

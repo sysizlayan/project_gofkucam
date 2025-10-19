@@ -1,6 +1,7 @@
 #include "DepthEstimatorControllerImpl.hpp"
 #include "Config.hpp"
 #include "Evts.hpp"
+#include "GofkuCamCommon.hpp"
 #include "ObjectDetector.hpp"
 #include "qp.hpp"
 #include <memory>
@@ -17,7 +18,8 @@ DepthEstimatorControllerImpl::DepthEstimatorControllerImpl(QP::QActive * const o
     , m_logger(logger)
     , m_depth_estimator(std::make_shared<DepthEstimator>(
                     Config::config().get<std::string>("depth_model_path"),
-                    logger))
+                    logger,
+                    Config::config().get<bool>("use_gpu")))
 {
     m_logger->info("Depth estimator with model: " + Config::config().get<std::string>("depth_model_path"));
 
@@ -43,15 +45,10 @@ void DepthEstimatorControllerImpl::running_entry(QP::QEvt const * const e)
 
 void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
 {
-    m_logger->info("New frame");
+    m_logger->info("New frame to depth estimator");
     std::shared_ptr<Frame> frame = Q_EVT_CAST(FrameCapturedEvt)->m_frame;
     m_logger->trace("Captured frame with size: " + std::to_string(frame->cols) + "x" + std::to_string(frame->rows));
 
-    // // Here you would:
-    // // 1. Get the frame from the event
-    // // 2. Run object detection
-    // // 3. Publish detection results
-    
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     #endif
@@ -87,10 +84,10 @@ void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
     m_logger->info("Depth estimaton took " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) + "[ms]");
     #endif
 
-    // Display the frame
-    cv::imshow("GofkuCam Depth", *depth_map);
-    cv::waitKey(2); // Allow the window to update, wait 1ms
-
+    // // Display the frame
+    static Frame display_frame;
+    cv::resize(*depth_map, display_frame, cv::Size(640, 480));
+    g_depth_visualization_frame.store(&display_frame);
 }
 
 } // namespace GofkuCam

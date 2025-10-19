@@ -8,7 +8,7 @@
         "yolo_model_path": "/home/sysizlayan/git/project_gofkucam/resources/yolo/yolo12s.onnx",
         "depth_model_path": "/home/sysizlayan/git/project_gofkucam/resources/depth_anything/depth_anything_v2_vits.onnx",
         "yolo_labels_path": "/home/sysizlayan/git/project_gofkucam/resources/yolo/coco.names",
-        "stream_address": "/home/sysizlayan/git/project_gofkucam/resources/dayligth_feeding.mp4",
-        "frame_interval_ms": 3000
+        "stream_address": "rtsp://127.0.0.1:8554/test",
+        "frame_interval_ms": 2500
     }
 }
