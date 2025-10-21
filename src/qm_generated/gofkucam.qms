@@ -9,9 +9,7 @@
   <item name="backups">0</item>
  </group>
  <group name="windows">
-  <item id="../../include/qm_generated::Controller.hpp">0,0,596,300</item>
-  <item id="Components::CameraGrabber::SM">0,0,1035,674,*</item>
-  <item id="Components::Controller::SM">0,194,640,480</item>
+  <item id="Components::CatDetector::SM">0,0,979,674,*</item>
  </group>
  <group name="search">
   <item name="options">2032128</item>

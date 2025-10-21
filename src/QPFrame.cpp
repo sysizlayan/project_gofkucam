@@ -123,6 +123,10 @@ void QP::QF::onStartup()
 /*--------------------------------------------------------------------------*/
 void QP::QF::onCleanup()
 {
+   // cleanup code application-specific
+   GofkuCam::StreamEnded* se = Q_NEW(GofkuCam::StreamEnded, GofkuCam::STREAM_ENDED_SIG) ;
+   QP::QF::PUBLISH(se, this);
+   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 //............................................................................
