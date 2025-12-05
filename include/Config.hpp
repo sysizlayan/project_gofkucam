@@ -5,7 +5,7 @@
 #include "nlohmann/json.hpp"
 #include <fstream>
 
-#define CONFIG_FILE_PATH "/home/sysizlayan/git/project_gofkucam/config/config.json"
+#define CONFIG_FILE_PATH "/Users/sysizlayan/Desktop/git/project_gofkucam/config/config.json"
 namespace GofkuCam
 {
 

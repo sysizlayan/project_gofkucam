@@ -9,7 +9,7 @@ set -euo pipefail
 CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 # Default values
-ONNXRUNTIME_VERSION="${1:-1.20.1}"
+ONNXRUNTIME_VERSION="${1:-1.23.2}"
 ONNXRUNTIME_GPU="${2:-0}"
 
 # Function to display usage
@@ -60,7 +60,7 @@ esac
 # Determine ONNX Runtime architecture
 case "$architecture" in
 aarch64|arm64)
-    ONNXRUNTIME_ARCH="aarch64"
+    ONNXRUNTIME_ARCH="arm64"
     ;;
 x86_64)
     ONNXRUNTIME_ARCH="x64"

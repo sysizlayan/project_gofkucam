@@ -21,7 +21,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
 
 if(NOT ONNXRUNTIME_DIR)
-    set(ONNXRUNTIME_DIR "${CMAKE_SOURCE_DIR}/extern/onnxruntime-linux-x64-1.20.1")
+    set(ONNXRUNTIME_DIR "${CMAKE_SOURCE_DIR}/extern/onnxruntime-osx-arm64-1.23.2")
 endif()
 
 message(STATUS "ONNX runtime directory: ${ONNXRUNTIME_DIR}")
@@ -86,7 +86,7 @@ target_link_libraries(gofkucam_lib
     qpcpp
     ${OpenCV_LIBS}
     #"${TORCH_LIBRARIES}"
-    ${ONNXRUNTIME_DIR}/lib/libonnxruntime.so
+    ${ONNXRUNTIME_DIR}/lib/libonnxruntime.dylib
     spdlog::spdlog
 )
 
