@@ -3,22 +3,8 @@
 #CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-set(CMAKE_CXX_COMPILER "clang++")
-set(CMAKE_C_COMPILER "clang")
-
 # Remove the forced Debug mode
 set(CMAKE_BUILD_TYPE Debug)
-
-# Add configuration types
-set(CMAKE_CONFIGURATION_TYPES Debug Release)
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-endif()
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
-# Set compile flags for different build types
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -DDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
 
 if(NOT ONNXRUNTIME_DIR)
     set(ONNXRUNTIME_DIR "${CMAKE_SOURCE_DIR}/extern/onnxruntime-osx-arm64-1.23.2")
