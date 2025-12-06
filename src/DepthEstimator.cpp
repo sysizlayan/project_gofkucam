@@ -39,7 +39,7 @@ int GetCvType(ONNXTensorElementDataType onnx_type) {
 
 
 // Implementation of ObjectDetector constructor
-DepthEstimator::DepthEstimator(const std::string &model_path, LoggerInterfacePtr logger, bool is_cuda)
+DepthEstimator::DepthEstimator(const std::string &model_path, LoggerInterfacePtr logger, bool is_gpu)
     : m_model_path(model_path)
     , m_logger(logger)
     , m_env{nullptr}
@@ -65,15 +65,22 @@ DepthEstimator::DepthEstimator(const std::string &model_path, LoggerInterfacePtr
     m_logger->info(ss.str());
 
     auto cudaAvailable = std::find(availableProviders.begin(), availableProviders.end(), "CUDAExecutionProvider");
+    auto is_coreml_available = std::find(availableProviders.begin(), availableProviders.end(), "CoreMLExecutionProvider");
     OrtCUDAProviderOptions cudaOption;
-    if (is_cuda && cudaAvailable != availableProviders.end())
+    if (is_gpu && cudaAvailable != availableProviders.end())
     {
         m_logger->info("Using CUDA!");
         m_session_options.AppendExecutionProvider_CUDA(cudaOption); // Append CUDA execution provider
     }
-    else if(is_cuda && cudaAvailable == availableProviders.end())
+    else if(is_gpu && is_coreml_available != availableProviders.end())
     {
-        m_logger->warn("CUDAExecutionProvider is not available. Falling back to CPU.");
+        m_logger->info("Using CoreML for depth estimator!");
+        std::unordered_map<std::string, std::string> provider_options;
+        provider_options["ModelFormat"] = "MLProgram";
+        provider_options["MLComputeUnits"] = "ALL";
+        provider_options["RequireStaticInputShapes"] = "0";
+        provider_options["EnableOnSubgraphs"] = "0";
+        m_session_options.AppendExecutionProvider("CoreML", provider_options);
     }
     else
     {

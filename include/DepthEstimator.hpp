@@ -15,7 +15,7 @@ namespace GofkuCam
 class DepthEstimator
 {
 public:
-    DepthEstimator(const std::string &model_path, LoggerInterfacePtr logger, bool is_cuda = false);
+    DepthEstimator(const std::string &model_path, LoggerInterfacePtr logger, bool is_gpu = false);
     ~DepthEstimator() = default;
     DepthEstimator(const DepthEstimator &) = delete; // Disable copy constructor
     DepthEstimator &operator=(const DepthEstimator &) = delete; // Disable copy assignment operator

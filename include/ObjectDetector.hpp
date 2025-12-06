@@ -30,7 +30,7 @@ namespace GofkuCam
 class ObjectDetector
 {
 public:
-    ObjectDetector(const std::string &model_path, const std::string &label_file_path, LoggerInterfacePtr logger, bool is_cuda = false);
+    ObjectDetector(const std::string &model_path, const std::string &label_file_path, LoggerInterfacePtr logger, bool is_gpu = false);
     ~ObjectDetector() = default;
     ObjectDetector(const ObjectDetector &) = delete; // Disable copy constructor
     ObjectDetector &operator=(const ObjectDetector &) = delete; // Disable copy assignment operator
