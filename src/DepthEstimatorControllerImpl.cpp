@@ -2,12 +2,9 @@
 #include "Config.hpp"
 #include "Evts.hpp"
 #include "GofkuCamCommon.hpp"
-#include "ObjectDetector.hpp"
 #include "qp.hpp"
 #include <memory>
 #include <chrono>
-#include <iomanip>
-#include <sstream>
 
 #define MINI_PROFILER
 namespace GofkuCam
@@ -22,7 +19,6 @@ DepthEstimatorControllerImpl::DepthEstimatorControllerImpl(QP::QActive * const o
                     Config::config().get<bool>("use_gpu")))
 {
     m_logger->info("Depth estimator with model: " + Config::config().get<std::string>("depth_model_path"));
-
 }
 
 void DepthEstimatorControllerImpl::start_req(QP::QEvt const * const e)

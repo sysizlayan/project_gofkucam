@@ -6,18 +6,17 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <thread>
 #include "LoggerInterface.hpp"
 
 /**
  * @brief Confidence threshold for filtering detections.
  */
-const float CONFIDENCE_THRESHOLD = 0.3f;
+const float CONFIDENCE_THRESHOLD = 0.2f;
 
 /**
  * @brief  IoU threshold for filtering detections.
  */
-const float IOU_THRESHOLD = 0.4f;
+const float IOU_THRESHOLD = 0.2f;
 
 /**
  * @brief Struct to represent a bounding box.

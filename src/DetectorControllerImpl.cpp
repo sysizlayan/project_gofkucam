@@ -6,8 +6,6 @@
 #include "qp.hpp"
 #include <memory>
 #include <chrono>
-#include <iomanip>
-#include <sstream>
 
 #define MINI_PROFILER
 //#define SAVE_DETECTIONS_FRAMES
@@ -78,8 +76,9 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
                 m_logger->info("Detected " + class_name + " with confidence: " + 
                             std::to_string(detection.conf) + 
                             " at position [" + std::to_string(detection.box.x) + 
-                            ", " + std::to_string(detection.box.y) + 
-                            ", " + std::to_string(detection.box.width) + 
+                            ", " + std::to_string(detection.box.y) +
+                            "], WitdhHeight: [" +
+                            std::to_string(detection.box.width) + 
                             ", " + std::to_string(detection.box.height) + "]");
                 cat_or_dog_detections.push_back(detection);
             }
