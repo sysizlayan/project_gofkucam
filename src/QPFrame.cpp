@@ -53,28 +53,28 @@ void QPFrame::ao_thread_func()
       m_gofkucam_camera_grabber_queue,
       Q_DIM(m_gofkucam_camera_grabber_queue),
       nullptr,
-      256*MB);
+      0);
 
    m_detector_controller->start(
       2, 
       m_gofkucam_controller_queue,
       Q_DIM(m_gofkucam_controller_queue),
       nullptr,
-      256*MB);
+      0);
 
    m_depth_estimator_controller->start(
       3, 
       m_gofkucam_controller_queue,
       Q_DIM(m_gofkucam_controller_queue),
       nullptr,
-      256*MB);
+      0);
 
    m_cat_detector->start(
       4, 
       m_gofkucam_controller_queue,
       Q_DIM(m_gofkucam_controller_queue),
       nullptr,
-      256*MB);
+      0);
 
 
    StartRequested* sr = Q_NEW(StartRequested, START_REQ_SIG);
