@@ -9,9 +9,6 @@ set -e
 if [ -f build/src/gofkucam ]; then
     echo "Running build/gofkucam..."
     ./build/src/gofkucam
-elif [ -f gofkucam ]; then
-    echo "Running gofkucam..."
-    ./gofkucam
 else
     echo "Executable gofkucam not found!"
     exit 1
