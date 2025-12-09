@@ -298,6 +298,7 @@ std::vector<Detection> ObjectDetector::postprocess(
     {
         detections.emplace_back(Detection{
             boxes[idx],       // Bounding box
+            0.0,              // average_of_detection
             confs[idx],       // Confidence score
             classIds[idx]     // Class ID
         });

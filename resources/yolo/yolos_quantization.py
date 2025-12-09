@@ -1,7 +1,3 @@
-
-
-
-
 from onnxruntime.quantization import quantize_dynamic, QuantType
 from pathlib import Path
 from typing import Union

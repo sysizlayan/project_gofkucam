@@ -27,6 +27,7 @@ namespace GofkuCam
     // Struct to represent a detection.
     struct Detection {
         BoundingBox box;
+        double average_of_detection;
         float conf{};
         int classId{};
     };

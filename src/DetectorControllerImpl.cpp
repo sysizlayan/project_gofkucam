@@ -69,10 +69,25 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
 
         std::vector<Detection> cat_or_dog_detections{};
         // Log dog and cat detections
-        for (const auto& detection : detections) {
+        for (const auto& original_detection : detections) {
+            Detection detection = original_detection;
             std::string class_name = m_class_names[detection.classId];
             if (class_name == "dog" || class_name == "cat")
             {
+                if (copy_of_frame && !copy_of_frame->empty()) {
+                    cv::Rect roi_rect(detection.box.x, detection.box.y, detection.box.width, detection.box.height);
+                    roi_rect = roi_rect & cv::Rect(0, 0, copy_of_frame->cols, copy_of_frame->rows);
+                    
+                    if (roi_rect.area() > 0) {
+                        cv::Scalar mean_scalar = cv::mean((*copy_of_frame)(roi_rect));
+                        if (copy_of_frame->channels() >= 3) {
+                             detection.average_of_detection = (mean_scalar[0] + mean_scalar[1] + mean_scalar[2]) / 3.0;
+                        } else {
+                             detection.average_of_detection = mean_scalar[0];
+                        }
+                    }
+                }
+
                 m_logger->info("Detected " + class_name + " with confidence: " + 
                             std::to_string(detection.conf) + 
                             " at position [" + std::to_string(detection.box.x) + 

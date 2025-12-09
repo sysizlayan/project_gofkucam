@@ -134,6 +134,10 @@ void CatDetectorImpl::object_detection_completed(QP::QEvt const * const e)
     auto odce = Q_EVT_CAST(ObjectDetectionCompletedEvt);
     std::vector<Detection>& cat_or_dog_detections = *odce->m_cat_or_dog_detections;
     m_logger->info("CAT Number of cat or dog detections: " + std::to_string(cat_or_dog_detections.size()));
+    for (auto& detection : cat_or_dog_detections)
+    {
+        m_logger->info("CAT Average of detection: " + std::to_string(detection.average_of_detection));
+    }
 }
 
 void CatDetectorImpl::depth_estimation_completed(QP::QEvt const * const e)
