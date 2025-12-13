@@ -1,0 +1,9 @@
+---
+BasedOnStyle: Microsoft
+IndentWidth: 3
+ColumnLimit: 120
+BreakBeforeBraces: Allman
+AllowShortFunctionsOnASingleLine: None
+IndentCaseLabels: false
+PointerAlignment: Left
+...
