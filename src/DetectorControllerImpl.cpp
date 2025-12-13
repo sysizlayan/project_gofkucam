@@ -8,7 +8,6 @@
 #include <chrono>
 
 #define MINI_PROFILER
-//#define SAVE_DETECTIONS_FRAMES
 
 namespace GofkuCam
 {
@@ -61,7 +60,7 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
 
         if (copy_of_frame && !copy_of_frame->empty())
         {
-            m_logger->info("Object detection input size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
+            m_logger->trace("Object detection input size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
             // You can further process or visualize the depth map as needed
         }
 
@@ -69,32 +68,29 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
 
         std::vector<Detection> cat_or_dog_detections{};
         // Log dog and cat detections
-        for (const auto& original_detection : detections) {
+        for (const auto& original_detection : detections)
+        {
             Detection detection = original_detection;
             std::string class_name = m_class_names[detection.classId];
-            if (class_name == "dog" || class_name == "cat")
+            if (class_name == "dog" 
+            ||  class_name == "cat")
             {
-                if (copy_of_frame && !copy_of_frame->empty()) {
+                if (copy_of_frame && !copy_of_frame->empty())
+                {
                     cv::Rect roi_rect(detection.box.x, detection.box.y, detection.box.width, detection.box.height);
                     roi_rect = roi_rect & cv::Rect(0, 0, copy_of_frame->cols, copy_of_frame->rows);
-                    
-                    if (roi_rect.area() > 0) {
+                    if (roi_rect.area() > 0)
+                    {
                         cv::Scalar mean_scalar = cv::mean((*copy_of_frame)(roi_rect));
-                        if (copy_of_frame->channels() >= 3) {
-                             detection.average_of_detection = (mean_scalar[0] + mean_scalar[1] + mean_scalar[2]) / 3.0;
-                        } else {
-                             detection.average_of_detection = mean_scalar[0];
-                        }
+                        detection.average_of_detection = (mean_scalar[0] + mean_scalar[1] + mean_scalar[2]) / 3.0;
                     }
                 }
 
-                m_logger->info("Detected " + class_name + " with confidence: " + 
-                            std::to_string(detection.conf) + 
-                            " at position [" + std::to_string(detection.box.x) + 
-                            ", " + std::to_string(detection.box.y) +
-                            "], WitdhHeight: [" +
-                            std::to_string(detection.box.width) + 
-                            ", " + std::to_string(detection.box.height) + "]");
+                m_logger->info("Detected " + class_name + 
+                            " with confidence: " + std::to_string(detection.conf) +
+                            " with pixel average: " + std::to_string(detection.average_of_detection) +
+                            " at position [" + std::to_string(detection.box.x) + ", " + std::to_string(detection.box.y) +
+                            "], WitdhHeight: [" + std::to_string(detection.box.width) +  ", " + std::to_string(detection.box.height) + "]");
                 cat_or_dog_detections.push_back(detection);
             }
         }
@@ -110,27 +106,6 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
             m_logger->trace("Cat and dog detections are sent");
             QP::QF::PUBLISH(odce, this);
         }
-
-        #ifdef SAVE_DETECTIONS_FRAMES
-        // Save frame if it contains a dog or cat detection
-        for (const auto& detection : detections) {
-            std::string class_name = m_class_names[detection.classId];
-            if (class_name == "dog" || class_name == "cat") {
-                // Generate timestamp for the filename
-                auto now = std::chrono::system_clock::now();
-                auto now_time = std::chrono::system_clock::to_time_t(now);
-                std::stringstream ss;
-                ss << "captured_frames/" << class_name << "_" 
-                << std::put_time(std::localtime(&now_time), "%Y%m%d_%H%M%S")
-                << "_conf" << std::fixed << std::setprecision(2) << detection.conf
-                << ".png";
-                
-                cv::imwrite(ss.str(), *frame);
-                m_logger->info("Saved frame to: " + ss.str());
-                break;  // Save the frame only once even if multiple detections exist
-            }
-        }
-        #endif
 
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();

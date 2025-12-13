@@ -53,14 +53,14 @@ void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
         FramePtr copy_of_frame = std::make_shared<Frame>(Q_EVT_CAST(FrameCapturedEvt)->m_frame->clone());
         if (copy_of_frame && !copy_of_frame->empty())
         {
-            m_logger->info("Depth Estimation input size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
+            m_logger->trace("Depth Estimation input size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
             // You can further process or visualize the depth map as needed
         }
 
         FramePtr depth_map = m_depth_estimator->estimate_depth(copy_of_frame);
         if (depth_map && !depth_map->empty())
         {
-            m_logger->info("Depth map estimated with size: " + std::to_string(depth_map->cols) + "x" + std::to_string(depth_map->rows));
+            m_logger->trace("Depth map estimated with size: " + std::to_string(depth_map->cols) + "x" + std::to_string(depth_map->rows));
             // You can further process or visualize the depth map as needed
         }
 
@@ -73,11 +73,6 @@ void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     m_logger->info("Depth estimaton took " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) + "[ms]");
     #endif
-
-    // // Display the frame
-    static Frame display_frame;
-    cv::resize(*depth_map, display_frame, cv::Size(640, 480));
-    g_depth_visualization_frame.store(&display_frame);
 }
 
 } // namespace GofkuCam

@@ -79,17 +79,29 @@ Q_STATE_DEF(CatDetector, initial) {
     return tran(&NOT_STARTED);
 }
 
-//${Components::CatDetector::SM::OPERAING} ...................................
-Q_STATE_DEF(CatDetector, OPERAING) {
+//${Components::CatDetector::SM::OPERATING} ..................................
+Q_STATE_DEF(CatDetector, OPERATING) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::CatDetector::SM::OPERAING::FRAME_CAPTURED}
+        //${Components::CatDetector::SM::OPERATING}
+        case Q_ENTRY_SIG: {
+            m_cat_detector->operating_entry(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING}
+        case Q_EXIT_SIG: {
+            m_cat_detector->operating_exit(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::FRAME_CAPTURED}
         case FRAME_CAPTURED_SIG: {
             m_cat_detector->frame_captured(e);
             status_ = tran(&WAITING_DETECTORS);
             break;
         }
-        //${Components::CatDetector::SM::OPERAING::STREAM_ENDED, CAPTURE_ERROR, STO~}
+        //${Components::CatDetector::SM::OPERATING::STREAM_ENDED, CAPTURE_ERROR, STO~}
         case STREAM_ENDED_SIG: // intentionally fall through
         case CAPTURE_ERROR_SIG: // intentionally fall through
         case STOP_REQ_SIG: {
@@ -105,41 +117,67 @@ Q_STATE_DEF(CatDetector, OPERAING) {
     return status_;
 }
 
-//${Components::CatDetector::SM::OPERAING::WAITING_DETECTORS} ................
+//${Components::CatDetector::SM::OPERATING::WAITING_DETECTORS} ...............
 Q_STATE_DEF(CatDetector, WAITING_DETECTORS) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::OBJECT_DETECTION_COMPLETED}
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTORS}
+        case Q_ENTRY_SIG: {
+            m_cat_detector->waiting_detectors_entry(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTORS}
+        case Q_EXIT_SIG: {
+            m_cat_detector->waiting_detectors_exit(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::OBJECT_DETECTION_COMPLETED}
         case OBJECT_DETECTION_COMPLETED_SIG: {
             m_cat_detector->object_detection_completed(e);
             status_ = tran(&WAITING_DEPTH_MAP);
             break;
         }
-        //${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::DEPTH_ESTIMATION_COMPLETED}
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::DEPTH_ESTIMATION_COMPLETED}
         case DEPTH_ESTIMATION_COMPLETED_SIG: {
             m_cat_detector->depth_estimation_completed(e);
             status_ = tran(&WAITING_OBJECT_DETECTION);
             break;
         }
         default: {
-            status_ = super(&OPERAING);
+            status_ = super(&OPERATING);
             break;
         }
     }
     return status_;
 }
 
-//${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::WAITING_OBJECT_DETECTION}
+//${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_OBJECT_DETECTION}
 Q_STATE_DEF(CatDetector, WAITING_OBJECT_DETECTION) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::WAITING_OBJECT_D~::OBJECT_DETECTION_COMPLETED}
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_OBJECT_DETECTION}
+        case Q_ENTRY_SIG: {
+            m_cat_detector->waiting_object_detection_entry(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_OBJECT_DETECTION}
+        case Q_EXIT_SIG: {
+            m_cat_detector->waiting_object_detection_exit(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_OBJECT_D~::OBJECT_DETECTION_COMPLETED}
         case OBJECT_DETECTION_COMPLETED_SIG: {
+            m_cat_detector->object_detection_completed(e);
             status_ = tran(&DETERMINE_CAT_FEEDING);
             break;
         }
-        //${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::WAITING_OBJECT_D~::FRAME_CAPTURED}
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_OBJECT_D~::FRAME_CAPTURED}
         case FRAME_CAPTURED_SIG: {
+            m_cat_detector->frame_captured(e);
             status_ = tran(&WAITING_DETECTORS);
             break;
         }
@@ -151,17 +189,31 @@ Q_STATE_DEF(CatDetector, WAITING_OBJECT_DETECTION) {
     return status_;
 }
 
-//${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::WAITING_DEPTH_MAP}
+//${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_DEPTH_MAP}
 Q_STATE_DEF(CatDetector, WAITING_DEPTH_MAP) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::WAITING_DEPTH_MA~::DEPTH_ESTIMATION_COMPLETED}
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_DEPTH_MAP}
+        case Q_ENTRY_SIG: {
+            m_cat_detector->waiting_depth_map_entry(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_DEPTH_MAP}
+        case Q_EXIT_SIG: {
+            m_cat_detector->waiting_depth_map_exit(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_DEPTH_MA~::DEPTH_ESTIMATION_COMPLETED}
         case DEPTH_ESTIMATION_COMPLETED_SIG: {
+            m_cat_detector->depth_estimation_completed(e);
             status_ = tran(&DETERMINE_CAT_FEEDING);
             break;
         }
-        //${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::WAITING_DEPTH_MA~::FRAME_CAPTURED}
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_DEPTH_MA~::FRAME_CAPTURED}
         case FRAME_CAPTURED_SIG: {
+            m_cat_detector->frame_captured(e);
             status_ = tran(&WAITING_DETECTORS);
             break;
         }
@@ -173,13 +225,26 @@ Q_STATE_DEF(CatDetector, WAITING_DEPTH_MAP) {
     return status_;
 }
 
-//${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::DETERMINE_CAT_FEEDING}
+//${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::DETERMINE_CAT_FEEDING}
 Q_STATE_DEF(CatDetector, DETERMINE_CAT_FEEDING) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::CatDetector::SM::OPERAING::WAITING_DETECTOR~::DETERMINE_CAT_FE~::CAT_FEEDING_DETERMINED}
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::DETERMINE_CAT_FEEDING}
+        case Q_ENTRY_SIG: {
+            m_cat_detector->determine_cat_feeding_entry(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::DETERMINE_CAT_FEEDING}
+        case Q_EXIT_SIG: {
+            m_cat_detector->determine_cat_feeding_exit(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::DETERMINE_CAT_FE~::CAT_FEEDING_DETERMINED}
         case CAT_FEEDING_DETERMINED_SIG: {
-            status_ = tran(&OPERAING);
+            m_cat_detector->cat_feeding_determined(e);
+            status_ = tran(&OPERATING);
             break;
         }
         default: {
@@ -194,10 +259,22 @@ Q_STATE_DEF(CatDetector, DETERMINE_CAT_FEEDING) {
 Q_STATE_DEF(CatDetector, NOT_STARTED) {
     QP::QState status_;
     switch (e->sig) {
+        //${Components::CatDetector::SM::NOT_STARTED}
+        case Q_ENTRY_SIG: {
+            m_cat_detector->not_started_entry(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::CatDetector::SM::NOT_STARTED}
+        case Q_EXIT_SIG: {
+            m_cat_detector->not_started_exit(e);
+            status_ = Q_RET_HANDLED;
+            break;
+        }
         //${Components::CatDetector::SM::NOT_STARTED::START_REQ}
         case START_REQ_SIG: {
             m_cat_detector->start_req(e);
-            status_ = tran(&OPERAING);
+            status_ = tran(&OPERATING);
             break;
         }
         default: {

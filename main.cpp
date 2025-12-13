@@ -39,9 +39,12 @@ int main(int argc, char **argv)
          cv::waitKey(1);
       }
       // Simulate some processing
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
       seconds_from_start++;
-      logger->info("Running main loop for  " + std::to_string(seconds_from_start) + " seconds");
+      if(seconds_from_start % 10 == 0)
+      {
+         logger->info("Running main loop for  " + std::to_string(seconds_from_start/10) + " seconds");
+      }
    }
    return 0;
 }
