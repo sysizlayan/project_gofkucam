@@ -70,6 +70,15 @@
 , m_depth_frame{nullptr}</code>
    </operation>
   </class>
+  <class name="CatFeedingDetermined" superclass="qpcpp::QEvt">
+   <attribute name="m_is_haku_in_dangerous_zone" type="bool" visibility="0x00" properties="0x00"/>
+   <attribute name="m_haku_distance" type="double" visibility="0x00" properties="0x00"/>
+   <operation name="CatFeedingDetermined" type="" visibility="0x00" properties="0x02">
+    <code>: QEvt(EvtSignals::CAT_FEEDING_DETERMINED_SIG)
+, m_is_haku_in_dangerous_zone{false}
+, m_haku_distance(0.0)</code>
+   </operation>
+  </class>
  </package>
  <package name="Components" stereotype="0x02">
   <class name="CameraGrabber" superclass="qpcpp::QActive">

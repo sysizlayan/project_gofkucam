@@ -18,6 +18,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
+set (THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+find_package(PahoMqttCpp REQUIRED)
 find_package(OpenCV REQUIRED)
 #find_package(Torch REQUIRED)
 
@@ -27,10 +30,6 @@ message(STATUS "    config: ${OpenCV_DIR}")
 message(STATUS "    version: ${OpenCV_VERSION}")
 message(STATUS "    libraries: ${OpenCV_LIBS}")
 message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
-
-include_directories(${OpenCV_INCLUDE_DIRS})
-
-find_package(Threads REQUIRED)
 
 # Quantum Leaps, QM tool generated files
 file(GLOB QM_GENERATED_SOURCES
@@ -70,8 +69,8 @@ target_link_libraries(gofkucam_lib
     PUBLIC
     qpcpp
     ${OpenCV_LIBS}
-    #"${TORCH_LIBRARIES}"
     ${ONNXRUNTIME_DIR}/lib/libonnxruntime.dylib
+    PahoMqttCpp::paho-mqttpp3
     spdlog::spdlog
 )
 
@@ -79,6 +78,9 @@ target_link_libraries(gofkucam_lib
 add_executable(gofkucam
     ../main.cpp
 )
+if(PAHO_BUILD_SHARED)
+    target_compile_definitions(gofkucam PRIVATE PAHO_MQTTPP_IMPORTS)
+endif()
 
 target_compile_features(gofkucam
     PRIVATE

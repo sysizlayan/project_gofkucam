@@ -19,7 +19,8 @@ namespace GofkuCam
 {
 
 CatDetectorImpl::CatDetectorImpl(QP::QActive* const owner, LoggerInterfacePtr logger)
-    : m_owner{owner}, m_logger(logger)
+    : m_owner{owner}
+    , m_logger(logger)
     , m_current_frame_copy(nullptr)
     , m_current_depth_map(nullptr)
     , m_detected_haku(nullptr)
@@ -90,6 +91,8 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
    m_logger->info("Entering DETERMINE_CAT_FEEDING state");
 
    std::unique_ptr<cv::Scalar> color_ptr{nullptr};
+   //CatFeedingDetermined* cfde = Q_NEW(CatFeedingDetermined, CAT_FEEDING_DETERMINED_SIG);
+
    if (m_current_depth_map != nullptr && !m_current_depth_map->empty() && m_detected_haku != nullptr)
    {
       int roi_size = Config::config().get<int>("depth_mean_roi_size");
@@ -128,10 +131,16 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
       {
          m_logger->error("Haku is feeding! Distance: " + std::to_string(static_cast<int>(m_detected_haku_distance)));
          color_ptr = std::make_unique<cv::Scalar>(0, 0, 0); // Black
+
+         // cfde->m_haku_distance = m_detected_haku_distance;
+         // cfde->m_is_haku_in_dangerous_zone =true;
       }
       else
       {
          color_ptr = std::make_unique<cv::Scalar>(255, 255, 255); // White
+
+         // cfde->m_haku_distance = 0.0;
+         // cfde->m_is_haku_in_dangerous_zone =false;
       }
       cv::putText(*m_current_depth_map, "Haku:" + std::to_string(static_cast<int>(m_detected_haku_distance)),
                   cv::Point(anchor_x, anchor_y), cv::FONT_HERSHEY_COMPLEX, 1.5, *color_ptr, 2);
@@ -172,6 +181,7 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
                   cv::Point(anchor_x, anchor_y), cv::FONT_HERSHEY_COMPLEX, 1.5, cv::Scalar(255, 255, 255), 2);
    }
 
+   // QP::QF::PUBLISH(cfde, this);
    cv::resize(*m_current_depth_map, display_frame, cv::Size(640, 480));
    g_depth_visualization_frame.store(&display_frame);
 }
@@ -179,7 +189,7 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
 void CatDetectorImpl::determine_cat_feeding_exit(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Exiting DETERMINE_CAT_FEEDING state");
+   m_logger->info("Exiting DETERMINE_CAT_FEEDING state " + std::to_string(static_cast<int>(e->sig)));
 }
 
 void CatDetectorImpl::not_started_entry(QP::QEvt const* const e)
@@ -258,12 +268,12 @@ void CatDetectorImpl::object_detection_completed(QP::QEvt const* const e)
       if (detection.average_of_detection >= Config::config().get<int>("haku_pixel_threshold"))
       {
          m_detected_haku = std::make_shared<Detection>(detection);
-         m_logger->info("Haku detected with average pixel value: " + std::to_string(detection.average_of_detection));
+         m_logger->trace("Haku detected with average pixel value: " + std::to_string(detection.average_of_detection));
       }
       else
       {
          m_detected_gofret = std::make_shared<Detection>(detection);
-         m_logger->info("Gofret detected with average pixel value: " + std::to_string(detection.average_of_detection));
+         m_logger->trace("Gofret detected with average pixel value: " + std::to_string(detection.average_of_detection));
       }
    }
 }
@@ -274,7 +284,7 @@ void CatDetectorImpl::depth_estimation_completed(QP::QEvt const* const e)
    auto dece = Q_EVT_CAST(DepthEstimationCompletedEvt);
    FramePtr depth_frame = std::make_shared<Frame>(dece->m_depth_frame->clone());
    m_current_depth_map.swap(depth_frame);
-   m_logger->info("CAT Depth frame size: " + std::to_string(m_current_depth_map->cols) + "x" +
+   m_logger->trace("CAT Depth frame size: " + std::to_string(m_current_depth_map->cols) + "x" +
                   std::to_string(m_current_depth_map->rows));
    m_detected_gofret_distance = 0;
    m_detected_gofret_distance = 0; // Reset distances
@@ -289,7 +299,7 @@ void CatDetectorImpl::frame_timer_timeout(QP::QEvt const* const e)
 void CatDetectorImpl::cat_feeding_determined(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Cat feeding status determined");
+   m_logger->info("TEST TEST Cat feeding status determined");
 }
 
 void CatDetectorImpl::capture_error(QP::QEvt const* const e)

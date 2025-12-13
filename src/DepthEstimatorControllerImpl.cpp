@@ -68,7 +68,7 @@ void DepthEstimatorControllerImpl::frame_captured(QP::QEvt const * const e)
     DepthEstimationCompletedEvt* dece = Q_NEW(DepthEstimationCompletedEvt, DEPTH_ESTIMATION_COMPLETED_SIG);
     dece->m_depth_frame = std::make_shared<Frame>(depth_map->clone());
     m_logger->trace("New Depth frame");
-    QP::QF::PUBLISH(dece, this);
+    QP::QF::PUBLISH(dece, m_owner);
 
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();

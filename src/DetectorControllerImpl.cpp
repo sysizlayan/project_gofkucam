@@ -104,7 +104,7 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
             for(auto& item:cat_or_dog_detections)
                 odce->m_cat_or_dog_detections->push_back(item);
             m_logger->trace("Cat and dog detections are sent");
-            QP::QF::PUBLISH(odce, this);
+            QP::QF::PUBLISH(odce, m_owner);
         }
 
     #ifdef MINI_PROFILER
