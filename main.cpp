@@ -18,11 +18,11 @@ int main(int argc, char **argv)
    (void)argv;
 
    LoggerInterfacePtr logger = std::make_shared<SpdlogLogger>("GofkuCam");
-   QPFrame m_qp_frame(logger);
+   std::unique_ptr<QPFrame> m_qp_frame = std::make_unique<QPFrame>(logger);
 
    // Start the active object controller to generate timed events
    // This iniates a detached thread and has its own infinite loop
-   m_qp_frame.start();
+   m_qp_frame->start();
    int seconds_from_start = 0;
    logger->info("GofkuCam started!");
    // Convert to tensor

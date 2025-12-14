@@ -75,7 +75,6 @@ Q_STATE_DEF(CatDetector, initial) {
     this->subscribe(START_REQ_SIG);
     this->subscribe(STOP_REQ_SIG);
 
-
     return tran(&NOT_STARTED);
 }
 
@@ -245,6 +244,12 @@ Q_STATE_DEF(CatDetector, DETERMINE_CAT_FEEDING) {
         case CAT_FEEDING_DETERMINED_SIG: {
             m_cat_detector->cat_feeding_determined(e);
             status_ = tran(&OPERATING);
+            break;
+        }
+        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::DETERMINE_CAT_FE~::FRAME_CAPTURED}
+        case FRAME_CAPTURED_SIG: {
+            m_cat_detector->frame_captured(e);
+            status_ = tran(&WAITING_DETECTORS);
             break;
         }
         default: {

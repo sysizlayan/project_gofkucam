@@ -136,6 +136,18 @@ public:
     {}
 }; // class DepthEstimationCompletedEvt
 
+//${Evts::CatFeedingDetermined} ..............................................
+class CatFeedingDetermined : public QP::QEvt {
+public:
+    std::shared_ptr<HakuStatus> m_haku_status;
+
+public:
+    CatFeedingDetermined()
+    : QEvt(EvtSignals::CAT_FEEDING_DETERMINED_SIG)
+    , m_haku_status{nullptr}
+    {}
+}; // class CatFeedingDetermined
+
 } // namespace GofkuCam
 //$enddecl${Evts} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -18,12 +18,14 @@ namespace GofkuCam
 QPFrame::QPFrame(LoggerInterfacePtr logger)
    : m_logger(logger)
 {
-   //Initialize Q Framework
+   //Initialize QFramework
    QP::QF::init();
 
    // Init Pub-sub
    QP::QF::psInit(m_subscrSto, Q_DIM(m_subscrSto));
+   //QP::QF::poolInit(m_cat_events_pool, sizeof(m_cat_events_pool), sizeof(m_cat_events_pool[0]));
    QP::QF::poolInit(m_event_memory_pool, sizeof(m_event_memory_pool), sizeof(m_event_memory_pool[0]));
+   //QP::QF::poolInit(m_frame_events_pool, sizeof(m_frame_events_pool), sizeof(m_frame_events_pool[0]));
 
    std::string source = Config::config().get<std::string>("stream_address");
 
@@ -71,11 +73,10 @@ void QPFrame::ao_thread_func()
 
    m_cat_detector->start(
       4, 
-      m_gofkucam_controller_queue,
-      Q_DIM(m_gofkucam_controller_queue),
+      m_gofkucam_cat_detector_queue,
+      Q_DIM(m_gofkucam_cat_detector_queue),
       nullptr,
       0);
-
 
    StartRequested* sr = Q_NEW(StartRequested, START_REQ_SIG);
    QP::QF::PUBLISH(sr, this);

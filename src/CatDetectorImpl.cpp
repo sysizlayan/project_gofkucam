@@ -91,7 +91,6 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
    m_logger->info("Entering DETERMINE_CAT_FEEDING state");
 
    std::unique_ptr<cv::Scalar> color_ptr{nullptr};
-   //CatFeedingDetermined* cfde = Q_NEW(CatFeedingDetermined, CAT_FEEDING_DETERMINED_SIG);
 
    if (m_current_depth_map != nullptr && !m_current_depth_map->empty() && m_detected_haku != nullptr)
    {
@@ -106,7 +105,7 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
       cv::Rect haku_roi_rect(anchor_x, anchor_y, roi_size, roi_size);
       // haku_roi_rect = haku_roi_rect & cv::Rect(0, 0,
       // m_current_depth_map->cols, m_current_depth_map->rows);
-      m_logger->info("Haku ROI rect: x=" + std::to_string(haku_roi_rect.x) + ", y=" + std::to_string(haku_roi_rect.y) +
+      m_logger->trace("Haku ROI rect: x=" + std::to_string(haku_roi_rect.x) + ", y=" + std::to_string(haku_roi_rect.y) +
                      ", width=" + std::to_string(haku_roi_rect.width) +
                      ", height=" + std::to_string(haku_roi_rect.height));
       if (haku_roi_rect.area() > 0)
@@ -132,15 +131,11 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
          m_logger->error("Haku is feeding! Distance: " + std::to_string(static_cast<int>(m_detected_haku_distance)));
          color_ptr = std::make_unique<cv::Scalar>(0, 0, 0); // Black
 
-         // cfde->m_haku_distance = m_detected_haku_distance;
-         // cfde->m_is_haku_in_dangerous_zone =true;
       }
       else
       {
          color_ptr = std::make_unique<cv::Scalar>(255, 255, 255); // White
 
-         // cfde->m_haku_distance = 0.0;
-         // cfde->m_is_haku_in_dangerous_zone =false;
       }
       cv::putText(*m_current_depth_map, "Haku:" + std::to_string(static_cast<int>(m_detected_haku_distance)),
                   cv::Point(anchor_x, anchor_y), cv::FONT_HERSHEY_COMPLEX, 1.5, *color_ptr, 2);
@@ -159,7 +154,7 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
       cv::Rect gofret_roi_rect(anchor_x, anchor_y, roi_size, roi_size);
       // haku_roi_rect = haku_roi_rect & cv::Rect(0, 0,
       // m_current_depth_map->cols, m_current_depth_map->rows);
-      m_logger->info("Gofret ROI rect: x=" + std::to_string(gofret_roi_rect.x) + ", y=" + std::to_string(gofret_roi_rect.y) +
+      m_logger->trace("Gofret ROI rect: x=" + std::to_string(gofret_roi_rect.x) + ", y=" + std::to_string(gofret_roi_rect.y) +
                      ", width=" + std::to_string(gofret_roi_rect.width) +
                      ", height=" + std::to_string(gofret_roi_rect.height));
       if (gofret_roi_rect.area() > 0)
@@ -181,7 +176,12 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
                   cv::Point(anchor_x, anchor_y), cv::FONT_HERSHEY_COMPLEX, 1.5, cv::Scalar(255, 255, 255), 2);
    }
 
-   // QP::QF::PUBLISH(cfde, this);
+   CatFeedingDetermined* cfd = Q_NEW(CatFeedingDetermined, CAT_FEEDING_DETERMINED_SIG);
+   cfd->m_haku_status = std::make_shared<HakuStatus>();
+   cfd->m_haku_status->m_is_haku_in_dangerous_zone = (m_detected_haku_distance >= lower_threshold);
+   cfd->m_haku_status->m_hakus_distance = m_detected_haku_distance;
+   QP::QF::PUBLISH(cfd, m_owner);
+
    cv::resize(*m_current_depth_map, display_frame, cv::Size(640, 480));
    g_depth_visualization_frame.store(&display_frame);
 }
@@ -214,6 +214,7 @@ void CatDetectorImpl::start_req(QP::QEvt const* const e)
    m_owner->subscribe(CAPTURE_ERROR_SIG);
    m_owner->subscribe(OBJECT_DETECTION_COMPLETED_SIG);
    m_owner->subscribe(DEPTH_ESTIMATION_COMPLETED_SIG);
+   m_owner->subscribe(CAT_FEEDING_DETERMINED_SIG);
 }
 
 void CatDetectorImpl::stop_req(QP::QEvt const* const e)

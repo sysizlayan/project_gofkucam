@@ -15,7 +15,7 @@ constexpr size_t NUM_STORED_EVENTS = 100;
 
 namespace GofkuCam
 {
-using EventTyp = std::variant<FrameCapturedEvt, FrameTimerTimeout, StreamEnded, CaptureError, StartRequested, StopRequested, PollingTimerTimeout, ObjectDetectionCompletedEvt, DepthEstimationCompletedEvt>;
+using EventTyp = std::variant<FrameCapturedEvt, FrameTimerTimeout, StreamEnded, CaptureError, StartRequested, StopRequested, PollingTimerTimeout, ObjectDetectionCompletedEvt, DepthEstimationCompletedEvt, CatFeedingDetermined>;
 class QPFrame
 /**
  * @class QPFrame
@@ -44,9 +44,12 @@ private:
 
 
     QP::QEvt const *m_gofkucam_controller_queue[NUM_STORED_EVENTS];
+    QP::QEvt const *m_gofkucam_cat_detector_queue[NUM_STORED_EVENTS];
     QP::QEvt const *m_gofkucam_camera_grabber_queue[NUM_STORED_EVENTS];
     QP::QSubscrList m_subscrSto[MAX_GOFKU_CAM_SIG];
     QF_MPOOL_EL(EventTyp)    m_event_memory_pool[5*NUM_STORED_EVENTS];
+    //QF_MPOOL_EL(FrameEvts)   m_frame_events_pool[NUM_STORED_EVENTS];
+    //QF_MPOOL_EL(CatFeedingDetermined) m_cat_events_pool[NUM_STORED_EVENTS];
 
     std::thread         aoThread_;
     void                ao_thread_func();

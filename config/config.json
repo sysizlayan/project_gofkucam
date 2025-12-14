@@ -9,10 +9,10 @@
         "depth_mean_roi_size": 20,
         "haku_feeding_distance_lower_threshold": 110,
         "haku_feeding_distance_upper_threshold": 155,
-        "yolo_model_path": "/Users/sysizlayan/Desktop/git/project_gofkucam/resources/yolo/yolo12m.onnx",
+        "yolo_model_path": "/Users/sysizlayan/Desktop/git/project_gofkucam/resources/yolo/yolo12s.onnx",
         "depth_model_path": "/Users/sysizlayan/Desktop/git/project_gofkucam/resources/depth_anything/depth_anything_v2_vits.onnx",
         "yolo_labels_path": "/Users/sysizlayan/Desktop/git/project_gofkucam/resources/yolo/coco.names",
         "stream_address": "rtsp://localhost:8554/stream",
-        "frame_interval_ms": 500
+        "frame_interval_ms": 1000
     }
 }
