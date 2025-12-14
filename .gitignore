@@ -46,6 +46,8 @@ test___/
 extern/onnxruntime-*
 
 *.pt
+*.onnx
+*.log
 resources/yolo/venv/
 config/*
 captured_frames/
