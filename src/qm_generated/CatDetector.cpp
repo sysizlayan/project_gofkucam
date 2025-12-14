@@ -174,12 +174,6 @@ Q_STATE_DEF(CatDetector, WAITING_OBJECT_DETECTION) {
             status_ = tran(&DETERMINE_CAT_FEEDING);
             break;
         }
-        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_OBJECT_D~::FRAME_CAPTURED}
-        case FRAME_CAPTURED_SIG: {
-            m_cat_detector->frame_captured(e);
-            status_ = tran(&WAITING_DETECTORS);
-            break;
-        }
         default: {
             status_ = super(&WAITING_DETECTORS);
             break;
@@ -210,12 +204,6 @@ Q_STATE_DEF(CatDetector, WAITING_DEPTH_MAP) {
             status_ = tran(&DETERMINE_CAT_FEEDING);
             break;
         }
-        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::WAITING_DEPTH_MA~::FRAME_CAPTURED}
-        case FRAME_CAPTURED_SIG: {
-            m_cat_detector->frame_captured(e);
-            status_ = tran(&WAITING_DETECTORS);
-            break;
-        }
         default: {
             status_ = super(&WAITING_DETECTORS);
             break;
@@ -244,12 +232,6 @@ Q_STATE_DEF(CatDetector, DETERMINE_CAT_FEEDING) {
         case CAT_FEEDING_DETERMINED_SIG: {
             m_cat_detector->cat_feeding_determined(e);
             status_ = tran(&OPERATING);
-            break;
-        }
-        //${Components::CatDetector::SM::OPERATING::WAITING_DETECTOR~::DETERMINE_CAT_FE~::FRAME_CAPTURED}
-        case FRAME_CAPTURED_SIG: {
-            m_cat_detector->frame_captured(e);
-            status_ = tran(&WAITING_DETECTORS);
             break;
         }
         default: {

@@ -58,6 +58,8 @@ enum EvtSignals : QP::QSignal
     OBJECT_DETECTION_COMPLETED_SIG,
     DEPTH_ESTIMATION_COMPLETED_SIG,
     CAT_FEEDING_DETERMINED_SIG,
+    RECONNECTION_TIMER_TIMED_OUT_SIG,
+    DISCONNECTED_FROM_BROKER_SIG,
 
     MAX_GOFKU_CAM_SIG
 };
@@ -147,6 +149,22 @@ public:
     , m_haku_status{nullptr}
     {}
 }; // class CatFeedingDetermined
+
+//${Evts::ReconnectionTimerTimerTimeout} .....................................
+class ReconnectionTimerTimerTimeout : public QP::QEvt {
+public:
+    ReconnectionTimerTimerTimeout()
+    : QEvt(EvtSignals::RECONNECTION_TIMER_TIMED_OUT_SIG)
+    {}
+}; // class ReconnectionTimerTimerTimeout
+
+//${Evts::DisconnectedFromBroker} ............................................
+class DisconnectedFromBroker : public QP::QEvt {
+public:
+    DisconnectedFromBroker()
+    : QEvt(EvtSignals::DISCONNECTED_FROM_BROKER_SIG)
+    {}
+}; // class DisconnectedFromBroker
 
 } // namespace GofkuCam
 //$enddecl${Evts} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

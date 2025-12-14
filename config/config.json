@@ -3,6 +3,8 @@
     {
         "name": "project_gofkucam",
         "version": "1.0.0",
+        "mqtt_broker_url": "192.168.50.159",
+        "mqtt_broker_port": 1883,
         "logging": "DEBUG",
         "use_gpu": true,
         "haku_pixel_threshold": 100,

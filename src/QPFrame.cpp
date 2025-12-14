@@ -17,6 +17,11 @@ namespace GofkuCam
 {
 QPFrame::QPFrame(LoggerInterfacePtr logger)
    : m_logger(logger)
+   , m_detector_controller(nullptr)
+   , m_depth_estimator_controller(nullptr)
+   , m_camera_grabber(nullptr)
+   , m_cat_detector(nullptr)
+   , m_mqtt_client(nullptr)
 {
    //Initialize QFramework
    QP::QF::init();
@@ -49,6 +54,10 @@ void QPFrame::ao_thread_func()
    m_detector_controller = std::make_shared<DetectorController>(m_logger);
    m_depth_estimator_controller = std::make_shared<DepthEstimatorController>(m_logger);
    m_cat_detector = std::make_shared<CatDetector>(m_logger);
+   m_mqtt_client = std::make_shared<MqttClient>(
+      Config::config().get<std::string>("mqtt_broker_url"),
+      Config::config().get<std::uint32_t>("mqtt_broker_port"),
+      m_logger);
 
    m_camera_grabber->start(
       1, 
@@ -75,6 +84,13 @@ void QPFrame::ao_thread_func()
       4, 
       m_gofkucam_cat_detector_queue,
       Q_DIM(m_gofkucam_cat_detector_queue),
+      nullptr,
+      0);
+   
+   m_mqtt_client->start(
+      5, 
+      m_gofkucam_mqtt_event_queue,
+      Q_DIM(m_gofkucam_mqtt_event_queue),
       nullptr,
       0);
 

@@ -35,49 +35,49 @@ CatDetectorImpl::CatDetectorImpl(QP::QActive* const owner, LoggerInterfacePtr lo
 void CatDetectorImpl::operating_entry(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Entering OPERATING state");
+   m_logger->trace("Entering OPERATING state");
 }
 
 void CatDetectorImpl::operating_exit(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Exiting OPERATING state");
+   m_logger->trace("Exiting OPERATING state");
 }
 
 void CatDetectorImpl::waiting_detectors_entry(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Entering WAITING_DETECTORS state");
+   m_logger->trace("Entering WAITING_DETECTORS state");
 }
 
 void CatDetectorImpl::waiting_detectors_exit(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Exiting WAITING_DETECTORS state");
+   m_logger->trace("Exiting WAITING_DETECTORS state");
 }
 
 void CatDetectorImpl::waiting_object_detection_entry(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Entering WAITING_OBJECT_DETECTION state");
+   m_logger->trace("Entering WAITING_OBJECT_DETECTION state");
 }
 
 void CatDetectorImpl::waiting_object_detection_exit(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Exiting WAITING_OBJECT_DETECTION state");
+   m_logger->trace("Exiting WAITING_OBJECT_DETECTION state");
 }
 
 void CatDetectorImpl::waiting_depth_map_entry(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Entering WAITING_DEPTH_MAP state");
+   m_logger->trace("Entering WAITING_DEPTH_MAP state");
 }
 
 void CatDetectorImpl::waiting_depth_map_exit(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Exiting WAITING_DEPTH_MAP state");
+   m_logger->trace("Exiting WAITING_DEPTH_MAP state");
 }
 
 void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
@@ -189,19 +189,19 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
 void CatDetectorImpl::determine_cat_feeding_exit(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Exiting DETERMINE_CAT_FEEDING state " + std::to_string(static_cast<int>(e->sig)));
+   m_logger->trace("Exiting DETERMINE_CAT_FEEDING state " + std::to_string(static_cast<int>(e->sig)));
 }
 
 void CatDetectorImpl::not_started_entry(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Entering NOT_STARTED state");
+   m_logger->warn("Entering NOT_STARTED state");
 }
 
 void CatDetectorImpl::not_started_exit(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Exiting NOT_STARTED state");
+   m_logger->trace("Exiting NOT_STARTED state");
 }
 
 // Event handler implementations
@@ -220,31 +220,31 @@ void CatDetectorImpl::start_req(QP::QEvt const* const e)
 void CatDetectorImpl::stop_req(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Cat Detector stop requested");
+   m_logger->warn("Cat Detector stop requested");
 }
 
 void CatDetectorImpl::stream_end(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Stream ended, stopping Cat Detector");
+   m_logger->error("Stream ended, stopping Cat Detector");
 }
 
 void CatDetectorImpl::running_entry(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Cat Detector running entry");
+   m_logger->trace("Cat Detector running entry");
 }
 
 void CatDetectorImpl::frame_captured(QP::QEvt const* const e)
 {
-   m_logger->trace("New frame to Cat Detector");
+   m_logger->info("New frame to Cat Detector");
 
 #ifdef MINI_PROFILER
    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 #endif
 
    FramePtr copy_of_frame = std::make_shared<Frame>(Q_EVT_CAST(FrameCapturedEvt)->m_frame->clone());
-   m_logger->info("Cat detector input size: " + std::to_string(copy_of_frame->cols) + "x" +
+   m_logger->trace("Cat detector input size: " + std::to_string(copy_of_frame->cols) + "x" +
                   std::to_string(copy_of_frame->rows));
    m_current_frame_copy.swap(copy_of_frame);
 
@@ -294,7 +294,7 @@ void CatDetectorImpl::depth_estimation_completed(QP::QEvt const* const e)
 void CatDetectorImpl::frame_timer_timeout(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("Frame timer timeout");
+   m_logger->trace("Frame timer timeout");
 }
 
 void CatDetectorImpl::cat_feeding_determined(QP::QEvt const* const e)
