@@ -16,6 +16,7 @@
     DEPTH_ESTIMATION_COMPLETED_SIG,
     CAT_FEEDING_DETERMINED_SIG,
     RECONNECTION_TIMER_TIMED_OUT_SIG,
+    CONNECTED_TO_BROKER_SIG,
     DISCONNECTED_FROM_BROKER_SIG,
 
     MAX_GOFKU_CAM_SIG
@@ -87,6 +88,11 @@
   <class name="DisconnectedFromBroker" superclass="qpcpp::QEvt">
    <operation name="DisconnectedFromBroker" type="" visibility="0x00" properties="0x02">
     <code>: QEvt(EvtSignals::DISCONNECTED_FROM_BROKER_SIG)</code>
+   </operation>
+  </class>
+  <class name="ConnectedToBroker" superclass="qpcpp::QEvt">
+   <operation name="ConnectedToBroker" type="" visibility="0x00" properties="0x02">
+    <code>: QEvt(EvtSignals::CONNECTED_TO_BROKER_SIG)</code>
    </operation>
   </class>
  </package>
@@ -425,14 +431,13 @@ this-&gt;subscribe(STOP_REQ_SIG);</action>
      <tran trig="START_REQ">
       <action>m_imqtt_client-&gt;start_req(e);
 </action>
-      <choice target="../../../2">
-       <guard>m_imqtt_client-&gt;is_connected()</guard>
-       <choice_glyph conn="30,18,5,1,47,15,-5">
-        <action box="1,0,30,5"/>
-       </choice_glyph>
-      </choice>
       <tran_glyph conn="6,18,3,-1,24">
        <action box="0,-4,23,5"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="CONNECTED_TO_BROKER" target="../../2">
+      <tran_glyph conn="6,21,3,1,68,12,-2">
+       <action box="0,-2,23,2"/>
       </tran_glyph>
      </tran>
      <state_glyph node="6,7,66,16">
@@ -460,7 +465,7 @@ this-&gt;subscribe(STOP_REQ_SIG);</action>
       </tran_glyph>
      </tran>
      <tran trig="DISCONNECTED_FROM_BROKER" target="../../3">
-      <tran_glyph conn="5,41,3,1,69,13,-2">
+      <tran_glyph conn="5,41,3,1,70,13,-3">
        <action box="0,-2,25,2"/>
       </tran_glyph>
      </tran>
@@ -477,13 +482,7 @@ this-&gt;subscribe(STOP_REQ_SIG);</action>
      <tran trig="RECONNECTION_TIMER_TIMED_OUT">
       <action>m_imqtt_client-&gt;reconnection_timer_timed_out(e);
 </action>
-      <choice target="../../../2">
-       <guard>m_imqtt_client-&gt;is_connected()</guard>
-       <choice_glyph conn="34,62,5,1,43,-27,-5">
-        <action box="1,0,30,2"/>
-       </choice_glyph>
-      </choice>
-      <tran_glyph conn="5,62,3,-1,29">
+      <tran_glyph conn="5,60,3,-1,31">
        <action box="0,-2,29,2"/>
       </tran_glyph>
      </tran>
@@ -492,6 +491,11 @@ this-&gt;subscribe(STOP_REQ_SIG);</action>
 </action>
       <tran_glyph conn="5,66,3,3,-4,-47,5">
        <action box="0,-2,12,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="CONNECTED_TO_BROKER" target="../../2">
+      <tran_glyph conn="5,63,3,1,75,-24,-8">
+       <action box="0,-2,24,2"/>
       </tran_glyph>
      </tran>
      <state_glyph node="5,51,67,17">

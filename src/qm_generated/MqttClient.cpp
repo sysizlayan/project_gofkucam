@@ -102,13 +102,12 @@ Q_STATE_DEF(MqttClient, NOT_STARTED) {
         case START_REQ_SIG: {
             m_imqtt_client->start_req(e);
 
-            //${Components::MqttClient::SM::NOT_STARTED::START_REQ::[m_imqtt_client->is_connected()]}
-            if (m_imqtt_client->is_connected()) {
-                status_ = tran(&CONNECTED);
-            }
-            else {
-                status_ = Q_RET_UNHANDLED;
-            }
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::MqttClient::SM::NOT_STARTED::CONNECTED_TO_BROKER}
+        case CONNECTED_TO_BROKER_SIG: {
+            status_ = tran(&CONNECTED);
             break;
         }
         default: {
@@ -186,13 +185,7 @@ Q_STATE_DEF(MqttClient, DISCONNECTED) {
         case RECONNECTION_TIMER_TIMED_OUT_SIG: {
             m_imqtt_client->reconnection_timer_timed_out(e);
 
-            //${Components::MqttClient::SM::DISCONNECTED::RECONNECTION_TIM~::[m_imqtt_client->is_connected()]}
-            if (m_imqtt_client->is_connected()) {
-                status_ = tran(&CONNECTED);
-            }
-            else {
-                status_ = Q_RET_UNHANDLED;
-            }
+            status_ = Q_RET_HANDLED;
             break;
         }
         //${Components::MqttClient::SM::DISCONNECTED::STOP_REQ}
@@ -200,6 +193,11 @@ Q_STATE_DEF(MqttClient, DISCONNECTED) {
             m_imqtt_client->stop_req(e);
 
             status_ = tran(&NOT_STARTED);
+            break;
+        }
+        //${Components::MqttClient::SM::DISCONNECTED::CONNECTED_TO_BROKER}
+        case CONNECTED_TO_BROKER_SIG: {
+            status_ = tran(&CONNECTED);
             break;
         }
         default: {

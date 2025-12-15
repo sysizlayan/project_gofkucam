@@ -88,7 +88,7 @@ void CatDetectorImpl::determine_cat_feeding_entry(QP::QEvt const* const e)
    static int upper_threshold = Config::config().get<int>("haku_feeding_distance_upper_threshold");
 
    (void)e;
-   m_logger->info("Entering DETERMINE_CAT_FEEDING state");
+   m_logger->trace("Entering DETERMINE_CAT_FEEDING state");
 
    std::unique_ptr<cv::Scalar> color_ptr{nullptr};
 
@@ -300,7 +300,7 @@ void CatDetectorImpl::frame_timer_timeout(QP::QEvt const* const e)
 void CatDetectorImpl::cat_feeding_determined(QP::QEvt const* const e)
 {
    (void)e;
-   m_logger->info("TEST TEST Cat feeding status determined");
+   m_logger->trace("Cat feeding status determined");
 }
 
 void CatDetectorImpl::capture_error(QP::QEvt const* const e)

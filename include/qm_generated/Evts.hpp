@@ -59,6 +59,7 @@ enum EvtSignals : QP::QSignal
     DEPTH_ESTIMATION_COMPLETED_SIG,
     CAT_FEEDING_DETERMINED_SIG,
     RECONNECTION_TIMER_TIMED_OUT_SIG,
+    CONNECTED_TO_BROKER_SIG,
     DISCONNECTED_FROM_BROKER_SIG,
 
     MAX_GOFKU_CAM_SIG
@@ -165,6 +166,14 @@ public:
     : QEvt(EvtSignals::DISCONNECTED_FROM_BROKER_SIG)
     {}
 }; // class DisconnectedFromBroker
+
+//${Evts::ConnectedToBroker} .................................................
+class ConnectedToBroker : public QP::QEvt {
+public:
+    ConnectedToBroker()
+    : QEvt(EvtSignals::CONNECTED_TO_BROKER_SIG)
+    {}
+}; // class ConnectedToBroker
 
 } // namespace GofkuCam
 //$enddecl${Evts} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

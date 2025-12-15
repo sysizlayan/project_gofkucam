@@ -4,11 +4,14 @@
 #include "GofkuCamCommon.hpp"
 #include "IMqttClient.hpp"
 #include "LoggerInterface.hpp"
+#include "mqtt/async_client.h"
 #include "qp.hpp"
+#include <memory>
 #include <string>
 
 namespace GofkuCam
 {
+
 
 class MqttClientImpl : public IMqttClient
 {
@@ -19,8 +22,14 @@ class MqttClientImpl : public IMqttClient
    LoggerInterfacePtr m_logger;
 
    bool m_is_connected;
+
+   QP::QTimeEvt m_disconnection_timer;
+   // The MQTT client
+   std::unique_ptr<mqtt::async_client> m_client;
+
  public:
-   explicit MqttClientImpl(QP::QActive* owner, std::string broker_url, std::uint32_t broker_port, LoggerInterfacePtr logger);
+   explicit MqttClientImpl(QP::QActive* owner, std::string broker_url, std::uint32_t broker_port,
+                           LoggerInterfacePtr logger);
 
    // IMqttClient interface implementation
    void not_started_entry(QP::QEvt const* const e) override;
@@ -36,10 +45,14 @@ class MqttClientImpl : public IMqttClient
 
    void reconnection_timer_timed_out(QP::QEvt const* const e) override;
 
-   void cat_feeding_result(QP::QEvt const * const e) override;
+   void cat_feeding_result(QP::QEvt const* const e) override;
 
    void stop_req(QP::QEvt const* const e) override;
    bool is_connected() override;
+
+   void connected(const std::string& cause);
+
+   void connection_lost(const std::string& cause);
 }; // class MqttClientImpl
 
 } // namespace GofkuCam

@@ -17,7 +17,7 @@ constexpr size_t NUM_STORED_EVENTS = 100;
 
 namespace GofkuCam
 {
-using EventTyp = std::variant<FrameCapturedEvt, FrameTimerTimeout, StreamEnded, CaptureError, StartRequested, StopRequested, PollingTimerTimeout, ObjectDetectionCompletedEvt, DepthEstimationCompletedEvt, CatFeedingDetermined>;
+using EventTyp = std::variant<FrameCapturedEvt, FrameTimerTimeout, StreamEnded, CaptureError, StartRequested, StopRequested, PollingTimerTimeout, ObjectDetectionCompletedEvt, DepthEstimationCompletedEvt, CatFeedingDetermined, ReconnectionTimerTimerTimeout, DisconnectedFromBroker, ConnectedToBroker>;
 class QPFrame
 /**
  * @class QPFrame
