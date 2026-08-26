@@ -7,7 +7,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(CMAKE_BUILD_TYPE Debug)
 
 if(NOT ONNXRUNTIME_DIR)
-    set(ONNXRUNTIME_DIR "${CMAKE_SOURCE_DIR}/extern/onnxruntime-osx-arm64-1.23.2")
+    set(ONNXRUNTIME_DIR "${CMAKE_SOURCE_DIR}/extern/onnxruntime-osx-arm64-1.29.0")
 endif()
 
 message(STATUS "ONNX runtime directory: ${ONNXRUNTIME_DIR}")

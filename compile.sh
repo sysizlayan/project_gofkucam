@@ -9,7 +9,7 @@ set -euo pipefail
 CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 # Default values
-ONNXRUNTIME_VERSION="${1:-1.23.2}"
+ONNXRUNTIME_VERSION="${1:-1.29.0}"
 ONNXRUNTIME_GPU="${2:-0}"
 
 # Function to display usage
