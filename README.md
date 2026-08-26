@@ -42,6 +42,10 @@ Repo/Development requirements:
 
 
 ### Changelog:
+36.08.2026 - Update after long time, the camera pipeline now can detect cats, estimate their depths, figure out which one is which (Gofret is black and Haku is white, I use bounding box pixel value mean with a threshold).
+Mqtt connection is done and now process can send messages when Haku is around the bowl
+<img width="2571" height="1032" alt="image" src="https://github.com/user-attachments/assets/be589e24-5efa-4ab0-88a0-ffedd1e6338b" />
+
 30.05.2025 - Camera connection, frame acquisition and the QP framework active object framework is working. I will continue with choosing neural models.
 
 My laptop is not that good, developing in the old desktop I have migth be a good idea but I do not want to install ubuntu there. Can I connect to the WSL remotely for development? Let's check.
