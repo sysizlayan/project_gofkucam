@@ -11,7 +11,7 @@ using Frame = cv::Mat;
 using FramePtr = std::shared_ptr<Frame>;
 using ActiveObjPtr = std::shared_ptr<QP::QActive>;
 constexpr int TICKS_PER_SEC = 1000;
-
+constexpr int TICKS_BEFORE_START = 10000;
 // Struct to represent a bounding box
 struct BoundingBox
 {

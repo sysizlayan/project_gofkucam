@@ -39,11 +39,18 @@ QPFrame::QPFrame(LoggerInterfacePtr logger)
    m_logger->info(ss.str());
 }
 
-void QPFrame::start()
+void QPFrame::start(bool should_use_a_dedicated_thread)
 {
-   aoThread_ = std::thread(&QPFrame::ao_thread_func, this);
-   aoThread_.detach();
-   std::this_thread::sleep_for(std::chrono::milliseconds(100));
+   if(should_use_a_dedicated_thread)
+   {
+      aoThread_ = std::thread(&QPFrame::ao_thread_func, this);
+      aoThread_.detach();
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+   }
+   else
+   {
+      ao_thread_func();
+   }
 }
 
 void QPFrame::ao_thread_func()
@@ -122,6 +129,29 @@ void QP::QF::onCleanup()
 void QP::QF::onClockTick()
 {
    QTimeEvt::TICK_X(0U, 0); // process time events at rate 0
+   static size_t call_count = 0;
+   static bool is_started = false;
+
+   call_count++;
+   if(!is_started && call_count == GofkuCam::TICKS_BEFORE_START) // 30 seconds
+   {
+      is_started = true;
+      call_count = 0;
+   }
+   if(is_started && call_count == 30)
+   {
+      if(GofkuCam::g_detection_visualization_frame.load() != nullptr)
+      {
+         cv::imshow("Detections", *(GofkuCam::g_detection_visualization_frame.load()));
+      }
+      if(GofkuCam::g_depth_visualization_frame.load() != nullptr)
+      {
+         cv::imshow("Depth Map", *(GofkuCam::g_depth_visualization_frame.load()));
+      }
+      cv::pollKey();
+      call_count = 0;
+   }
+
    //  QS_RX_INPUT(); // handle the QS-RX input
    //  QS_OUTPUT();   // handle the QS output
 }

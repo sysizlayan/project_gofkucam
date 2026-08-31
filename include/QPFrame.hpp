@@ -36,7 +36,7 @@ class QPFrame
 public:
     QPFrame(LoggerInterfacePtr);
     virtual ~QPFrame() = default;
-    void start();
+    void start(bool should_use_a_dedicated_thread = false);
 private:
     LoggerInterfacePtr  m_logger;
     std::shared_ptr<DetectorController>   m_detector_controller;
