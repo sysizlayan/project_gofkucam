@@ -26,6 +26,9 @@ public:
 
     template <typename T>
     const T get(const std::string& key) const;
+
+    template <typename T>
+    const T get(const std::string& key, const T& default_value) const;
     
 private:
     nlohmann::json m_config_json; // JSON object to hold the configuration
@@ -46,6 +49,22 @@ inline const T Config::get(const std::string& key) const
     {
         throw ConfigFailure("Config cannot take '" + key);
     }
+}
+
+template <typename T>
+inline const T Config::get(const std::string& key, const T& default_value) const
+{
+    try
+    {
+        if (m_config_json.contains("config") && m_config_json["config"].contains(key))
+        {
+            return m_config_json["config"][key].get<T>();
+        }
+    }
+    catch(...)
+    {
+    }
+    return default_value;
 }
 
 inline Config::Config()

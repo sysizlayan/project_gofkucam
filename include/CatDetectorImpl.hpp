@@ -19,6 +19,8 @@ private:
     std::shared_ptr<Detection> m_detected_gofret;
     double m_detected_haku_distance;
     double m_detected_gofret_distance;
+
+    void save_detection_crop(const Detection& detection, const std::string& cat_name, size_t index);
 public:
     CatDetectorImpl(QP::QActive * const owner, LoggerInterfacePtr logger);
     

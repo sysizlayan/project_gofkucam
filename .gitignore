@@ -36,9 +36,12 @@
 Tapo*
 
 *:Zone.Identifier
+*.ses
+:memory:*
 .gofkucam
 .vscode/
 .cache/
+.venv/
 out/
 build/
 extern/libtorch/
@@ -52,6 +55,9 @@ resources/yolo/venv/
 config/*
 captured_frames/
 captured_frames/*
+haku/
+gofret/
 CmakePresets.json
+config/config.json
 
 .DS_Store

@@ -6,6 +6,7 @@
 #include "qp.hpp"
 #include <chrono>
 #include <cstddef>
+#include <filesystem>
 #include <iomanip>
 #include <memory>
 #include <opencv2/core/types.hpp>
@@ -255,6 +256,65 @@ void CatDetectorImpl::frame_captured(QP::QEvt const* const e)
 #endif
 }
 
+void CatDetectorImpl::save_detection_crop(const Detection& detection, const std::string& cat_name, size_t index)
+{
+   if (!m_current_frame_copy || m_current_frame_copy->empty())
+   {
+      m_logger->warn("Cannot save " + cat_name + " crop: current frame is null or empty");
+      return;
+   }
+
+   try
+   {
+      std::string folder = Config::config().get<std::string>(cat_name + "_folder", cat_name);
+      std::filesystem::create_directories(folder);
+
+      cv::Rect roi(detection.box.x, detection.box.y, detection.box.width, detection.box.height);
+      roi = roi & cv::Rect(0, 0, m_current_frame_copy->cols, m_current_frame_copy->rows);
+
+      if (roi.width <= 0 || roi.height <= 0)
+      {
+         m_logger->warn("Cannot save " + cat_name + " crop: invalid bounding box ROI [" +
+                        std::to_string(detection.box.x) + ", " + std::to_string(detection.box.y) + ", " +
+                        std::to_string(detection.box.width) + ", " + std::to_string(detection.box.height) + "]");
+         return;
+      }
+
+      cv::Mat cropped = (*m_current_frame_copy)(roi);
+
+      auto now = std::chrono::system_clock::now();
+      auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+      auto timer = std::chrono::system_clock::to_time_t(now);
+      std::tm tm{};
+      localtime_r(&timer, &tm);
+
+      std::ostringstream filename;
+      filename << folder << "/" << cat_name << "_"
+               << std::put_time(&tm, "%Y%m%d_%H%M%S") << "_"
+               << std::setfill('0') << std::setw(3) << now_ms.count() << "_"
+               << index << ".png";
+
+      std::string filepath = filename.str();
+
+      // Minimally compressed image file (PNG compression level 0 = uncompressed, lossless)
+      std::vector<int> params = {cv::IMWRITE_PNG_COMPRESSION, 0};
+      bool success = cv::imwrite(filepath, cropped, params);
+      if (success)
+      {
+         m_logger->info("Saved " + cat_name + " detection crop to " + filepath +
+                        " (" + std::to_string(roi.width) + "x" + std::to_string(roi.height) + ")");
+      }
+      else
+      {
+         m_logger->error("Failed to write " + cat_name + " detection crop to " + filepath);
+      }
+   }
+   catch (const std::exception& e)
+   {
+      m_logger->error("Error saving " + cat_name + " detection crop: " + std::string(e.what()));
+   }
+}
+
 void CatDetectorImpl::object_detection_completed(QP::QEvt const* const e)
 {
    m_logger->trace("Object detection completed event received in Cat Detector");
@@ -264,18 +324,22 @@ void CatDetectorImpl::object_detection_completed(QP::QEvt const* const e)
    m_detected_haku = nullptr;
    m_detected_gofret = nullptr;
 
+   size_t detection_idx = 0;
    for (auto& detection : cat_or_dog_detections)
    {
       if (detection.average_of_detection >= Config::config().get<int>("haku_pixel_threshold"))
       {
          m_detected_haku = std::make_shared<Detection>(detection);
          m_logger->trace("Haku detected with average pixel value: " + std::to_string(detection.average_of_detection));
+         save_detection_crop(detection, "haku", detection_idx);
       }
       else
       {
          m_detected_gofret = std::make_shared<Detection>(detection);
          m_logger->trace("Gofret detected with average pixel value: " + std::to_string(detection.average_of_detection));
+         save_detection_crop(detection, "gofret", detection_idx);
       }
+      ++detection_idx;
    }
 }
 
