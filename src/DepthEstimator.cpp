@@ -311,7 +311,7 @@ FramePtr DepthEstimator::postprocess(const Ort::Value &ort_value)
     // The Mat will be a view into the Ort::Value's memory.
     FramePtr depth_mat = std::make_shared<Frame>(height, width, CV_32F, const_cast<void*>(raw_data_ptr));
     cv::normalize(*depth_mat, *depth_mat, 0, 255, cv::NORM_MINMAX, CV_8U);
-    cv::resize(*depth_mat, *depth_mat, cv::Size(1920, 1080));
+    cv::resize(*depth_mat, *depth_mat, cv::Size(2560, 1440));
     // Create a colormap from the depth data
     // cv::Mat colormap;
     // cv::applyColorMap(depth_mat, colormap, cv::COLORMAP_INFERNO);
