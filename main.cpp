@@ -5,23 +5,32 @@
 #include "QPFrame.hpp"
 #include "SpdlogLogger.hpp"
 #include "GofkuCamCommon.hpp"
-
+#include <thread>
+#include "Config.hpp"
 
 using namespace GofkuCam;
 
-std::atomic<Frame*> GofkuCam::g_depth_visualization_frame{nullptr};
-std::atomic<Frame*> GofkuCam::g_detection_visualization_frame{nullptr};
+std::atomic<Frame*>  GofkuCam::g_depth_visualization_frame{nullptr};
+std::atomic<Frame*>  GofkuCam::g_detection_visualization_frame{nullptr};
+LoggerInterfacePtr   GofkuCam::g_logger;
 
 int main(int argc, char **argv)
-{
+{  
    (void)argc;
    (void)argv;
 
-   LoggerInterfacePtr logger = std::make_shared<SpdlogLogger>("GofkuCam");
-   std::unique_ptr<QPFrame> m_qp_frame = std::make_unique<QPFrame>(logger);
+   GofkuCam::g_logger = std::make_shared<SpdlogLogger>("GofkuCam");
+   std::unique_ptr<QPFrame> m_qp_frame = std::make_unique<QPFrame>(GofkuCam::g_logger);
 
+   GofkuCam::g_logger->info("GofkuCam constructed!");
+   bool use_detached_thread_for_QP = Config::config().get<bool>("use_detached_thread");
+   
    // Start the active object controller to generate timed events
-   logger->info("GofkuCam started!");
-   m_qp_frame->start(false);
+   m_qp_frame->start(use_detached_thread_for_QP);
+   while(!use_detached_thread_for_QP) // In case we are not using a dedicated thread, keep the main thread alive
+   {
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+      GofkuCam::g_logger->info("GofkuCam is running");
+   }
    return 0;
 }

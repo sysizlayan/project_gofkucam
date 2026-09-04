@@ -4,12 +4,14 @@
 #include "qpcpp.hpp"
 #include <atomic>
 #include <opencv2/opencv.hpp>
+#include "LoggerInterface.hpp"
 
 namespace GofkuCam
 {
-using Frame = cv::Mat;
-using FramePtr = std::shared_ptr<Frame>;
-using ActiveObjPtr = std::shared_ptr<QP::QActive>;
+using Frame            = cv::Mat;
+using FramePtr         = std::shared_ptr<Frame>;
+using ActiveObjPtr     = std::shared_ptr<QP::QActive>;
+using VisualizationPtr = std::atomic<Frame*>;
 constexpr int TICKS_PER_SEC = 1000;
 constexpr int TICKS_BEFORE_START = 10000;
 // Struct to represent a bounding box
@@ -47,8 +49,9 @@ struct HakuStatus
    }
 };
 
-extern std::atomic<Frame*> g_depth_visualization_frame;
-extern std::atomic<Frame*> g_detection_visualization_frame;
+extern VisualizationPtr   g_depth_visualization_frame;
+extern VisualizationPtr   g_detection_visualization_frame;
+extern LoggerInterfacePtr g_logger;
 } // namespace GofkuCam
 
 #endif

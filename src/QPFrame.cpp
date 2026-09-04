@@ -130,10 +130,11 @@ void QP::QF::onClockTick()
 {
    QTimeEvt::TICK_X(0U, 0); // process time events at rate 0
    static size_t call_count = 0;
+   static size_t log_count  = 0;
    static bool is_started = false;
 
    call_count++;
-   if(!is_started && call_count == GofkuCam::TICKS_BEFORE_START) // 30 seconds
+   if(!is_started && call_count == GofkuCam::TICKS_BEFORE_START) // 10 seconds, do not try to visualize
    {
       is_started = true;
       call_count = 0;
@@ -151,6 +152,10 @@ void QP::QF::onClockTick()
       cv::pollKey();
       call_count = 0;
    }
+
+   // Log every second
+   log_count = (log_count < GofkuCam::TICKS_PER_SEC) ? log_count + 1 : 0;
+   if(!log_count) GofkuCam::g_logger->info("GofkuCam Running...");
 
    //  QS_RX_INPUT(); // handle the QS-RX input
    //  QS_OUTPUT();   // handle the QS output

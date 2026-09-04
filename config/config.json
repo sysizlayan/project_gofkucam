@@ -7,6 +7,7 @@
         "mqtt_broker_port": 1883,
         "logging": "DEBUG",
         "use_gpu": true,
+        "use_detached_thread": false,
         "haku_pixel_threshold": 100,
         "depth_mean_roi_size": 20,
         "haku_feeding_distance_lower_threshold": 110,
