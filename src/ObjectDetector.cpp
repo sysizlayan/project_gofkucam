@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <random>
 #include <fstream>
+#include <filesystem>
 
 namespace GofkuCam
 {
@@ -65,11 +66,16 @@ void ObjectDetector::init_session()
     else if (m_is_gpu && is_coreml_available != availableProviders.end())
     {
         m_logger->info("Using CoreML!");
+        std::filesystem::path cache_dir = std::filesystem::current_path() / ".cache" / "coreml" / "yolo";
+        std::error_code ec;
+        std::filesystem::create_directories(cache_dir, ec);
+
         std::unordered_map<std::string, std::string> provider_options;
         provider_options["ModelFormat"] = "MLProgram";
         provider_options["MLComputeUnits"] = "CPUAndGPU";
         provider_options["RequireStaticInputShapes"] = "0";
         provider_options["EnableOnSubgraphs"] = "1";
+        provider_options["ModelCacheDirectory"] = cache_dir.string();
         m_session_options.AppendExecutionProvider("CoreML", provider_options);
     }
     else
