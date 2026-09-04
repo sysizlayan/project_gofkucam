@@ -21,10 +21,14 @@ public:
     DepthEstimator &operator=(const DepthEstimator &) = delete; // Disable copy assignment operator
 
     FramePtr estimate_depth(FramePtr image);
+    void recover();
 
 private:
+    void init_session();
+
     std::string m_model_path;                   // Path to the ONNX model file
     LoggerInterfacePtr m_logger; // Logger for debug messages
+    bool m_is_gpu{false};                       // Whether GPU execution provider is enabled
     Ort::Env m_env;                         // ONNX Runtime environment
     Ort::SessionOptions m_session_options;   // Session options for ONNX Runtime
     Ort::Session m_session;                 // ONNX Runtime session for running inference

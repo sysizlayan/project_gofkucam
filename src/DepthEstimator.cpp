@@ -42,13 +42,25 @@ int GetCvType(ONNXTensorElementDataType onnx_type) {
 DepthEstimator::DepthEstimator(const std::string &model_path, LoggerInterfacePtr logger, bool is_gpu)
     : m_model_path(model_path)
     , m_logger(logger)
+    , m_is_gpu{is_gpu}
     , m_env{nullptr}
-    , m_session_options{nullptr}
     , m_session{nullptr}
     , isDynamicInputShape(false)
     , inputImageShape(0, 0)
     , numInputNodes(0)
     , numOutputNodes(0)
+{
+    init_session();
+
+    std::stringstream ss1;
+    ss1 << "Loaded Model: " << m_model_path << "\n"
+        << "Input shape: "  << inputImageShape.width << "x" << inputImageShape.height << "\n"
+        << "Number of input nodes: " << numInputNodes << "\n"
+        << "Number of output nodes: " << numOutputNodes << "\n";
+    m_logger->info(ss1.str());
+}
+
+void DepthEstimator::init_session()
 {
     m_session_options = Ort::SessionOptions();
     m_session_options.SetIntraOpNumThreads(4);
@@ -67,19 +79,19 @@ DepthEstimator::DepthEstimator(const std::string &model_path, LoggerInterfacePtr
     auto cudaAvailable = std::find(availableProviders.begin(), availableProviders.end(), "CUDAExecutionProvider");
     auto is_coreml_available = std::find(availableProviders.begin(), availableProviders.end(), "CoreMLExecutionProvider");
     OrtCUDAProviderOptions cudaOption;
-    if (is_gpu && cudaAvailable != availableProviders.end())
+    if (m_is_gpu && cudaAvailable != availableProviders.end())
     {
         m_logger->info("Using CUDA!");
-        m_session_options.AppendExecutionProvider_CUDA(cudaOption); // Append CUDA execution provider
+        m_session_options.AppendExecutionProvider_CUDA(cudaOption);
     }
-    else if(is_gpu && is_coreml_available != availableProviders.end())
+    else if (m_is_gpu && is_coreml_available != availableProviders.end())
     {
         m_logger->info("Using CoreML for depth estimator!");
         std::unordered_map<std::string, std::string> provider_options;
         provider_options["ModelFormat"] = "MLProgram";
-        provider_options["MLComputeUnits"] = "ALL";
+        provider_options["MLComputeUnits"] = "CPUAndGPU";
         provider_options["RequireStaticInputShapes"] = "0";
-        provider_options["EnableOnSubgraphs"] = "0";
+        provider_options["EnableOnSubgraphs"] = "1";
         m_session_options.AppendExecutionProvider("CoreML", provider_options);
     }
     else
@@ -93,10 +105,15 @@ DepthEstimator::DepthEstimator(const std::string &model_path, LoggerInterfacePtr
 
     Ort::AllocatorWithDefaultOptions allocator;
 
+    inputNodeNameAllocatedStrings.clear();
+    inputNames.clear();
+    outputNodeNameAllocatedStrings.clear();
+    outputNames.clear();
+
     // Retrieve input tensor shape information
     Ort::TypeInfo inputTypeInfo = m_session.GetInputTypeInfo(0);
     std::vector<int64_t> inputTensorShapeVec = inputTypeInfo.GetTensorTypeAndShapeInfo().GetShape();
-    isDynamicInputShape = (inputTensorShapeVec.size() >= 4) && (inputTensorShapeVec[2] == -1 && inputTensorShapeVec[3] == -1); // Check for dynamic dimensions
+    isDynamicInputShape = (inputTensorShapeVec.size() >= 4) && (inputTensorShapeVec[2] == -1 && inputTensorShapeVec[3] == -1);
 
     // Allocate and store input node names
     auto input_name = m_session.GetInputNameAllocated(0, allocator);
@@ -121,19 +138,29 @@ DepthEstimator::DepthEstimator(const std::string &model_path, LoggerInterfacePtr
     // Get the number of input and output nodes
     numInputNodes = m_session.GetInputCount();
     numOutputNodes = m_session.GetOutputCount();
+}
 
-    std::stringstream ss1;
-    ss1 << "Loaded Model: " << m_model_path << "\n"
-        << "Input shape: "  << inputImageShape.width << "x" << inputImageShape.height << "\n"
-        << "Number of input nodes: " << numInputNodes << "\n"
-        << "Number of output nodes: " << numOutputNodes << "\n";
-    m_logger->info(ss1.str());
+void DepthEstimator::recover()
+{
+    try
+    {
+        m_logger->warn("Attempting to recover DepthEstimator session after failure...");
+        init_session();
+        m_logger->info("DepthEstimator session recovered successfully.");
+    }
+    catch (const std::exception& e)
+    {
+        m_logger->error(std::string("Failed to recover DepthEstimator session: ") + e.what());
+    }
 }
 
 // Detect function implementation
 FramePtr DepthEstimator::estimate_depth(FramePtr image)
 {
-    // //ScopedTimer timer("Overall detection");
+    if (!image || image->empty()) {
+        m_logger->warn("DepthEstimator::estimate_depth called with empty image");
+        return nullptr;
+    }
 
     float* blobPtr = nullptr; // Pointer to hold preprocessed image data
     // Define the shape of the input tensor (batch size, channels, height, width)
@@ -141,6 +168,10 @@ FramePtr DepthEstimator::estimate_depth(FramePtr image)
 
     // Preprocess the image and obtain a pointer to the blob
     FramePtr preprocessedImage{preprocess(image, blobPtr, inputTensorShape)};
+    if (!blobPtr) {
+        m_logger->error("DepthEstimator preprocessing failed to allocate blob");
+        return nullptr;
+    }
 
     // Compute the total number of elements in the input tensor
     size_t inputTensorSize = std::accumulate(inputTensorShape.begin(), inputTensorShape.end(), 1ull, std::multiplies<size_t>());
@@ -163,14 +194,32 @@ FramePtr DepthEstimator::estimate_depth(FramePtr image)
     );
 
     // Run the inference session with the input tensor and retrieve output tensors
-    std::vector<Ort::Value> outputTensors = m_session.Run(
-        Ort::RunOptions{nullptr},
-        inputNames.data(),
-        &inputTensor,
-        numInputNodes,
-        outputNames.data(),
-        numOutputNodes
-    );
+    std::vector<Ort::Value> outputTensors;
+    try {
+        outputTensors = m_session.Run(
+            Ort::RunOptions{nullptr},
+            inputNames.data(),
+            &inputTensor,
+            numInputNodes,
+            outputNames.data(),
+            numOutputNodes
+        );
+    }
+    catch (const Ort::Exception& e) {
+        m_logger->error(std::string("Ort::Exception in DepthEstimator::estimate_depth: ") + e.what());
+        recover();
+        return nullptr;
+    }
+    catch (const std::exception& e) {
+        m_logger->error(std::string("std::exception in DepthEstimator::estimate_depth: ") + e.what());
+        recover();
+        return nullptr;
+    }
+
+    if (outputTensors.empty()) {
+        return nullptr;
+    }
+
     Ort::Value &outputTensor = outputTensors[0];
 
     std::stringstream ss;

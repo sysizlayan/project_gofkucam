@@ -16,11 +16,11 @@ set(QPCPP_CFG_KERNEL QXK)
 set(QPCPP_CFG_PORT posix)
 set(QPCPP_CFG_GUI OFF)
 set(QPCPP_CFG_DEBUG OFF)
-set(QPCPP_CFG_VERBOSE OFF)
 set(PAHO_WITH_SSL FALSE)
+set(PAHO_WITH_MQTT_C TRUE CACHE BOOL "" FORCE)
 
 add_subdirectory(extern/json)
+add_subdirectory(extern/paho.mqtt.cpp)
 add_subdirectory(extern/qpcpp)
 add_subdirectory(extern/spdlog)
 add_subdirectory(src)
-

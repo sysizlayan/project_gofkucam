@@ -1,9 +1,9 @@
 #include "MqttClientImpl.hpp"
-#include "Config.hpp"
 #include "Evts.hpp"
 #include "qp.hpp"
 #include <memory>
 #include <string>
+#include <unistd.h>
 
 namespace GofkuCam
 {
@@ -21,6 +21,8 @@ MqttClientImpl::MqttClientImpl(QP::QActive* owner, std::string broker_url, std::
    m_logger->info("Creating MQTT client for broker at " + serverURI);
    const int MAX_BUFFERED_MESSAGES = 10;
 
+   std::string clientId = "GofkuCam_Vision_" + std::to_string(getpid());
+
    // We configure to allow publishing to the client while off-line,
    // and that it's OK to do so before the 1st successful connection.
    auto createOpts = mqtt::create_options_builder()
@@ -28,7 +30,7 @@ MqttClientImpl::MqttClientImpl(QP::QActive* owner, std::string broker_url, std::
                         .send_while_disconnected(false, false)
                         .max_buffered_messages(MAX_BUFFERED_MESSAGES)
                         .delete_oldest_messages()
-                        .client_id("GofkuCam_Vision")
+                        .client_id(clientId)
                         .finalize();
    m_client = std::make_unique<mqtt::async_client>(createOpts);
 
@@ -113,15 +115,14 @@ void MqttClientImpl::cat_feeding_result(QP::QEvt const* const e)
       if(cfd->m_haku_status->m_is_haku_in_dangerous_zone)
       {
          payload = "dangerous: " + std::to_string(static_cast<int>(cfd->m_haku_status->m_hakus_distance));
+         auto msg = mqtt::make_message(topic, payload);
+         m_client->publish(msg);
+         m_logger->info("Published cat feeding status: " + payload + " to topic: " + topic);
       }
       else
       {
-         payload = "not_dangerous";
+         // Do nothing
       }
-
-      auto msg = mqtt::make_message(topic, payload);
-      m_client->publish(msg);
-      m_logger->info("Published cat feeding status: " + payload + " to topic: " + topic);
    }
 }
 

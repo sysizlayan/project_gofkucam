@@ -82,8 +82,8 @@ void QPFrame::ao_thread_func()
 
    m_depth_estimator_controller->start(
       3, 
-      m_gofkucam_controller_queue,
-      Q_DIM(m_gofkucam_controller_queue),
+      m_gofkucam_depth_estimator_queue,
+      Q_DIM(m_gofkucam_depth_estimator_queue),
       nullptr,
       0);
 

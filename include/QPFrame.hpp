@@ -47,6 +47,7 @@ private:
 
 
     QP::QEvt const *m_gofkucam_controller_queue[NUM_STORED_EVENTS];
+    QP::QEvt const *m_gofkucam_depth_estimator_queue[NUM_STORED_EVENTS];
     QP::QEvt const *m_gofkucam_cat_detector_queue[NUM_STORED_EVENTS];
     QP::QEvt const *m_gofkucam_camera_grabber_queue[NUM_STORED_EVENTS];
     QP::QEvt const *m_gofkucam_mqtt_event_queue[10];

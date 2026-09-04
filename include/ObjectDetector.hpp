@@ -44,11 +44,15 @@ public:
                                 float maskAlpha);
     std::vector<std::string> get_class_names(const std::string &path);
     static std::vector<cv::Scalar> generate_colors(const std::vector<std::string> &classNames, int seed);
+    void recover();
 
 private:
-        std::string m_model_path;                   // Path to the ONNX model file
+    void init_session();
+
+    std::string m_model_path;                   // Path to the ONNX model file
     std::string m_label_file_path;                  // Path to the labels file containing class names
     LoggerInterfacePtr m_logger;                    // Logger for debug messages
+    bool m_is_gpu{false};                           // Whether GPU execution provider is enabled
     Ort::Env m_env;                                 // ONNX Runtime environment
     Ort::SessionOptions m_session_options;          // Session options for ONNX Runtime
     Ort::Session m_session;                         // ONNX Runtime session for running inference

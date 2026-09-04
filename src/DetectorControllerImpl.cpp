@@ -56,13 +56,15 @@ void DetectorControllerImpl::frame_captured(QP::QEvt const * const e)
     #ifdef MINI_PROFILER
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     #endif
-        FramePtr copy_of_frame = std::make_shared<Frame>(Q_EVT_CAST(FrameCapturedEvt)->m_frame->clone());
-
-        if (copy_of_frame && !copy_of_frame->empty())
+        auto fce = Q_EVT_CAST(FrameCapturedEvt);
+        if (!fce || !fce->m_frame || fce->m_frame->empty())
         {
-            m_logger->trace("Object detection input size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
-            // You can further process or visualize the depth map as needed
+            m_logger->warn("DetectorController received null or empty frame");
+            return;
         }
+
+        FramePtr copy_of_frame = std::make_shared<Frame>(fce->m_frame->clone());
+        m_logger->trace("Object detection input size: " + std::to_string(copy_of_frame->cols) + "x" + std::to_string(copy_of_frame->rows));
 
         std::vector<Detection> detections = m_detector->detect(copy_of_frame);
 
