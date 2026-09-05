@@ -18,6 +18,9 @@
         "depth_model_path": "/Users/sysizlayan/Desktop/git/project_gofkucam/resources/depth_anything/depth_anything_v2_vits.onnx",
         "yolo_labels_path": "/Users/sysizlayan/Desktop/git/project_gofkucam/resources/yolo/coco.names",
         "stream_address": "rtsp://localhost:8554/stream",
-        "frame_interval_ms": 1000
+        "frame_interval_ms": 1000,
+        "haku_folder": "haku",
+        "gofret_folder": "gofret",
+        "save_images": true
     }
 }
