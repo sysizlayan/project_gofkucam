@@ -48,7 +48,7 @@ int main(int argc, char **argv)
       GofkuCam::g_logger->info("GofkuCam is running");
    }
    cv::destroyAllWindows();
-   logger->info("Received interrupt signal, shutting down gracefully...");
+   GofkuCam::g_logger->info("Received interrupt signal, shutting down gracefully...");
    std::this_thread::sleep_for(std::chrono::milliseconds(2*Config::config().get<int>("frame_interval_ms")));
    return 0;
 }
