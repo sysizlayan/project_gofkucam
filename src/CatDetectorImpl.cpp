@@ -340,13 +340,17 @@ void CatDetectorImpl::object_detection_completed(QP::QEvt const* const e)
       {
          m_detected_haku = std::make_shared<Detection>(detection);
          m_logger->info("Haku detected (" + id_result.details + ")");
-         save_detection_crop(detection, "haku", detection_idx);
+
+         if(Config::config().get<bool>("save_images"))
+            save_detection_crop(detection, "haku", detection_idx);
       }
       else if (id_result.identity == CatIdentity::GOFRET)
       {
          m_detected_gofret = std::make_shared<Detection>(detection);
          m_logger->info("Gofret detected (" + id_result.details + ")");
-         save_detection_crop(detection, "gofret", detection_idx);
+
+         if(Config::config().get<bool>("save_images"))
+            save_detection_crop(detection, "gofret", detection_idx);
       }
       else
       {
