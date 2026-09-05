@@ -22,6 +22,7 @@ namespace GofkuCam
 CatDetectorImpl::CatDetectorImpl(QP::QActive* const owner, LoggerInterfacePtr logger)
     : m_owner{owner}
     , m_logger(logger)
+    , m_strategy(CatIdentificationStrategyFactory::createStrategy(logger))
     , m_current_frame_copy(nullptr)
     , m_current_depth_map(nullptr)
     , m_detected_haku(nullptr)
@@ -327,17 +328,29 @@ void CatDetectorImpl::object_detection_completed(QP::QEvt const* const e)
    size_t detection_idx = 0;
    for (auto& detection : cat_or_dog_detections)
    {
-      if (detection.average_of_detection >= Config::config().get<int>("haku_pixel_threshold"))
+      if (!m_current_frame_copy || m_current_frame_copy->empty())
+      {
+         m_logger->warn("Cannot identify cat: current frame is null or empty");
+         continue;
+      }
+
+      CatIdentificationResult id_result = m_strategy->identify(*m_current_frame_copy, detection);
+
+      if (id_result.identity == CatIdentity::HAKU)
       {
          m_detected_haku = std::make_shared<Detection>(detection);
-         m_logger->trace("Haku detected with average pixel value: " + std::to_string(detection.average_of_detection));
+         m_logger->info("Haku detected (" + id_result.details + ")");
          save_detection_crop(detection, "haku", detection_idx);
+      }
+      else if (id_result.identity == CatIdentity::GOFRET)
+      {
+         m_detected_gofret = std::make_shared<Detection>(detection);
+         m_logger->info("Gofret detected (" + id_result.details + ")");
+         save_detection_crop(detection, "gofret", detection_idx);
       }
       else
       {
-         m_detected_gofret = std::make_shared<Detection>(detection);
-         m_logger->trace("Gofret detected with average pixel value: " + std::to_string(detection.average_of_detection));
-         save_detection_crop(detection, "gofret", detection_idx);
+         m_logger->warn("Cat identification inconclusive (" + id_result.details + ")");
       }
       ++detection_idx;
    }

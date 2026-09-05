@@ -1,6 +1,7 @@
 #ifndef CAT_DETECTOR_IMPL_HPP_
 #define CAT_DETECTOR_IMPL_HPP_
 
+#include "CatIdentificationStrategy.hpp"
 #include "GofkuCamCommon.hpp"
 #include "ICatDetector.hpp"
 #include "LoggerInterface.hpp"
@@ -13,6 +14,7 @@ class CatDetectorImpl : public ICatDetector {
 private:
     QP::QActive * m_owner; 
     LoggerInterfacePtr m_logger;
+    CatIdentificationStrategyPtr m_strategy;
     FramePtr m_current_frame_copy;
     FramePtr m_current_depth_map;
     std::shared_ptr<Detection> m_detected_haku;

@@ -8,6 +8,8 @@
         "logging": "DEBUG",
         "use_gpu": true,
         "use_detached_thread": false,
+        "cat_identification_strategy": "neural_model",
+        "gofku_identifier_model_path": "/Users/sysizlayan/Desktop/git/project_gofkucam/extern/gofku_identifier/models/gofku_classifier.onnx",
         "haku_pixel_threshold": 100,
         "depth_mean_roi_size": 20,
         "haku_feeding_distance_lower_threshold": 110,
@@ -16,6 +18,6 @@
         "depth_model_path": "/Users/sysizlayan/Desktop/git/project_gofkucam/resources/depth_anything/depth_anything_v2_vits.onnx",
         "yolo_labels_path": "/Users/sysizlayan/Desktop/git/project_gofkucam/resources/yolo/coco.names",
         "stream_address": "rtsp://localhost:8554/stream",
-        "frame_interval_ms": 300
+        "frame_interval_ms": 1000
     }
 }
