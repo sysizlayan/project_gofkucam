@@ -42,7 +42,8 @@ void CameraGrabberImpl::frame_timer_timeout(QP::QEvt const * const e)
    if (m_is_new_frame_available)
    {
       FrameCapturedEvt* fce = Q_NEW(FrameCapturedEvt, FRAME_CAPTURED_SIG);
-      fce->m_frame = std::make_shared<Frame>(m_current_frame->clone());
+      cv::Rect roi(0, 0, m_current_frame->cols * 2 / 3, m_current_frame->rows);
+      fce->m_frame = std::make_shared<Frame>((*m_current_frame)(roi).clone());
       m_logger->trace("Captured a new frame");
       QP::QF::PUBLISH(fce, this);
       m_frame_timer.armX(Config::config().get<int>("frame_interval_ms"), 0);
