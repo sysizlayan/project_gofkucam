@@ -61,3 +61,7 @@ CmakePresets.json
 config/config.json
 
 .DS_Store
+
+__pycache__/
+print_templates/
+tools/
